@@ -85,6 +85,7 @@ void update_table(void)
 {
     int i;
     leads(lead);
+    printf("\x1b[?25l\x1b[H\x1b[J"); // 画面をクリア
     printf("\n                                       turn_ %2d\n", turn);
     printf("%s\n", dot_turnbar);
     printf("point:              |  1  |      |  2  |      |  3  |      |  4  |\n");
@@ -179,6 +180,7 @@ void update_table(void)
         }
         printf("\n");
     }
+    printf("\x1b[?25h");
 
     player_action();
 }
