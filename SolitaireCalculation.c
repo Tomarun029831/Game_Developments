@@ -148,7 +148,7 @@ void update_table(void)
         printf("                      ");
         if (stuck[0][i].suit != NULL)
         {
-            printf("%s%2s", stuck[0][i].suit, stuck[0][i].rank);
+            printf("%s%s", stuck[0][i].suit, stuck[0][i].rank);
         }
         else
         {
@@ -156,7 +156,7 @@ void update_table(void)
         }
         if (stuck[1][i].suit != NULL)
         {
-            printf("          %s%2s", stuck[1][i].suit, stuck[1][i].rank);
+            printf("          %s%s", stuck[1][i].suit, stuck[1][i].rank);
         }
         else
         {
@@ -164,7 +164,7 @@ void update_table(void)
         }
         if (stuck[2][i].suit != NULL)
         {
-            printf("          %s%2s", stuck[2][i].suit, stuck[2][i].rank);
+            printf("          %s%s", stuck[2][i].suit, stuck[2][i].rank);
         }
         else
         {
@@ -172,7 +172,7 @@ void update_table(void)
         }
         if (stuck[3][i].suit != NULL)
         {
-            printf("          %s%2s", stuck[3][i].suit, stuck[3][i].rank);
+            printf("          %s%s", stuck[3][i].suit, stuck[3][i].rank);
         }
         else
         {
