@@ -3,7 +3,9 @@
 #include <stdlib.h> // exit, random
 #include <time.h>   // time
 
-#define OPTION_HELP {"-h", "help", "HELP"}        // info of options
+#define OPTION_AMOUNT 5
+
+#define OPTION_HELP {"-h", "help", "HELP"}        // help option
 #define OPTION_TREE {"-t", "tree", "TREE"}        // show struct of path in data
 #define OPTION_DIRECTOTY {"-d", "dir", "DIR"}     // show file or subdirectory in data
 #define OPTION_REMOVE {"-rm", "remove", "REMOVE"} // remove directory, file in data
@@ -23,9 +25,16 @@ typedef struct
     Card *next;
 } Stock;
 
+// Option
+void HELP(char *option);
+void TREE(char *path);
+void DIRECTORY(char *path);
+void REMOVE(char *path);
+void ADD(char *path);
+
 // To Enter Game
 int StartWindow(int, char **);
-void cmdline_error();
+void OPTION_ERROR();
 
 // Enter Game
 void SolitaireCalculation();
@@ -70,32 +79,40 @@ void SolitaireCalculation()
 
 int StartWindow(int argc, char **argv)
 {
-    char *options[] = {OPTION_ADD, OPTION_DIRECTOTY, OPTION_HELP, OPTION_REMOVE, OPTION_TREE};
-    if (argc == 1)
+    char *callOptions[][3] = {OPTION_ADD, OPTION_DIRECTOTY, OPTION_HELP, OPTION_REMOVE, OPTION_TREE};
+    if (argc < 4)
     {
-        // Normal Startment
-        return 0;
-    }
-    else if (argc == 2)
-    {
-        // Option Startment
-        if (argv[1])
+        for (int line = 1; line < argc; line++) // focus cmdline
         {
+            for (int option = 0; option < OPTION_AMOUNT; option++) // compare options
+            {
+                for (int alias = 0; alias < 3; alias++) // check all aliases
+                {
+                    if (strcmp(argv[line], callOptions[option][alias]) == 0) // found option
+                    {
+                        printf("find cmd: %s", callOptions[option][alias]);
+                        exit(EXIT_SUCCESS);
+                    }
+                }
+            }
+            OPTION_ERROR(); // Not found option
         }
-    }
-    else if (argc == 3)
-    {
+        return 0; // normal
     }
     else
     {
-        cmdline_error();
+        OPTION_ERROR();
     }
-
-    return 0;
 }
 
-void cmdline_error()
+void HELP(char *option) {}
+void TREE(char *path) {}
+void DIRECTORY(char *path) {}
+void REMOVE(char *path) {}
+void ADD(char *path) {}
+
+void OPTION_ERROR()
 {
-    puts("arguments are too much\nUsage: .\\SolitaireCalculation.exe <option>");
+    puts("Usage: .\\SolitaireCalculation.exe <option>\noption - \"help\"");
     exit(EXIT_FAILURE);
 }
