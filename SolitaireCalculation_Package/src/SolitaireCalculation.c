@@ -4,7 +4,9 @@
 #include <time.h>   // time
 
 #define OPTION_AMOUNT 5
+#define OPTION_ALIAS 3
 
+#define OPTION_NULL "noOption"
 #define OPTION_HELP {"-h", "help", "HELP"}        // help option
 #define OPTION_TREE {"-t", "tree", "TREE"}        // show struct of path in data
 #define OPTION_DIRECTOTY {"-d", "dir", "DIR"}     // show file or subdirectory in data
@@ -79,18 +81,19 @@ void SolitaireCalculation()
 
 int StartWindow(int argc, char **argv)
 {
-    char *callOptions[][3] = {OPTION_ADD, OPTION_DIRECTOTY, OPTION_HELP, OPTION_REMOVE, OPTION_TREE};
+    char *callOptions[][OPTION_ALIAS] = {OPTION_ADD, OPTION_DIRECTOTY, OPTION_HELP, OPTION_REMOVE, OPTION_TREE};
     if (argc < 4)
     {
         for (int line = 1; line < argc; line++) // focus cmdline
         {
             for (int option = 0; option < OPTION_AMOUNT; option++) // compare options
             {
-                for (int alias = 0; alias < 3; alias++) // check all aliases
+                for (int alias = 0; alias < OPTION_ALIAS; alias++) // check all aliases
                 {
                     if (strcmp(argv[line], callOptions[option][alias]) == 0) // found option
                     {
-                        printf("find cmd: %s", callOptions[option][alias]);
+                        printf("find cmd: %s\n", callOptions[option][alias]);
+                        HELP(OPTION_NULL);
                         exit(EXIT_SUCCESS);
                     }
                 }
@@ -105,7 +108,35 @@ int StartWindow(int argc, char **argv)
     }
 }
 
-void HELP(char *option) {}
+void HELP(char *option)
+{
+    char *callOptions[][OPTION_ALIAS] = {OPTION_ADD, OPTION_DIRECTOTY, OPTION_HELP, OPTION_REMOVE, OPTION_TREE};
+    char *describeOption[OPTION_AMOUNT] =
+        {"ADD <NAME> - create new file for saving processing of game",
+         "DIR <PATH> - show files and subdirectories in directory of argument",
+         "HELP - show usage",
+         "REMOVE <PATH> - delete file of argument",
+         "TREE <PATH> - show grahical struct of directory"};
+
+    if (strcmp(OPTION_NULL, option) == 0)
+    {
+        puts("Usage:");
+        for (int option = 0; option < OPTION_AMOUNT; option++)
+        {
+            putchar('\t');
+            for (int alias = 0; alias < OPTION_ALIAS; alias++)
+            {
+                printf("%s", callOptions[option][alias]);
+                printf(", "); // padding
+            }
+            printf("%s\n", describeOption[option]);
+        }
+    }
+    else
+    {
+    }
+}
+
 void TREE(char *path) {}
 void DIRECTORY(char *path) {}
 void REMOVE(char *path) {}
