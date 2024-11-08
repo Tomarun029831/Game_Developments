@@ -6,7 +6,8 @@
 #define OPTION_AMOUNT 5
 #define OPTION_ALIAS 3
 
-#define OPTION_NULL "noOption"
+#define OPTION_NULL "NONOPTION"
+#define OPTION_INVAIL "INVAILOPTION"
 #define OPTION_HELP {"-h", "help", "HELP"}        // help option
 #define OPTION_TREE {"-t", "tree", "TREE"}        // show struct of path in data
 #define OPTION_DIRECTOTY {"-d", "dir", "DIR"}     // show file or subdirectory in data
@@ -28,11 +29,12 @@ typedef struct
 } Stock;
 
 // Option
-void HELP(char *option);
-void TREE(char *path);
-void DIRECTORY(char *path);
-void REMOVE(char *path);
-void ADD(char *path);
+void HELP(char *);
+void TREE(char *);
+void DIRECTORY(char *);
+void REMOVE(char *);
+void ADD(char *);
+char *CHECKOPTION(char *);
 
 // To Enter Game
 int StartWindow(int, char **);
@@ -86,17 +88,18 @@ int StartWindow(int argc, char **argv)
     {
         for (int line = 1; line < argc; line++) // focus cmdline
         {
-            for (int option = 0; option < OPTION_AMOUNT; option++) // compare options
+            // found option
+            if (CHECKOPTION(argv[line]))
             {
-                for (int alias = 0; alias < OPTION_ALIAS; alias++) // check all aliases
+                if (argc == 1)
                 {
-                    if (strcmp(argv[line], callOptions[option][alias]) == 0) // found option
-                    {
-                        printf("find cmd: %s\n", callOptions[option][alias]);
-                        HELP(OPTION_NULL);
-                        exit(EXIT_SUCCESS);
-                    }
+                    HELP(OPTION_NULL);
                 }
+                else
+                {
+                    HELP(argv[2]);
+                }
+                exit(EXIT_SUCCESS);
             }
             OPTION_ERROR(); // Not found option
         }
@@ -108,32 +111,46 @@ int StartWindow(int argc, char **argv)
     }
 }
 
-void HELP(char *option)
+// found option: index of option , Not found option: 0
+char *CHECKOPTION(char *_option)
 {
     char *callOptions[][OPTION_ALIAS] = {OPTION_ADD, OPTION_DIRECTOTY, OPTION_HELP, OPTION_REMOVE, OPTION_TREE};
-    char *describeOption[OPTION_AMOUNT] =
-        {"ADD <NAME> - create new file for saving processing of game",
-         "DIR <PATH> - show files and subdirectories in directory of argument",
-         "HELP - show usage",
-         "REMOVE <PATH> - delete file of argument",
-         "TREE <PATH> - show grahical struct of directory"};
+    for (int option = 0; option < OPTION_AMOUNT; option++)
+    {
+        for (int alias = 0; alias < OPTION_ALIAS; alias++)
+        {
+            if (strcmp(_option, callOptions[option][alias]) == 0)
+                return;
+        }
+    }
+    return OPTION_INVAIL;
+}
 
-    if (strcmp(OPTION_NULL, option) == 0)
+void HELP(char *_option)
+{
+    char *describeOption[OPTION_AMOUNT] =
+        {"-a <NAME>, add <NAME>, ADD <NAME> - create new file for saving processing of game",
+         "-d <PATH>, dir <PATH>, DIR <PATH> - show files and subdirectories in directory of argument",
+         "-h, help, HELP - show usage",
+         "-rm <PATH>, remove <PATH>, REMOVE <PATH> - delete file of argument",
+         "-t <PATH>, tree <PATH>, TREE <PATH> - show grahical struct of directory"};
+
+    if (CHECKOPTION(_option) == 0)
     {
         puts("Usage:");
         for (int option = 0; option < OPTION_AMOUNT; option++)
         {
-            putchar('\t');
-            for (int alias = 0; alias < OPTION_ALIAS; alias++)
-            {
-                printf("%s", callOptions[option][alias]);
-                printf(", "); // padding
-            }
-            printf("%s\n", describeOption[option]);
+            printf("\t%s\n", describeOption[option]);
         }
     }
     else
     {
+        int option = CHECKOPTION(_option);
+        if (option)
+        {
+            puts("Usage:");
+            printf("\t%s", describeOption[option]);
+        }
     }
 }
 
