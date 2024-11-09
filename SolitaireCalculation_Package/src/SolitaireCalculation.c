@@ -85,7 +85,7 @@ void SolitaireCalculation()
 int StartWindow(int argc, char **argv)
 {
     char *callOptions[][OPTION_ALIAS] = {OPTION_ADD, OPTION_DIRECTOTY, OPTION_HELP, OPTION_REMOVE, OPTION_TREE};
-    void (*pfunc)(char *);
+    void (*pfunc)();
     if (argc < 4)
     {
         for (int line = 1; line < argc; line++) // focus cmdline
@@ -105,13 +105,9 @@ int StartWindow(int argc, char **argv)
                 }
                 exit(EXIT_SUCCESS);
             }
-            opERROR(); // Not found option
+            pfunc(); // Not found option
         }
         return 0; // normal
-    }
-    else
-    {
-        opERROR();
     }
 }
 
@@ -124,15 +120,22 @@ const char **callOptions[] = {optionADD, optionDIRECTORY, optionHELP, optionREMO
 
 const char **CHECKOPTION(char *_option)
 {
-    for (int option = 0; option < OPTION_AMOUNT; option++)
+    if (_option == OPTION_INVAIL)
     {
-        for (int alias = 0; alias < OPTION_ALIAS; alias++)
-        {
-            if (strcmp(_option, callOptions[option][alias]) == 0)
-                return callOptions[option];
-        }
+        return OPTION_INVAIL;
     }
-    return OPTION_INVAIL;
+    else
+    {
+        for (int option = 0; option < OPTION_AMOUNT; option++)
+        {
+            for (int alias = 0; alias < OPTION_ALIAS; alias++)
+            {
+                if (strcmp(_option, callOptions[option][alias]) == 0)
+                    return callOptions[option];
+            }
+        }
+        return OPTION_INVAIL;
+    }
 }
 
 void *RETURN_FUNC_OPTION(char *_fullOption)
@@ -158,7 +161,6 @@ void *RETURN_FUNC_OPTION(char *_fullOption)
     {
         return TREE;
     }
-
     return opERROR;
 }
 
