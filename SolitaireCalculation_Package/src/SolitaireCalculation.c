@@ -14,6 +14,13 @@
 #define OPTION_REMOVE {"-rm", "remove", "REMOVE"} // remove directory, file in data
 #define OPTION_ADD {"-a", "add", "ADD"}           // create directory, file in data
 
+const char *optionADD[] = OPTION_ADD;
+const char *optionDIRECTORY[] = OPTION_DIRECTOTY;
+const char *optionHELP[] = OPTION_HELP;
+const char *optionREMOVE[] = OPTION_REMOVE;
+const char *optionTREE[] = OPTION_TREE;
+const char **callOptions[] = {optionADD, optionDIRECTORY, optionHELP, optionREMOVE, optionTREE};
+
 // 'S', 'D', 'H', 'C'
 int ranks[] = {'S', 'D', 'H', 'C'};
 // 'A', '2', '3', '4', '5', '6', '7', '8', '9', "10", 'J', 'Q', 'K'
@@ -110,13 +117,6 @@ int StartWindow(int argc, char **argv)
         return 0; // normal
     }
 }
-
-const char *optionADD[] = OPTION_ADD;
-const char *optionDIRECTORY[] = OPTION_DIRECTOTY;
-const char *optionHELP[] = OPTION_HELP;
-const char *optionREMOVE[] = OPTION_REMOVE;
-const char *optionTREE[] = OPTION_TREE;
-const char **callOptions[] = {optionADD, optionDIRECTORY, optionHELP, optionREMOVE, optionTREE};
 
 const char **CHECKOPTION(char *_option)
 {
