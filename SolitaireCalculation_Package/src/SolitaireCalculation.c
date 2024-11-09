@@ -108,6 +108,12 @@ int StartWindow(int argc, char **argv)
         pfunc(argv[2]);
         exit(EXIT_SUCCESS);
     }
+    else
+    {
+        puts("Warning: Too many arguments");
+        pfunc(argv[2]);
+        exit(EXIT_FAILURE);
+    }
 }
 
 const char **CHECKOPTION(char *_option)
@@ -158,7 +164,6 @@ void *RETURN_FUNC_OPTION(char *_fullOption)
 
 void HELP(char *_option)
 {
-    printf("HELP called with %s\n", _option);
     const char *describeOption[OPTION_AMOUNT] =
         {"-a <NAME>, add <NAME>, ADD <NAME> - create new file for saving processing of game",
          "-d <PATH>, dir <PATH>, DIR <PATH> - show files and subdirectories in directory of argument",
