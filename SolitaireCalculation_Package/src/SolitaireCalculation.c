@@ -29,12 +29,13 @@ typedef struct
 } Stock;
 
 // Option
-void HELP(const char *);
-void TREE(const char *);
-void DIRECTORY(const char *);
-void REMOVE(const char *);
-void ADD(const char *);
-const char **CHECKOPTION(const char *);
+void HELP(char *);
+void TREE(char *);
+void DIRECTORY(char *);
+void REMOVE(char *);
+void ADD(char *);
+const char **CHECKOPTION(char *);
+void *RETURN_FUNC_OPTION(char *);
 
 // To Enter Game
 int StartWindow(int, char **);
@@ -84,12 +85,12 @@ void SolitaireCalculation()
 int StartWindow(int argc, char **argv)
 {
     char *callOptions[][OPTION_ALIAS] = {OPTION_ADD, OPTION_DIRECTOTY, OPTION_HELP, OPTION_REMOVE, OPTION_TREE};
-    void (*pfunc)();
+    void (*pfunc)(char *);
     if (argc < 4)
     {
-        pfunc = HELP;
         for (int line = 1; line < argc; line++) // focus cmdline
         {
+            pfunc = RETURN_FUNC_OPTION(argv[1]);
 
             // found option
             if (CHECKOPTION(argv[line]) != OPTION_INVAIL)
@@ -121,7 +122,7 @@ const char *optionREMOVE[] = OPTION_REMOVE;
 const char *optionTREE[] = OPTION_TREE;
 const char **callOptions[] = {optionADD, optionDIRECTORY, optionHELP, optionREMOVE, optionTREE};
 
-const char **CHECKOPTION(const char *_option)
+const char **CHECKOPTION(char *_option)
 {
     for (int option = 0; option < OPTION_AMOUNT; option++)
     {
@@ -134,7 +135,7 @@ const char **CHECKOPTION(const char *_option)
     return OPTION_INVAIL;
 }
 
-void *RETURN_FUNC_OPTION(const char *_fullOption)
+void *RETURN_FUNC_OPTION(char *_fullOption)
 {
     const char **fullOption = CHECKOPTION(_fullOption);
     if (fullOption == optionADD)
@@ -161,7 +162,7 @@ void *RETURN_FUNC_OPTION(const char *_fullOption)
     return opERROR;
 }
 
-void HELP(const char *_option)
+void HELP(char *_option)
 {
     const char *describeOption[OPTION_AMOUNT] =
         {"-a <NAME>, add <NAME>, ADD <NAME> - create new file for saving processing of game",
@@ -189,10 +190,10 @@ void HELP(const char *_option)
     }
 }
 
-void TREE(const char *path) {}
-void DIRECTORY(const char *path) {}
-void REMOVE(const char *path) {}
-void ADD(const char *path) {}
+void TREE(char *path) { puts("TREE called"); }
+void DIRECTORY(char *path) { puts("DIRECRORY called"); }
+void REMOVE(char *path) { puts("REMOVE called"); }
+void ADD(char *path) { puts("ADD called"); }
 
 void opERROR()
 {
