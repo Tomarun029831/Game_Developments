@@ -92,29 +92,21 @@ void SolitaireCalculation()
 int StartWindow(int argc, char **argv)
 {
     char *callOptions[][OPTION_ALIAS] = {OPTION_ADD, OPTION_DIRECTOTY, OPTION_HELP, OPTION_REMOVE, OPTION_TREE};
-    void (*pfunc)();
-    if (argc < 4)
+    void (*pfunc)() = RETURN_FUNC_OPTION(argv[1]);
+    // found option
+    if (argc == 1)
     {
-        for (int line = 1; line < argc; line++) // focus cmdline
-        {
-            pfunc = RETURN_FUNC_OPTION(argv[1]);
-
-            // found option
-            if (CHECKOPTION(argv[line]) != OPTION_INVAIL)
-            {
-                if (argc == 1)
-                {
-                    pfunc(OPTION_NULL);
-                }
-                else
-                {
-                    pfunc(argv[2]);
-                }
-                exit(EXIT_SUCCESS);
-            }
-            pfunc(); // Not found option
-        }
         return 0; // normal
+    }
+    else if (argc == 2)
+    {
+        pfunc(OPTION_NULL);
+        exit(EXIT_SUCCESS);
+    }
+    else if (argc == 3)
+    {
+        pfunc(argv[2]);
+        exit(EXIT_SUCCESS);
     }
 }
 
