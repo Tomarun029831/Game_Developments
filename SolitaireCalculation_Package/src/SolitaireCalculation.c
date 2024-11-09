@@ -34,7 +34,7 @@ void TREE(const char *);
 void DIRECTORY(const char *);
 void REMOVE(const char *);
 void ADD(const char *);
-char **CHECKOPTION(const char *);
+const char **CHECKOPTION(const char *);
 
 // To Enter Game
 int StartWindow(int, char **);
@@ -121,7 +121,7 @@ const char *optionREMOVE[] = OPTION_REMOVE;
 const char *optionTREE[] = OPTION_TREE;
 const char **callOptions[] = {optionADD, optionDIRECTORY, optionHELP, optionREMOVE, optionTREE};
 
-char **CHECKOPTION(const char *_option)
+const char **CHECKOPTION(const char *_option)
 {
     for (int option = 0; option < OPTION_AMOUNT; option++)
     {
@@ -136,7 +136,7 @@ char **CHECKOPTION(const char *_option)
 
 void *RETURN_FUNC_OPTION(const char *_fullOption)
 {
-    char **fullOption = CHECKOPTION(_fullOption);
+    const char **fullOption = CHECKOPTION(_fullOption);
     if (fullOption == optionADD)
     {
         return ADD;
