@@ -164,14 +164,16 @@ void *RETURN_FUNC_OPTION(char *_fullOption)
 
 void HELP(char *_option)
 {
+    printf("HELP called with %s\n", _option);
     const char *describeOption[OPTION_AMOUNT] =
         {"-a <NAME>, add <NAME>, ADD <NAME> - create new file for saving processing of game",
          "-d <PATH>, dir <PATH>, DIR <PATH> - show files and subdirectories in directory of argument",
-         "-h, help, HELP - show usage",
+         "-h <OPTION>, help <OPTION>, HELP <OPTION> - show usage",
          "-rm <PATH>, remove <PATH>, REMOVE <PATH> - delete file of argument",
          "-t <PATH>, tree <PATH>, TREE <PATH> - show grahical struct of directory"};
 
-    if (CHECKOPTION(_option) == 0)
+    const char **fullOption = CHECKOPTION(_option);
+    if (fullOption == OPTION_INVAIL)
     {
         puts("Usage:");
         for (int option = 0; option < OPTION_AMOUNT; option++)
@@ -181,19 +183,34 @@ void HELP(char *_option)
     }
     else
     {
-        // int option = CHECKOPTION(_option);
-        // if (option)
-        // {
-        //     puts("Usage:");
-        //     printf("\t%s", describeOption[option]);
-        // }
+        puts("Usage:");
+        if (fullOption == optionADD)
+        {
+            printf("\t%s", describeOption[0]);
+        }
+        else if (fullOption == optionDIRECTORY)
+        {
+            printf("\t%s", describeOption[1]);
+        }
+        else if (fullOption == optionHELP)
+        {
+            printf("\t%s", describeOption[2]);
+        }
+        else if (fullOption == optionREMOVE)
+        {
+            printf("\t%s", describeOption[3]);
+        }
+        else if (fullOption == optionTREE)
+        {
+            printf("\t%s", describeOption[4]);
+        }
     }
 }
 
-void TREE(char *path) { puts("TREE called"); }
-void DIRECTORY(char *path) { puts("DIRECRORY called"); }
-void REMOVE(char *path) { puts("REMOVE called"); }
-void ADD(char *path) { puts("ADD called"); }
+void TREE(char *path) { printf("TREE called with %s", path); }
+void DIRECTORY(char *path) { printf("DIRECRORY called with %s", path); }
+void REMOVE(char *path) { printf("REMOVE called with %s", path); }
+void ADD(char *path) { printf("ADD called with %s", path); }
 
 void opERROR()
 {
