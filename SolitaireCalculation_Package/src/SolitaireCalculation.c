@@ -3,23 +3,25 @@
 #include <stdlib.h> // exit, random
 #include <time.h>   // time
 
-#define OPTION_AMOUNT 5
+#define OPTION_AMOUNT 6
 #define OPTION_ALIAS 3
 
 #define OPTION_NULL "NONOPTION"
 #define OPTION_INVAIL NULL
-#define OPTION_HELP {"-h", "help", "HELP"}        // help option
-#define OPTION_TREE {"-t", "tree", "TREE"}        // show struct of path in data
-#define OPTION_DIRECTOTY {"-d", "dir", "DIR"}     // show file or subdirectory in data
-#define OPTION_REMOVE {"-rm", "remove", "REMOVE"} // remove directory, file in data
-#define OPTION_ADD {"-a", "add", "ADD"}           // create directory, file in data
+#define OPTION_HELP {"-h", "help", "HELP"}          // help option
+#define OPTION_TREE {"-t", "tree", "TREE"}          // show struct of path in data
+#define OPTION_DIRECTOTY {"-d", "dir", "DIR"}       // show file or subdirectory in data
+#define OPTION_REMOVE {"-rm", "remove", "REMOVE"}   // remove directory, file in data
+#define OPTION_ADD {"-a", "add", "ADD"}             // create directory, file in data
+#define OPTION_SETTING {"-s", "setting", "SETTING"} // User configs
 
 const char *optionADD[] = OPTION_ADD;
 const char *optionDIRECTORY[] = OPTION_DIRECTOTY;
 const char *optionHELP[] = OPTION_HELP;
 const char *optionREMOVE[] = OPTION_REMOVE;
 const char *optionTREE[] = OPTION_TREE;
-const char **callOptions[] = {optionADD, optionDIRECTORY, optionHELP, optionREMOVE, optionTREE};
+const char *optionSETTING[] = OPTION_SETTING;
+const char **callOptions[] = {optionADD, optionDIRECTORY, optionHELP, optionREMOVE, optionTREE, optionSETTING};
 
 // 'S', 'D', 'H', 'C'
 int ranks[] = {'S', 'D', 'H', 'C'};
@@ -41,6 +43,7 @@ void TREE(char *);
 void DIRECTORY(char *);
 void REMOVE(char *);
 void ADD(char *);
+void SETTING();
 const char **CHECKOPTION(char *);
 void *RETURN_FUNC_OPTION(char *);
 
@@ -96,7 +99,12 @@ int StartWindow(int argc, char **argv)
     // found option
     if (argc == 1)
     {
-        return 0; // normal
+        printf("\x1b[?25l\x1b[H\x1b[J"); // hide cursor, move it to HOME and delete right of cousor pos
+
+        ;
+
+        printf("\x1b[?25h"); // show cursor
+        return 0;            // Enter Game
     }
     else if (argc == 2)
     {
@@ -159,6 +167,10 @@ void *RETURN_FUNC_OPTION(char *_fullOption)
     {
         return TREE;
     }
+    else if (fullOption == optionSETTING)
+    {
+        return SETTING;
+    }
     return opERROR;
 }
 
@@ -169,7 +181,8 @@ void HELP(char *_option)
          "-d <PATH>, dir <PATH>, DIR <PATH> - show files and subdirectories in directory of argument",
          "-h <OPTION>, help <OPTION>, HELP <OPTION> - show usage",
          "-rm <PATH>, remove <PATH>, REMOVE <PATH> - delete file of argument",
-         "-t <PATH>, tree <PATH>, TREE <PATH> - show grahical struct of directory"};
+         "-t <PATH>, tree <PATH>, TREE <PATH> - show grahical struct of directory",
+         "-s, setting, SETTING - user configs"};
 
     const char **fullOption = CHECKOPTION(_option);
     if (fullOption == OPTION_INVAIL)
@@ -203,6 +216,10 @@ void HELP(char *_option)
         {
             printf("\t%s", describeOption[4]);
         }
+        else if (fullOption == optionSETTING)
+        {
+            printf("\t%s", describeOption[5]);
+        }
     }
 }
 
@@ -210,6 +227,7 @@ void TREE(char *path) { printf("TREE called with %s", path); }
 void DIRECTORY(char *path) { printf("DIRECRORY called with %s", path); }
 void REMOVE(char *path) { printf("REMOVE called with %s", path); }
 void ADD(char *path) { printf("ADD called with %s", path); }
+void SETTING() { printf("SETTING called"); }
 
 void opERROR()
 {
