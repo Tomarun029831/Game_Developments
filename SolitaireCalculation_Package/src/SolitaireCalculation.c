@@ -7,7 +7,7 @@
 #define OPTION_ALIAS 3
 
 #define OPTION_NULL "NONOPTION"
-#define OPTION_INVAIL "INVAILOPTION"
+#define OPTION_INVAIL NULL
 #define OPTION_HELP {"-h", "help", "HELP"}        // help option
 #define OPTION_TREE {"-t", "tree", "TREE"}        // show struct of path in data
 #define OPTION_DIRECTOTY {"-d", "dir", "DIR"}     // show file or subdirectory in data
@@ -29,16 +29,16 @@ typedef struct
 } Stock;
 
 // Option
-void HELP(char *);
-void TREE(char *);
-void DIRECTORY(char *);
-void REMOVE(char *);
-void ADD(char *);
-char *CHECKOPTION(char *);
+void HELP(const char *);
+void TREE(const char *);
+void DIRECTORY(const char *);
+void REMOVE(const char *);
+void ADD(const char *);
+char **CHECKOPTION(const char *);
 
 // To Enter Game
 int StartWindow(int, char **);
-void OPTION_ERROR();
+void opERROR();
 
 // Enter Game
 void SolitaireCalculation();
@@ -84,51 +84,86 @@ void SolitaireCalculation()
 int StartWindow(int argc, char **argv)
 {
     char *callOptions[][OPTION_ALIAS] = {OPTION_ADD, OPTION_DIRECTOTY, OPTION_HELP, OPTION_REMOVE, OPTION_TREE};
+    void (*pfunc)();
     if (argc < 4)
     {
+        pfunc = HELP;
         for (int line = 1; line < argc; line++) // focus cmdline
         {
+
             // found option
-            if (CHECKOPTION(argv[line]))
+            if (CHECKOPTION(argv[line]) != OPTION_INVAIL)
             {
                 if (argc == 1)
                 {
-                    HELP(OPTION_NULL);
+                    pfunc(OPTION_NULL);
                 }
                 else
                 {
-                    HELP(argv[2]);
+                    pfunc(argv[2]);
                 }
                 exit(EXIT_SUCCESS);
             }
-            OPTION_ERROR(); // Not found option
+            opERROR(); // Not found option
         }
         return 0; // normal
     }
     else
     {
-        OPTION_ERROR();
+        opERROR();
     }
 }
 
-// found option: index of option , Not found option: 0
-char *CHECKOPTION(char *_option)
+const char *optionADD[] = OPTION_ADD;
+const char *optionDIRECTORY[] = OPTION_DIRECTOTY;
+const char *optionHELP[] = OPTION_HELP;
+const char *optionREMOVE[] = OPTION_REMOVE;
+const char *optionTREE[] = OPTION_TREE;
+const char **callOptions[] = {optionADD, optionDIRECTORY, optionHELP, optionREMOVE, optionTREE};
+
+char **CHECKOPTION(const char *_option)
 {
-    char *callOptions[][OPTION_ALIAS] = {OPTION_ADD, OPTION_DIRECTOTY, OPTION_HELP, OPTION_REMOVE, OPTION_TREE};
     for (int option = 0; option < OPTION_AMOUNT; option++)
     {
         for (int alias = 0; alias < OPTION_ALIAS; alias++)
         {
             if (strcmp(_option, callOptions[option][alias]) == 0)
-                return;
+                return callOptions[option];
         }
     }
     return OPTION_INVAIL;
 }
 
-void HELP(char *_option)
+void *RETURN_FUNC_OPTION(const char *_fullOption)
 {
-    char *describeOption[OPTION_AMOUNT] =
+    char **fullOption = CHECKOPTION(_fullOption);
+    if (fullOption == optionADD)
+    {
+        return ADD;
+    }
+    else if (fullOption == optionDIRECTORY)
+    {
+        return DIRECTORY;
+    }
+    else if (fullOption == optionHELP)
+    {
+        return HELP;
+    }
+    else if (fullOption == optionREMOVE)
+    {
+        return REMOVE;
+    }
+    else if (fullOption == optionTREE)
+    {
+        return TREE;
+    }
+
+    return opERROR;
+}
+
+void HELP(const char *_option)
+{
+    const char *describeOption[OPTION_AMOUNT] =
         {"-a <NAME>, add <NAME>, ADD <NAME> - create new file for saving processing of game",
          "-d <PATH>, dir <PATH>, DIR <PATH> - show files and subdirectories in directory of argument",
          "-h, help, HELP - show usage",
@@ -145,21 +180,21 @@ void HELP(char *_option)
     }
     else
     {
-        int option = CHECKOPTION(_option);
-        if (option)
-        {
-            puts("Usage:");
-            printf("\t%s", describeOption[option]);
-        }
+        // int option = CHECKOPTION(_option);
+        // if (option)
+        // {
+        //     puts("Usage:");
+        //     printf("\t%s", describeOption[option]);
+        // }
     }
 }
 
-void TREE(char *path) {}
-void DIRECTORY(char *path) {}
-void REMOVE(char *path) {}
-void ADD(char *path) {}
+void TREE(const char *path) {}
+void DIRECTORY(const char *path) {}
+void REMOVE(const char *path) {}
+void ADD(const char *path) {}
 
-void OPTION_ERROR()
+void opERROR()
 {
     puts("Usage: .\\SolitaireCalculation.exe <option>\noption - \"help\"");
     exit(EXIT_FAILURE);
