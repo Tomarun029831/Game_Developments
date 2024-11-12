@@ -63,7 +63,7 @@ void SetWindowSize(int, int);
 void setFontAttributes(int, int, int);
 
 // To Enter Game
-int StartWindow(int, char **);
+void StartWindow(int, char **);
 void handleError();
 
 // Enter Game
@@ -96,7 +96,8 @@ ed
 
 int main(int argc, char **argv)
 {
-    StartWindow(argc, argv);
+
+    StartWindow(argc, &argv[1]);
     solitaireCalculation();
 
     RESET_FONT;
@@ -108,28 +109,28 @@ void solitaireCalculation()
     puts("SolitaireCalculation starts");
 }
 
-int StartWindow(int argc, char **argv)
+void StartWindow(int _optionc, char **_options)
 {
-    void (*pfunc)() = getOptionHandler(argv[1]);
+    void (*pfunc)() = getOptionHandler(_options[0]);
     // found option
-    if (argc == 1)
+    if (_optionc == 1)
     {
         T_CLEAR;
-        // setFontAttributes(0, 31, 42);
-        // printf("aaa\n");
-        // RESET_FONT;
+
+        // User ID Input and Password
+        // Play or Settings
 
         TC_END;
-        return 0; // Enter Game
+        return; // Enter Game
     }
-    else if (argc == 2)
+    else if (_optionc == 2)
     {
         pfunc(OPTION_NULL);
         exit(EXIT_SUCCESS);
     }
-    else if (argc == 3)
+    else if (_optionc == 3)
     {
-        pfunc(argv[2]);
+        pfunc(_options[2]);
         exit(EXIT_SUCCESS);
     }
     else
