@@ -37,15 +37,19 @@ typedef struct
     Card *next;
 } Stock;
 
-// Option
+// Options
 void HELP(char *);
 void TREE(char *);
 void DIRECTORY(char *);
 void REMOVE(char *);
 void ADD(char *);
-void SETTING();
 const char **CHECKOPTION(char *);
 void *RETURN_FUNC_OPTION(char *);
+
+// Setting Window
+void SETTINGWINDOW();
+void SETWINDOWSIZE(int, int);
+void SETFONT(int, int, int);
 
 // To Enter Game
 int StartWindow(int, char **);
@@ -101,7 +105,12 @@ int StartWindow(int argc, char **argv)
     {
         printf("\x1b[?25l\x1b[H\x1b[J"); // hide cursor, move it to HOME and delete right of cousor pos
 
-        ;
+        printf("\x1b[1;44;33m青文字、黄色背景\x1b[0m\n");
+        printf("\x1b[44;1;33m青文字、黄色背景\x1b[0m\n");
+        printf("\x1b[0;44;33m青文字、黄色背景\x1b[0m\n");
+
+        printf("\x1b[1;31m太字の赤色文字\x1b[0m\n");
+        printf("\x1b[4;32m下線付き緑色文字\x1b[0m\n");
 
         printf("\x1b[?25h"); // show cursor
         return 0;            // Enter Game
@@ -169,7 +178,7 @@ void *RETURN_FUNC_OPTION(char *_fullOption)
     }
     else if (fullOption == optionSETTING)
     {
-        return SETTING;
+        return SETTINGWINDOW;
     }
     return opERROR;
 }
@@ -227,7 +236,71 @@ void TREE(char *path) { printf("TREE called with %s", path); }
 void DIRECTORY(char *path) { printf("DIRECRORY called with %s", path); }
 void REMOVE(char *path) { printf("REMOVE called with %s", path); }
 void ADD(char *path) { printf("ADD called with %s", path); }
-void SETTING() { printf("SETTING called"); }
+
+void SETTINGWINDOW() { printf("SETTING called"); }
+
+void SETWINDOWSIZE(int width, int height)
+{
+}
+
+/*
+フォアグラウンド（文字色）コード
+30  — 黒
+31  — 赤
+32  — 緑
+33  — 黄
+34  — 青
+35  — マゼンタ
+36  — シアン
+37  — 白
+
+バックグラウンド（背景色）コード
+40  — 黒
+41  — 赤
+42  — 緑
+43  — 黄
+44  — 青
+45  — マゼンタ
+46  — シアン
+47  — 白
+
+明るいフォアグラウンド（文字色）コード
+90  — 明るい黒（暗い灰色）
+91  — 明るい赤
+92  — 明るい緑
+93  — 明るい黄
+94  — 明るい青
+95  — 明るいマゼンタ
+96  — 明るいシアン
+97  — 明るい白
+
+明るいバックグラウンド（背景色）コード
+100 — 明るい黒（暗い灰色）
+101 — 明るい赤
+102 — 明るい緑
+103 — 明るい黄
+104 — 明るい青
+105 — 明るいマゼンタ
+106 — 明るいシアン
+107 — 明るい白
+
+
+0 — リセット（Reset）
+1 — 太字（Bold）
+2 — 薄い文字（Faint）
+3 — 斜体（Italic）
+4 — 下線（Underline）
+5 — 点滅（Blink）
+6 — 速い点滅（Rapid Blink）
+7 — 反転（Inverse）
+8 — 非表示（Hidden）
+9 — 打ち消し線（Strike-through）
+
+*/
+
+void SETFONT(int foreground, int background_color, int attritude)
+{
+}
 
 void opERROR()
 {
