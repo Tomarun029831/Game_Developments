@@ -14,6 +14,8 @@
 #define OPTION_SETTING {"-s", "setting", "SETTING"} // User configs
 #define OPTION_TREE {"-t", "tree", "TREE"}          // show struct of path in data
 
+#define RESET_FONT setFontAttributes(-1, -1, -1)
+
 const char *optionAdd[] = OPTION_ADD;             // create directory, file in data
 const char *optionDirectory[] = OPTION_DIRECTOTY; // show file or subdirectory in data
 const char *optionHelp[] = OPTION_HELP;           // help option
@@ -37,17 +39,11 @@ typedef struct
 } Stock;
 
 // Initialize
-void initializeWindow()
-{
-}
+void initializeWindow();
 
-void initializeGame()
-{
-}
+void initializeGame();
 
-void initializeSettings()
-{
-}
+void initializeSettings();
 
 // Options
 void showHelp(char *);
@@ -99,7 +95,7 @@ int main(int argc, char **argv)
 {
     StartWindow(argc, argv);
     solitaireCalculation();
-    setFontAttributes(-1, -1, -1);
+    RESET_FONT;
     return 0;
 }
 
@@ -116,15 +112,9 @@ int StartWindow(int argc, char **argv)
     {
         printf("\x1b[?25l\x1b[H\x1b[J"); // hide cursor, move it to HOME and delete right of cousor pos
 
-        // printf("\x1b[1;44;33m青文字、黄色背景\x1b[0m\n");
-        // printf("\x1b[44;1;33m青文字、黄色背景\x1b[0m\n");
-        // printf("\x1b[0;44;33m青文字、黄色背景\x1b[0m\n");
-
-        // printf("\x1b[1;31m太字の赤色文字\x1b[0m\n");
-        // printf("\x1b[4;32m下線付き緑色文字\x1b[0m\n");
-
-        setFontAttributes(33, 44, 1);
+        setFontAttributes(3, 31, 42);
         printf("aaa\n");
+        RESET_FONT;
 
         printf("\x1b[?25h"); // show cursor
         return 0;            // Enter Game
@@ -197,6 +187,18 @@ void *getOptionHandler(char *_fullOption)
     return handleError;
 }
 
+void initializeWindow()
+{
+}
+
+void initializeGame()
+{
+}
+
+void initializeSettings()
+{
+}
+
 void showHelp(char *_option)
 {
     const char *optionDescriptions[OPTION_AMOUNT] =
@@ -258,6 +260,18 @@ void SetWindowSize(int width, int height)
 }
 
 /*
+
+0 — リセット（Reset）
+1 — 太字（Bold）
+2 — 薄い文字（Faint）
+3 — 斜体（Italic）
+4 — 下線（Underline）
+5 — 点滅（Blink）
+6 — 速い点滅（Rapid Blink）
+7 — 反転（Inverse）
+8 — 非表示（Hidden）
+9 — 打ち消し線（Strike-through）
+
 フォアグラウンド（文字色）コード
 30  — 黒
 31  — 赤
@@ -268,6 +282,8 @@ void SetWindowSize(int width, int height)
 36  — シアン
 37  — 白
 
+39 - reset
+
 バックグラウンド（背景色）コード
 40  — 黒
 41  — 赤
@@ -277,6 +293,8 @@ void SetWindowSize(int width, int height)
 45  — マゼンタ
 46  — シアン
 47  — 白
+
+49 - reset
 
 明るいフォアグラウンド（文字色）コード
 90  — 明るい黒（暗い灰色）
@@ -298,36 +316,41 @@ void SetWindowSize(int width, int height)
 106 — 明るいシアン
 107 — 明るい白
 
-
-0 — リセット（Reset）
-1 — 太字（Bold）
-2 — 薄い文字（Faint）
-3 — 斜体（Italic）
-4 — 下線（Underline）
-5 — 点滅（Blink）
-6 — 速い点滅（Rapid Blink）
-7 — 反転（Inverse）
-8 — 非表示（Hidden）
-9 — 打ち消し線（Strike-through）
-
 */
 
-// 30 <= foreground <= 37 or 90 <= foreground <= 97 and 40 <= background <= 47 or 100 <= background <= 107 and 0 <= attritude <= 9
-void setFontAttributes(int foreground, int background, int style)
+// 0 <= style <= 9, 30 <= foreground <= 37 or 90 <= foreground <= 97, 40 <= background <= 47 or 100 <= background <= 107
+void setFontAttributes(int style, int foreground, int background)
 {
-    char font[20];
-    if (((30 <= foreground && foreground <= 37) || (90 <= foreground && foreground <= 97)) &&
-        ((40 <= background && background <= 47) || (100 <= background && background <= 107)) &&
-        (0 <= style && style <= 9))
+    int isStyleValid = (style >= 0 && style <= 9);
+    int isForegroundValid = ((30 <= foreground && foreground <= 39) || (90 <= foreground && foreground <= 97));
+    int isBackgroundValid = ((40 <= background && background <= 49) || (100 <= background && background <= 107));
+
+    if (style == -1 && foreground == -1 && background == -1)
     {
-        snprintf(font, sizeof(font), "\x1b[%d;%d;%dm", style, foreground, background);
-    }
-    else
-    {
-        snprintf(font, sizeof(font), "\x1b[0m");
+        printf("\x1b[0m");
+        return;
     }
 
-    printf("%s", font);
+    printf("\x1b[");
+
+    if (isStyleValid)
+        printf("%d", style);
+
+    if (isForegroundValid)
+    {
+        if (isStyleValid)
+            printf(";");
+        printf("%d", foreground);
+    }
+
+    if (isBackgroundValid)
+    {
+        if (isStyleValid || isForegroundValid)
+            printf(";");
+        printf("%d", background);
+    }
+
+    printf("m");
 }
 
 void handleError()
