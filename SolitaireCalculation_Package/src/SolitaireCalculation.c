@@ -202,7 +202,7 @@ void initializeSettings()
 
 void showHelp(char *_option)
 {
-    const char *optionDescriptions[OPTION_AMOUNT] =
+    char *optionDescriptions[OPTION_AMOUNT] =
         {"-a <NAME>, add <NAME>, ADD <NAME> - create new file for saving processing of game",
          "-d <PATH>, dir <PATH>, DIR <PATH> - show files and subdirectories in directory of argument",
          "-h <OPTION>, help <OPTION>, HELP <OPTION> - show usage",
@@ -254,8 +254,64 @@ void listDirectory(char *path) { printf("DIRECRORY called with %s", path); }
 void removeFileOrDir(char *path) { printf("REMOVE called with %s", path); }
 void addFileOrDir(char *path) { printf("ADD called with %s", path); }
 
+typedef struct
+{
+    char *name;
+    struct _Showup
+    {
+        char *Style;
+        char *Foreground;
+        char *Background;
+    } ShowUp;
+
+    struct ms
+    {
+        char *Style;
+        char *Foreground;
+        char *Background;
+    } Makestack;
+
+    struct dc
+    {
+        char *Style;
+        char *Foreground;
+        char *Background;
+    } Discard;
+
+    struct ds
+    {
+        char *Style;
+        char *Foreground;
+        char *Background;
+    } Disstack;
+
+    struct ud
+    {
+        char *Style;
+        char *Foreground;
+        char *Background;
+    } Undo;
+
+    struct ed
+    {
+        char *Style;
+        char *Foreground;
+        char *Background;
+    } Endgame;
+
+} _Font;
+
+typedef struct
+{
+    char *Id;
+    _Font Font;
+    int WIHGT;
+    int HEIGHT;
+} _Settings;
+
 void showSettingsWindow()
 {
+    printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n");
 }
 
 void SetWindowSize(int width, int height)
