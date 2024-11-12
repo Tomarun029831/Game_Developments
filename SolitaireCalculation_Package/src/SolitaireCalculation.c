@@ -14,6 +14,9 @@
 #define OPTION_SETTING {"-s", "settings", "SETTINGS"} // User configs
 #define OPTION_TREE {"-t", "tree", "TREE"}            // show struct of path in data
 
+#define T_CLEAR printf("\x1b[?25l\x1b[H\x1b[J") // hide cursor, move it to HOME and delete right of cousor pos
+#define TC_END printf("\x1b[?25h")              // show cursor
+
 #define RESET_FONT setFontAttributes(-1, -1, -1)
 
 const char *optionAdd[] = OPTION_ADD;             // create directory, file in data
@@ -51,7 +54,7 @@ void showDirectoryTree(char *);
 void listDirectory(char *);
 void removeFileOrDir(char *);
 void addFileOrDir(char *);
-const char **getOption(char *);
+const char **getFullOption(char *);
 void *getOptionHandler(char *);
 
 // Setting Window
@@ -111,14 +114,13 @@ int StartWindow(int argc, char **argv)
     // found option
     if (argc == 1)
     {
-        printf("\x1b[?25l\x1b[H\x1b[J"); // hide cursor, move it to HOME and delete right of cousor pos
-
+        T_CLEAR;
         // setFontAttributes(0, 31, 42);
         // printf("aaa\n");
         // RESET_FONT;
 
-        printf("\x1b[?25h"); // show cursor
-        return 0;            // Enter Game
+        TC_END;
+        return 0; // Enter Game
     }
     else if (argc == 2)
     {
@@ -133,12 +135,33 @@ int StartWindow(int argc, char **argv)
     else
     {
         puts("Warning: Too many arguments");
-        pfunc(argv[2]);
         exit(EXIT_FAILURE);
     }
 }
 
-const char **getOption(char *_option)
+void executeOption(int _optionc, char **_option)
+{
+    void (*pfunc)() = getOptionHandler(_option[0]);
+    // found option
+    if (_optionc == 1)
+    {
+        pfunc(OPTION_NULL);
+        exit(EXIT_SUCCESS);
+    }
+    else if (_optionc == 2)
+    {
+        pfunc(_option[1]);
+        exit(EXIT_SUCCESS);
+    }
+    else
+    {
+        puts("Warning: Too many arguments");
+        pfunc(_option[1]);
+        exit(EXIT_FAILURE);
+    }
+}
+
+const char **getFullOption(char *_option)
 {
     if (_option == OPTION_INVAIL)
     {
@@ -160,7 +183,7 @@ const char **getOption(char *_option)
 
 void *getOptionHandler(char *_fullOption)
 {
-    const char **matchingOption = getOption(_fullOption);
+    const char **matchingOption = getFullOption(_fullOption);
     if (matchingOption == optionAdd)
     {
         return addFileOrDir;
@@ -210,7 +233,7 @@ void showHelp(char *_option)
          "-t <PATH>, tree <PATH>, TREE <PATH> - show grahical struct of directory",
          "-s, settings, SETTINGS - user configs"};
 
-    const char **matchingOption = getOption(_option);
+    const char **matchingOption = getFullOption(_option);
     if (matchingOption == OPTION_INVAIL)
     {
         puts("Usage:");
@@ -309,9 +332,18 @@ typedef struct
     int HEIGHT;
 } _Settings;
 
+_Settings Settings = {"-1"};
+
 void showSettingsWindow()
 {
-    printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n");
+    T_CLEAR;
+    // FILE fp;
+    char *s;
+    printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Font, Settings.WIHGT, Settings.HEIGHT);
+    printf("<Option> <Object>\tSPACE between <Option> and <Object>\n");
+    TC_END;
+
+    scanf_s("%s", s);
 }
 
 void SetWindowSize(int width, int height)
