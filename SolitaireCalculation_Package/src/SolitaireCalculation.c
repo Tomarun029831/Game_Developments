@@ -5,7 +5,6 @@
 
 #define OPTION_AMOUNT 6
 #define OPTION_ALIAS 3
-
 #define OPTION_NULL "NONOPTION"
 #define OPTION_INVAIL NULL
 #define OPTION_ADD {"-a", "add", "ADD"}             // create directory, file in data
@@ -15,18 +14,18 @@
 #define OPTION_SETTING {"-s", "setting", "SETTING"} // User configs
 #define OPTION_TREE {"-t", "tree", "TREE"}          // show struct of path in data
 
-const char *optionADD[] = OPTION_ADD;             // create directory, file in data
-const char *optionDIRECTORY[] = OPTION_DIRECTOTY; // show file or subdirectory in data
-const char *optionHELP[] = OPTION_HELP;           // help option
-const char *optionREMOVE[] = OPTION_REMOVE;       // remove directory, file in data
-const char *optionSETTING[] = OPTION_SETTING;     // User configs
-const char *optionTREE[] = OPTION_TREE;           // show struct of path in data
-const char **callOptions[] = {optionADD, optionDIRECTORY, optionHELP, optionREMOVE, optionTREE, optionSETTING};
+const char *optionAdd[] = OPTION_ADD;             // create directory, file in data
+const char *optionDirectory[] = OPTION_DIRECTOTY; // show file or subdirectory in data
+const char *optionHelp[] = OPTION_HELP;           // help option
+const char *optionRemove[] = OPTION_REMOVE;       // remove directory, file in data
+const char *optionSettings[] = OPTION_SETTING;    // User configs
+const char *optionTree[] = OPTION_TREE;           // show struct of path in data
+const char **optionHandlers[] = {optionAdd, optionDirectory, optionHelp, optionRemove, optionTree, optionSettings};
 
 // 'S', 'D', 'H', 'C'
-int ranks[] = {'S', 'D', 'H', 'C'};
+int cardRanks[] = {'S', 'D', 'H', 'C'};
 // 'A', '2', '3', '4', '5', '6', '7', '8', '9', "10", 'J', 'Q', 'K'
-int suits[] = {'A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'};
+int cardSuits[] = {'A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'};
 typedef struct
 {
     char *suit; // 'S', 'D', 'H', 'C'
@@ -37,26 +36,39 @@ typedef struct
     Card *next;
 } Stock;
 
+// Initialize
+void initializeWindow()
+{
+}
+
+void initializeGame()
+{
+}
+
+void initializeSettings()
+{
+}
+
 // Options
-void HELP(char *);
-void TREE(char *);
-void DIRECTORY(char *);
-void REMOVE(char *);
-void ADD(char *);
-const char **CHECKOPTION(char *);
-void *RETURN_FUNC_OPTION(char *);
+void showHelp(char *);
+void showDirectoryTree(char *);
+void listDirectory(char *);
+void removeFileOrDir(char *);
+void addFileOrDir(char *);
+const char **getOption(char *);
+void *getOptionHandler(char *);
 
 // Setting Window
-void SETTINGWINDOW();
-void SETWINDOWSIZE(int, int);
-void SETFONT(int, int, int);
+void showSettingsWindow();
+void SetWindowSize(int, int);
+void setFontAttributes(int, int, int);
 
 // To Enter Game
 int StartWindow(int, char **);
-void opERROR();
+void handleError();
 
 // Enter Game
-void SolitaireCalculation();
+void solitaireCalculation();
 
 /*
 
@@ -86,30 +98,33 @@ ed
 int main(int argc, char **argv)
 {
     StartWindow(argc, argv);
-    SolitaireCalculation();
-
+    solitaireCalculation();
+    setFontAttributes(-1, -1, -1);
     return 0;
 }
 
-void SolitaireCalculation()
+void solitaireCalculation()
 {
     puts("SolitaireCalculation starts");
 }
 
 int StartWindow(int argc, char **argv)
 {
-    void (*pfunc)() = RETURN_FUNC_OPTION(argv[1]);
+    void (*pfunc)() = getOptionHandler(argv[1]);
     // found option
     if (argc == 1)
     {
         printf("\x1b[?25l\x1b[H\x1b[J"); // hide cursor, move it to HOME and delete right of cousor pos
 
-        printf("\x1b[1;44;33m青文字、黄色背景\x1b[0m\n");
-        printf("\x1b[44;1;33m青文字、黄色背景\x1b[0m\n");
-        printf("\x1b[0;44;33m青文字、黄色背景\x1b[0m\n");
+        // printf("\x1b[1;44;33m青文字、黄色背景\x1b[0m\n");
+        // printf("\x1b[44;1;33m青文字、黄色背景\x1b[0m\n");
+        // printf("\x1b[0;44;33m青文字、黄色背景\x1b[0m\n");
 
-        printf("\x1b[1;31m太字の赤色文字\x1b[0m\n");
-        printf("\x1b[4;32m下線付き緑色文字\x1b[0m\n");
+        // printf("\x1b[1;31m太字の赤色文字\x1b[0m\n");
+        // printf("\x1b[4;32m下線付き緑色文字\x1b[0m\n");
+
+        setFontAttributes(33, 44, 1);
+        printf("aaa\n");
 
         printf("\x1b[?25h"); // show cursor
         return 0;            // Enter Game
@@ -132,7 +147,7 @@ int StartWindow(int argc, char **argv)
     }
 }
 
-const char **CHECKOPTION(char *_option)
+const char **getOption(char *_option)
 {
     if (_option == OPTION_INVAIL)
     {
@@ -144,47 +159,47 @@ const char **CHECKOPTION(char *_option)
         {
             for (int alias = 0; alias < OPTION_ALIAS; alias++)
             {
-                if (strcmp(_option, callOptions[option][alias]) == 0)
-                    return callOptions[option];
+                if (strcmp(_option, optionHandlers[option][alias]) == 0)
+                    return optionHandlers[option];
             }
         }
         return OPTION_INVAIL;
     }
 }
 
-void *RETURN_FUNC_OPTION(char *_fullOption)
+void *getOptionHandler(char *_fullOption)
 {
-    const char **fullOption = CHECKOPTION(_fullOption);
-    if (fullOption == optionADD)
+    const char **matchingOption = getOption(_fullOption);
+    if (matchingOption == optionAdd)
     {
-        return ADD;
+        return addFileOrDir;
     }
-    else if (fullOption == optionDIRECTORY)
+    else if (matchingOption == optionDirectory)
     {
-        return DIRECTORY;
+        return listDirectory;
     }
-    else if (fullOption == optionHELP)
+    else if (matchingOption == optionHelp)
     {
-        return HELP;
+        return showHelp;
     }
-    else if (fullOption == optionREMOVE)
+    else if (matchingOption == optionRemove)
     {
-        return REMOVE;
+        return removeFileOrDir;
     }
-    else if (fullOption == optionTREE)
+    else if (matchingOption == optionTree)
     {
-        return TREE;
+        return showDirectoryTree;
     }
-    else if (fullOption == optionSETTING)
+    else if (matchingOption == optionSettings)
     {
-        return SETTINGWINDOW;
+        return showSettingsWindow;
     }
-    return opERROR;
+    return handleError;
 }
 
-void HELP(char *_option)
+void showHelp(char *_option)
 {
-    const char *describeOption[OPTION_AMOUNT] =
+    const char *optionDescriptions[OPTION_AMOUNT] =
         {"-a <NAME>, add <NAME>, ADD <NAME> - create new file for saving processing of game",
          "-d <PATH>, dir <PATH>, DIR <PATH> - show files and subdirectories in directory of argument",
          "-h <OPTION>, help <OPTION>, HELP <OPTION> - show usage",
@@ -192,53 +207,53 @@ void HELP(char *_option)
          "-t <PATH>, tree <PATH>, TREE <PATH> - show grahical struct of directory",
          "-s, setting, SETTING - user configs"};
 
-    const char **fullOption = CHECKOPTION(_option);
-    if (fullOption == OPTION_INVAIL)
+    const char **matchingOption = getOption(_option);
+    if (matchingOption == OPTION_INVAIL)
     {
         puts("Usage:");
         for (int option = 0; option < OPTION_AMOUNT; option++)
         {
-            printf("\t%s\n", describeOption[option]);
+            printf("\t%s\n", optionDescriptions[option]);
         }
     }
     else
     {
         puts("Usage:");
-        if (fullOption == optionADD)
+        if (matchingOption == optionAdd)
         {
-            printf("\t%s", describeOption[0]);
+            printf("\t%s", optionDescriptions[0]);
         }
-        else if (fullOption == optionDIRECTORY)
+        else if (matchingOption == optionDirectory)
         {
-            printf("\t%s", describeOption[1]);
+            printf("\t%s", optionDescriptions[1]);
         }
-        else if (fullOption == optionHELP)
+        else if (matchingOption == optionHelp)
         {
-            printf("\t%s", describeOption[2]);
+            printf("\t%s", optionDescriptions[2]);
         }
-        else if (fullOption == optionREMOVE)
+        else if (matchingOption == optionRemove)
         {
-            printf("\t%s", describeOption[3]);
+            printf("\t%s", optionDescriptions[3]);
         }
-        else if (fullOption == optionTREE)
+        else if (matchingOption == optionTree)
         {
-            printf("\t%s", describeOption[4]);
+            printf("\t%s", optionDescriptions[4]);
         }
-        else if (fullOption == optionSETTING)
+        else if (matchingOption == optionSettings)
         {
-            printf("\t%s", describeOption[5]);
+            printf("\t%s", optionDescriptions[5]);
         }
     }
 }
 
-void TREE(char *path) { printf("TREE called with %s", path); }
-void DIRECTORY(char *path) { printf("DIRECRORY called with %s", path); }
-void REMOVE(char *path) { printf("REMOVE called with %s", path); }
-void ADD(char *path) { printf("ADD called with %s", path); }
+void showDirectoryTree(char *path) { printf("TREE called with %s", path); }
+void listDirectory(char *path) { printf("DIRECRORY called with %s", path); }
+void removeFileOrDir(char *path) { printf("REMOVE called with %s", path); }
+void addFileOrDir(char *path) { printf("ADD called with %s", path); }
 
-void SETTINGWINDOW() { printf("SETTING called"); }
+void showSettingsWindow() { printf("SETTING called"); }
 
-void SETWINDOWSIZE(int width, int height)
+void SetWindowSize(int width, int height)
 {
 }
 
@@ -297,11 +312,25 @@ void SETWINDOWSIZE(int width, int height)
 
 */
 
-void SETFONT(int foreground, int background_color, int attritude)
+// 30 <= foreground <= 37 or 90 <= foreground <= 97 and 40 <= background <= 47 or 100 <= background <= 107 and 0 <= attritude <= 9
+void setFontAttributes(int foreground, int background, int style)
 {
+    char font[20];
+    if (((30 <= foreground && foreground <= 37) || (90 <= foreground && foreground <= 97)) &&
+        ((40 <= background && background <= 47) || (100 <= background && background <= 107)) &&
+        (0 <= style && style <= 9))
+    {
+        snprintf(font, sizeof(font), "\x1b[%d;%d;%dm", style, foreground, background);
+    }
+    else
+    {
+        snprintf(font, sizeof(font), "\x1b[0m");
+    }
+
+    printf("%s", font);
 }
 
-void opERROR()
+void handleError()
 {
     puts("Usage: .\\SolitaireCalculation.exe <option>\noption - \"help\"");
     exit(EXIT_FAILURE);
