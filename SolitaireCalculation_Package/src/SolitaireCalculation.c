@@ -7,12 +7,12 @@
 #define OPTION_ALIAS 3
 #define OPTION_NULL "NONOPTION"
 #define OPTION_INVAIL NULL
-#define OPTION_ADD {"-a", "add", "ADD"}             // create directory, file in data
-#define OPTION_DIRECTOTY {"-d", "dir", "DIR"}       // show file or subdirectory in data
-#define OPTION_HELP {"-h", "help", "HELP"}          // help option
-#define OPTION_REMOVE {"-rm", "remove", "REMOVE"}   // remove directory, file in data
-#define OPTION_SETTING {"-s", "setting", "SETTING"} // User configs
-#define OPTION_TREE {"-t", "tree", "TREE"}          // show struct of path in data
+#define OPTION_ADD {"-a", "add", "ADD"}               // create directory, file in data
+#define OPTION_DIRECTOTY {"-d", "dir", "DIR"}         // show file or subdirectory in data
+#define OPTION_HELP {"-h", "help", "HELP"}            // help option
+#define OPTION_REMOVE {"-rm", "remove", "REMOVE"}     // remove directory, file in data
+#define OPTION_SETTING {"-s", "settings", "SETTINGS"} // User configs
+#define OPTION_TREE {"-t", "tree", "TREE"}            // show struct of path in data
 
 #define RESET_FONT setFontAttributes(-1, -1, -1)
 
@@ -95,6 +95,7 @@ int main(int argc, char **argv)
 {
     StartWindow(argc, argv);
     solitaireCalculation();
+
     RESET_FONT;
     return 0;
 }
@@ -112,9 +113,9 @@ int StartWindow(int argc, char **argv)
     {
         printf("\x1b[?25l\x1b[H\x1b[J"); // hide cursor, move it to HOME and delete right of cousor pos
 
-        setFontAttributes(3, 31, 42);
-        printf("aaa\n");
-        RESET_FONT;
+        // setFontAttributes(0, 31, 42);
+        // printf("aaa\n");
+        // RESET_FONT;
 
         printf("\x1b[?25h"); // show cursor
         return 0;            // Enter Game
@@ -207,7 +208,7 @@ void showHelp(char *_option)
          "-h <OPTION>, help <OPTION>, HELP <OPTION> - show usage",
          "-rm <PATH>, remove <PATH>, REMOVE <PATH> - delete file of argument",
          "-t <PATH>, tree <PATH>, TREE <PATH> - show grahical struct of directory",
-         "-s, setting, SETTING - user configs"};
+         "-s, settings, SETTINGS - user configs"};
 
     const char **matchingOption = getOption(_option);
     if (matchingOption == OPTION_INVAIL)
@@ -253,70 +254,13 @@ void listDirectory(char *path) { printf("DIRECRORY called with %s", path); }
 void removeFileOrDir(char *path) { printf("REMOVE called with %s", path); }
 void addFileOrDir(char *path) { printf("ADD called with %s", path); }
 
-void showSettingsWindow() { printf("SETTING called"); }
+void showSettingsWindow()
+{
+}
 
 void SetWindowSize(int width, int height)
 {
 }
-
-/*
-
-0 — リセット（Reset）
-1 — 太字（Bold）
-2 — 薄い文字（Faint）
-3 — 斜体（Italic）
-4 — 下線（Underline）
-5 — 点滅（Blink）
-6 — 速い点滅（Rapid Blink）
-7 — 反転（Inverse）
-8 — 非表示（Hidden）
-9 — 打ち消し線（Strike-through）
-
-フォアグラウンド（文字色）コード
-30  — 黒
-31  — 赤
-32  — 緑
-33  — 黄
-34  — 青
-35  — マゼンタ
-36  — シアン
-37  — 白
-
-39 - reset
-
-バックグラウンド（背景色）コード
-40  — 黒
-41  — 赤
-42  — 緑
-43  — 黄
-44  — 青
-45  — マゼンタ
-46  — シアン
-47  — 白
-
-49 - reset
-
-明るいフォアグラウンド（文字色）コード
-90  — 明るい黒（暗い灰色）
-91  — 明るい赤
-92  — 明るい緑
-93  — 明るい黄
-94  — 明るい青
-95  — 明るいマゼンタ
-96  — 明るいシアン
-97  — 明るい白
-
-明るいバックグラウンド（背景色）コード
-100 — 明るい黒（暗い灰色）
-101 — 明るい赤
-102 — 明るい緑
-103 — 明るい黄
-104 — 明るい青
-105 — 明るいマゼンタ
-106 — 明るいシアン
-107 — 明るい白
-
-*/
 
 // 0 <= style <= 9, 30 <= foreground <= 37 or 90 <= foreground <= 97, 40 <= background <= 47 or 100 <= background <= 107
 void setFontAttributes(int style, int foreground, int background)

@@ -1,0 +1,10 @@
+ID:USER0
+WINDOW
+{
+    FONT:PreSet1
+    SIZE
+    {
+        WIHGT:1920
+        HEIGHT:1080
+    }
+}

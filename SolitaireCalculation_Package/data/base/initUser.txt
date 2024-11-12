@@ -1,0 +1,11 @@
+ID:
+WINDOW
+{
+    FONT:DEFAULT
+
+    SIZE
+    {
+        WIHGT:1920
+        HEIGHT:1080
+    }
+}
