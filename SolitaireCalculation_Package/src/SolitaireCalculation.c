@@ -8,19 +8,19 @@
 
 #define OPTION_NULL "NONOPTION"
 #define OPTION_INVAIL NULL
-#define OPTION_HELP {"-h", "help", "HELP"}          // help option
-#define OPTION_TREE {"-t", "tree", "TREE"}          // show struct of path in data
-#define OPTION_DIRECTOTY {"-d", "dir", "DIR"}       // show file or subdirectory in data
-#define OPTION_REMOVE {"-rm", "remove", "REMOVE"}   // remove directory, file in data
 #define OPTION_ADD {"-a", "add", "ADD"}             // create directory, file in data
+#define OPTION_DIRECTOTY {"-d", "dir", "DIR"}       // show file or subdirectory in data
+#define OPTION_HELP {"-h", "help", "HELP"}          // help option
+#define OPTION_REMOVE {"-rm", "remove", "REMOVE"}   // remove directory, file in data
 #define OPTION_SETTING {"-s", "setting", "SETTING"} // User configs
+#define OPTION_TREE {"-t", "tree", "TREE"}          // show struct of path in data
 
-const char *optionADD[] = OPTION_ADD;
-const char *optionDIRECTORY[] = OPTION_DIRECTOTY;
-const char *optionHELP[] = OPTION_HELP;
-const char *optionREMOVE[] = OPTION_REMOVE;
-const char *optionTREE[] = OPTION_TREE;
-const char *optionSETTING[] = OPTION_SETTING;
+const char *optionADD[] = OPTION_ADD;             // create directory, file in data
+const char *optionDIRECTORY[] = OPTION_DIRECTOTY; // show file or subdirectory in data
+const char *optionHELP[] = OPTION_HELP;           // help option
+const char *optionREMOVE[] = OPTION_REMOVE;       // remove directory, file in data
+const char *optionSETTING[] = OPTION_SETTING;     // User configs
+const char *optionTREE[] = OPTION_TREE;           // show struct of path in data
 const char **callOptions[] = {optionADD, optionDIRECTORY, optionHELP, optionREMOVE, optionTREE, optionSETTING};
 
 // 'S', 'D', 'H', 'C'
@@ -98,7 +98,6 @@ void SolitaireCalculation()
 
 int StartWindow(int argc, char **argv)
 {
-    char *callOptions[][OPTION_ALIAS] = {OPTION_ADD, OPTION_DIRECTOTY, OPTION_HELP, OPTION_REMOVE, OPTION_TREE};
     void (*pfunc)() = RETURN_FUNC_OPTION(argv[1]);
     // found option
     if (argc == 1)
