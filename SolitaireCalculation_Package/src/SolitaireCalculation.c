@@ -5,7 +5,7 @@
 #include <stdlib.h> // exit, random
 #include <time.h>   // time
 
-#define DEFAULT_USER "../data/base/defaultUser"
+#define MAX_LENGTH_PATH 256
 
 #define OPTION_AMOUNT 6
 #define OPTION_ALIAS 3
@@ -264,49 +264,20 @@ void addFileOrDir(char *path) { printf("ADD called with %s", path); }
 
 typedef struct
 {
+    char *Style;
+    char *Foreground;
+    char *Background;
+} ColorStyle;
+
+typedef struct
+{
     char *name;
-    struct _Showup
-    {
-        char *Style;
-        char *Foreground;
-        char *Background;
-    } ShowUp;
-
-    struct ms
-    {
-        char *Style;
-        char *Foreground;
-        char *Background;
-    } Makestack;
-
-    struct dc
-    {
-        char *Style;
-        char *Foreground;
-        char *Background;
-    } Discard;
-
-    struct ds
-    {
-        char *Style;
-        char *Foreground;
-        char *Background;
-    } Disstack;
-
-    struct ud
-    {
-        char *Style;
-        char *Foreground;
-        char *Background;
-    } Undo;
-
-    struct ed
-    {
-        char *Style;
-        char *Foreground;
-        char *Background;
-    } Endgame;
-
+    ColorStyle ShowUp;
+    ColorStyle Makestack;
+    ColorStyle Discard;
+    ColorStyle Disstack;
+    ColorStyle Undo;
+    ColorStyle Endgame;
 } _Font;
 
 typedef struct
@@ -317,18 +288,18 @@ typedef struct
     int HEIGHT;
 } _Settings;
 
-_Settings Settings = {"-1"};
+_Settings Settings;
 
 void initializeSettings()
 {
-    T_CLEAR;
     const char *const defaultUserPath = "../data/base/defaultUser";
-    // FILE *fp = fopen(defaultUserPath, "r");
-    // if (fp == NULL)
-    // {
-    //     perror("openfile");
-    //     exit(EXIT_FAILURE);
-    // }
+    char Path[MAX_LENGTH_PATH];
+    strcpy(Path, defaultUserPath);
+    FILE *fp = fopen(strcat(Path, "/Settings.txt"), "r");
+    if (fp == NULL)
+    {
+        exit(EXIT_FAILURE);
+    }
     struct dirent *entry;
     DIR *dir = opendir(defaultUserPath);
     if (dir == NULL)
@@ -344,12 +315,8 @@ void initializeSettings()
         }
     }
 
-    // fclose(fp);
+    fclose(fp);
     closedir(dir);
-
-    // printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Font, Settings.WIHGT, Settings.HEIGHT);
-
-    TC_END;
 }
 
 void initializeWindow()
