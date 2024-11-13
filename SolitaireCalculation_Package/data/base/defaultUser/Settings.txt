@@ -1,7 +1,7 @@
 ID:-1
 WINDOW
 {
-    FONT:DEFAULT
+    FONT:default
 
     SIZE
     {

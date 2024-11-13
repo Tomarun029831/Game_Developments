@@ -1,7 +1,11 @@
 #include <stdio.h>
+#include <direct.h> // mkdir, rmdir
+#include <dirent.h> // directory search
 #include <string.h> // strcmp
 #include <stdlib.h> // exit, random
 #include <time.h>   // time
+
+#define DEFAULT_USER "../data/base/defaultUser"
 
 #define OPTION_AMOUNT 6
 #define OPTION_ALIAS 3
@@ -42,10 +46,8 @@ typedef struct
 
 // Initialize
 void initializeWindow();
-
-void initializeGame();
-
 void initializeSettings();
+void initializeGame();
 
 // Options
 void showHelp(const char *);
@@ -96,8 +98,10 @@ ed
 
 int main(int argc, char **argv)
 {
+    initializeSettings();
+    initializeWindow();
 
-    StartWindow((const int)argc - 1, (const char **)&argv[1]);
+    // StartWindow((const int)argc - 1, (const char **)&argv[1]);
     solitaireCalculation();
 
     RESET_FONT;
@@ -106,7 +110,9 @@ int main(int argc, char **argv)
 
 void solitaireCalculation()
 {
-    puts("SolitaireCalculation starts");
+    initializeGame();
+
+    puts("SolitaireCalculation starts\n");
 }
 
 void StartWindow(const int _optionc, const char **_options)
@@ -198,15 +204,7 @@ const char **getFullOption(const char *_option)
     }
 }
 
-void initializeWindow()
-{
-}
-
 void initializeGame()
-{
-}
-
-void initializeSettings()
 {
 }
 
@@ -320,6 +318,43 @@ typedef struct
 } _Settings;
 
 _Settings Settings = {"-1"};
+
+void initializeSettings()
+{
+    T_CLEAR;
+    const char *const defaultUserPath = "../data/base/defaultUser";
+    // FILE *fp = fopen(defaultUserPath, "r");
+    // if (fp == NULL)
+    // {
+    //     perror("openfile");
+    //     exit(EXIT_FAILURE);
+    // }
+    struct dirent *entry;
+    DIR *dir = opendir(defaultUserPath);
+    if (dir == NULL)
+    {
+        exit(EXIT_FAILURE);
+    }
+
+    while ((entry = readdir(dir)) != NULL)
+    {
+        if (strcmp(entry->d_name, "font") == 0)
+        {
+            printf("%s\n", entry->d_name);
+        }
+    }
+
+    // fclose(fp);
+    closedir(dir);
+
+    // printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Font, Settings.WIHGT, Settings.HEIGHT);
+
+    TC_END;
+}
+
+void initializeWindow()
+{
+}
 
 void showSettingsWindow()
 {
