@@ -5,8 +5,7 @@
 
 #define OPTION_AMOUNT 6
 #define OPTION_ALIAS 3
-#define OPTION_NULL "NONOPTION"
-#define OPTION_INVAIL NULL
+#define OPTION_FAILED NULL
 #define OPTION_ADD {"-a", "add", "ADD"}               // create directory, file in data
 #define OPTION_DIRECTOTY {"-d", "dir", "DIR"}         // show file or subdirectory in data
 #define OPTION_HELP {"-h", "help", "HELP"}            // help option
@@ -49,13 +48,13 @@ void initializeGame();
 void initializeSettings();
 
 // Options
-void showHelp(char *);
+void showHelp(const char *);
 void showDirectoryTree(char *);
 void listDirectory(char *);
 void removeFileOrDir(char *);
 void addFileOrDir(char *);
-const char **getFullOption(char *);
-void *getOptionHandler(char *);
+const char **getFullOption(const char *);
+void *getOptionHandler(const char *);
 
 // Setting Window
 void showSettingsWindow();
@@ -97,7 +96,7 @@ ed
 int main(int argc, char **argv)
 {
 
-    StartWindow(argc, &argv[1]);
+    StartWindow(argc - 1, &argv[1]);
     solitaireCalculation();
 
     RESET_FONT;
@@ -111,9 +110,8 @@ void solitaireCalculation()
 
 void StartWindow(int _optionc, char **_options)
 {
-    void (*pfunc)() = getOptionHandler(_options[0]);
     // found option
-    if (_optionc == 1)
+    if (_optionc == 0)
     {
         T_CLEAR;
 
@@ -123,20 +121,9 @@ void StartWindow(int _optionc, char **_options)
         TC_END;
         return; // Enter Game
     }
-    else if (_optionc == 2)
-    {
-        pfunc(OPTION_NULL);
-        exit(EXIT_SUCCESS);
-    }
-    else if (_optionc == 3)
-    {
-        pfunc(_options[2]);
-        exit(EXIT_SUCCESS);
-    }
     else
     {
-        puts("Warning: Too many arguments");
-        exit(EXIT_FAILURE);
+        executeOption(_optionc, _options);
     }
 }
 
@@ -146,7 +133,7 @@ void executeOption(int _optionc, char **_option)
     // found option
     if (_optionc == 1)
     {
-        pfunc(OPTION_NULL);
+        pfunc(OPTION_FAILED);
         exit(EXIT_SUCCESS);
     }
     else if (_optionc == 2)
@@ -156,17 +143,16 @@ void executeOption(int _optionc, char **_option)
     }
     else
     {
-        puts("Warning: Too many arguments");
-        pfunc(_option[1]);
+        puts("Warning: Invail arguments");
         exit(EXIT_FAILURE);
     }
 }
 
-const char **getFullOption(char *_option)
+const char **getFullOption(const char *_option)
 {
-    if (_option == OPTION_INVAIL)
+    if (_option == OPTION_FAILED)
     {
-        return OPTION_INVAIL;
+        return OPTION_FAILED;
     }
     else
     {
@@ -178,13 +164,13 @@ const char **getFullOption(char *_option)
                     return optionHandlers[option];
             }
         }
-        return OPTION_INVAIL;
+        return OPTION_FAILED;
     }
 }
 
-void *getOptionHandler(char *_fullOption)
+void *getOptionHandler(const char *_option)
 {
-    const char **matchingOption = getFullOption(_fullOption);
+    const char **matchingOption = getFullOption(_option);
     if (matchingOption == optionAdd)
     {
         return addFileOrDir;
@@ -224,7 +210,7 @@ void initializeSettings()
 {
 }
 
-void showHelp(char *_option)
+void showHelp(const char *_option)
 {
     char *optionDescriptions[OPTION_AMOUNT] =
         {"-a <NAME>, add <NAME>, ADD <NAME> - create new file for saving processing of game",
@@ -235,7 +221,7 @@ void showHelp(char *_option)
          "-s, settings, SETTINGS - user configs"};
 
     const char **matchingOption = getFullOption(_option);
-    if (matchingOption == OPTION_INVAIL)
+    if (matchingOption == OPTION_FAILED)
     {
         puts("Usage:");
         for (int option = 0; option < OPTION_AMOUNT; option++)
