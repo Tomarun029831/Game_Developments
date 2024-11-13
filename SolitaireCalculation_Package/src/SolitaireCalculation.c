@@ -230,29 +230,36 @@ void showHelp(const char *_option)
     else
     {
         puts("Usage:");
-        if (matchingOption == optionAdd)
+        // if (matchingOption == optionAdd)
+        // {
+        //     printf("\t%s", optionDescriptions[0]);
+        // }
+        // else if (matchingOption == optionDirectory)
+        // {
+        //     printf("\t%s", optionDescriptions[1]);
+        // }
+        // else if (matchingOption == optionHelp)
+        // {
+        //     printf("\t%s", optionDescriptions[2]);
+        // }
+        // else if (matchingOption == optionRemove)
+        // {
+        //     printf("\t%s", optionDescriptions[3]);
+        // }
+        // else if (matchingOption == optionTree)
+        // {
+        //     printf("\t%s", optionDescriptions[4]);
+        // }
+        // else if (matchingOption == optionSettings)
+        // {
+        //     printf("\t%s", optionDescriptions[5]);
+        // }
+        for (int i = 0; i < OPTION_AMOUNT; i++)
         {
-            printf("\t%s", optionDescriptions[0]);
-        }
-        else if (matchingOption == optionDirectory)
-        {
-            printf("\t%s", optionDescriptions[1]);
-        }
-        else if (matchingOption == optionHelp)
-        {
-            printf("\t%s", optionDescriptions[2]);
-        }
-        else if (matchingOption == optionRemove)
-        {
-            printf("\t%s", optionDescriptions[3]);
-        }
-        else if (matchingOption == optionTree)
-        {
-            printf("\t%s", optionDescriptions[4]);
-        }
-        else if (matchingOption == optionSettings)
-        {
-            printf("\t%s", optionDescriptions[5]);
+            if (matchingOption == optionHandlers[i])
+            {
+                printf("\t%s", optionDescriptions[i]);
+            }
         }
     }
 }
@@ -267,17 +274,17 @@ typedef struct
     char *Style;
     char *Foreground;
     char *Background;
-} ColorStyle;
+} ColorAttritude;
 
 typedef struct
 {
     char *name;
-    ColorStyle ShowUp;
-    ColorStyle Makestack;
-    ColorStyle Discard;
-    ColorStyle Disstack;
-    ColorStyle Undo;
-    ColorStyle Endgame;
+    ColorAttritude ShowUp;
+    ColorAttritude Makestack;
+    ColorAttritude Discard;
+    ColorAttritude Disstack;
+    ColorAttritude Undo;
+    ColorAttritude Endgame;
 } _Font;
 
 typedef struct
@@ -293,16 +300,17 @@ _Settings Settings;
 void initializeSettings()
 {
     const char *const defaultUserPath = "../data/base/defaultUser";
-    char Path[MAX_LENGTH_PATH];
+    char Path[256];
     strcpy(Path, defaultUserPath);
-    FILE *fp = fopen(strcat(Path, "/Settings.txt"), "r");
-    if (fp == NULL)
-    {
-        exit(EXIT_FAILURE);
-    }
+
     struct dirent *entry;
     DIR *dir = opendir(defaultUserPath);
     if (dir == NULL)
+    {
+        exit(EXIT_FAILURE);
+    }
+    FILE *fp;
+    if (fp == NULL)
     {
         exit(EXIT_FAILURE);
     }
@@ -311,7 +319,12 @@ void initializeSettings()
     {
         if (strcmp(entry->d_name, "font") == 0)
         {
+            fp = fopen(strcat(Path, "/font/default.txt"), "r");
             printf("%s\n", entry->d_name);
+        }
+        else if (strcmp(entry->d_name, "Settings.txt") == 0)
+        {
+            fp = fopen(strcat(Path, "/Settings.txt"), "r");
         }
     }
 
