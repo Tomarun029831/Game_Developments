@@ -57,7 +57,7 @@ void removeFileOrDir(char *);
 void addFileOrDir(char *);
 const char **getFullOption(const char *);
 void *getOptionHandler(const char *_option);
-void executeOption(const int, const char **);
+void executeOption(const char **);
 
 // Setting Window
 void showSettingsWindow();
@@ -65,7 +65,7 @@ void SetWindowSize(int, int);
 void setFontAttributes(int, int, int);
 
 // To Enter Game
-void StartWindow(const int, const char **);
+void StartWindow(const char **);
 void handleError();
 
 // Enter Game
@@ -101,7 +101,7 @@ int main(int argc, char **argv)
     initializeSettings();
     initializeWindow();
 
-    // StartWindow((const int)argc - 1, (const char **)&argv[1]);
+    StartWindow((const char **)&argv[1]);
     solitaireCalculation();
 
     RESET_FONT;
@@ -115,10 +115,10 @@ void solitaireCalculation()
     puts("SolitaireCalculation starts\n");
 }
 
-void StartWindow(const int _optionc, const char **_options)
+void StartWindow(const char **_optionv)
 {
     // found option
-    if (_optionc == 0)
+    if (_optionv[0] == NULL)
     {
         T_CLEAR;
 
@@ -130,27 +130,26 @@ void StartWindow(const int _optionc, const char **_options)
     }
     else
     {
-        executeOption(_optionc, _options);
+        executeOption(_optionv);
     }
 }
 
-void executeOption(const int _optionc, const char **_option)
+void executeOption(const char **_optionv)
 {
-    void (*handler)() = getOptionHandler(_option[0]);
-    if (_optionc == 1)
+    void (*handler)() = getOptionHandler(_optionv[0]);
+    if (_optionv[1] == OPTION_FAILED)
     {
         handler(OPTION_FAILED);
         exit(EXIT_SUCCESS);
     }
-    else if (_optionc == 2)
+    else if (_optionv[2] == OPTION_FAILED)
     {
-        handler(_option[1]);
+        handler(_optionv[1]);
         exit(EXIT_SUCCESS);
     }
     else
     {
-        puts("Warning: Invail arguments");
-        exit(EXIT_FAILURE);
+        handleError();
     }
 }
 
