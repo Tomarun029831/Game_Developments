@@ -55,7 +55,7 @@ void removeFileOrDir(char *);
 void addFileOrDir(char *);
 const char **getFullOption(const char *);
 void *getOptionHandler(const char *_option);
-const void executeOption(const int, const char **);
+void executeOption(const int, const char **);
 
 // Setting Window
 void showSettingsWindow();
@@ -128,7 +128,7 @@ void StartWindow(const int _optionc, const char **_options)
     }
 }
 
-const void executeOption(const int _optionc, const char **_option)
+void executeOption(const int _optionc, const char **_option)
 {
     void (*handler)() = getOptionHandler(_option[0]);
     if (_optionc == 1)
