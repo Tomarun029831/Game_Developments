@@ -63,7 +63,7 @@ void SetWindowSize(int, int);
 void setFontAttributes(int, int, int);
 
 // To Enter Game
-void StartWindow(int, char **);
+void StartWindow(const int, const char **);
 void handleError();
 
 // Enter Game
@@ -97,7 +97,7 @@ ed
 int main(int argc, char **argv)
 {
 
-    StartWindow(argc - 1, &argv[1]);
+    StartWindow((const int)argc - 1, (const char **)&argv[1]);
     solitaireCalculation();
 
     RESET_FONT;
@@ -109,7 +109,7 @@ void solitaireCalculation()
     puts("SolitaireCalculation starts");
 }
 
-void StartWindow(int _optionc, char **_options)
+void StartWindow(const int _optionc, const char **_options)
 {
     // found option
     if (_optionc == 0)
