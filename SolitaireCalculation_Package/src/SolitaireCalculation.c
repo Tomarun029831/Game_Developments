@@ -55,6 +55,7 @@ void removeFileOrDir(char *);
 void addFileOrDir(char *);
 const char **getFullOption(const char *);
 void *getOptionHandler(const char *);
+void executeOption(int, char **);
 
 // Setting Window
 void showSettingsWindow();
@@ -327,7 +328,7 @@ void showSettingsWindow()
     // FILE fp;
     char *s;
     printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Font, Settings.WIHGT, Settings.HEIGHT);
-    printf("<Option> <Object>\tSPACE between <Option> and <Object>\n");
+    printf("<Option> <Object>\tPut a SPACE between <Option> and <Object>\n");
     TC_END;
 
     scanf_s("%s", s);
