@@ -54,8 +54,8 @@ void listDirectory(char *);
 void removeFileOrDir(char *);
 void addFileOrDir(char *);
 const char **getFullOption(const char *);
-void *getOptionHandler(const char *);
-void executeOption(int, char **);
+void *getOptionHandler(const char *_option);
+const void executeOption(const int, const char **);
 
 // Setting Window
 void showSettingsWindow();
@@ -128,44 +128,23 @@ void StartWindow(int _optionc, char **_options)
     }
 }
 
-void executeOption(int _optionc, char **_option)
+const void executeOption(const int _optionc, const char **_option)
 {
-    void (*pfunc)() = getOptionHandler(_option[0]);
-    // found option
+    void (*handler)() = getOptionHandler(_option[0]);
     if (_optionc == 1)
     {
-        pfunc(OPTION_FAILED);
+        handler(OPTION_FAILED);
         exit(EXIT_SUCCESS);
     }
     else if (_optionc == 2)
     {
-        pfunc(_option[1]);
+        handler(_option[1]);
         exit(EXIT_SUCCESS);
     }
     else
     {
         puts("Warning: Invail arguments");
         exit(EXIT_FAILURE);
-    }
-}
-
-const char **getFullOption(const char *_option)
-{
-    if (_option == OPTION_FAILED)
-    {
-        return OPTION_FAILED;
-    }
-    else
-    {
-        for (int option = 0; option < OPTION_AMOUNT; option++)
-        {
-            for (int alias = 0; alias < OPTION_ALIAS; alias++)
-            {
-                if (strcmp(_option, optionHandlers[option][alias]) == 0)
-                    return optionHandlers[option];
-            }
-        }
-        return OPTION_FAILED;
     }
 }
 
@@ -197,6 +176,26 @@ void *getOptionHandler(const char *_option)
         return showSettingsWindow;
     }
     return handleError;
+}
+
+const char **getFullOption(const char *_option)
+{
+    if (_option == OPTION_FAILED)
+    {
+        return OPTION_FAILED;
+    }
+    else
+    {
+        for (int option = 0; option < OPTION_AMOUNT; option++)
+        {
+            for (int alias = 0; alias < OPTION_ALIAS; alias++)
+            {
+                if (strcmp(_option, optionHandlers[option][alias]) == 0)
+                    return optionHandlers[option];
+            }
+        }
+        return OPTION_FAILED;
+    }
 }
 
 void initializeWindow()
