@@ -277,18 +277,16 @@ _Settings Settings;
 
 void loadSettings(const char *const userName)
 {
+    const char *defaultUserPath = "../data/base/defaultUser";
+    const char *userPath = "../data/usr";
+
+    char margedPath[MAX_LENGTH_PATH];
+    char buffer;
+    char target[MAX_LENGTH_PATH] = "";
 
     printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Font, Settings.WIDTH, Settings.HEIGHT);
 
-    const char *const defaultUserPath = "../data/base/defaultUser";
-    const char *const userPath = "../data/usr";
-    char margedPath[MAX_LENGTH_PATH];
-    char buffer;
-    char buffer_2[2] = {0};
-    char target[MAX_LENGTH_PATH] = "";
-
     strcpy(margedPath, defaultUserPath);
-
     struct dirent *entry;
     DIR *dir = opendir(defaultUserPath);
     if (dir == NULL)
@@ -298,13 +296,10 @@ void loadSettings(const char *const userName)
     }
 
     FILE *fp = NULL;
-
     while ((entry = readdir(dir)) != NULL)
     {
-
         if (strcmp(entry->d_name, "Settings.txt") == 0)
         {
-
             strcat(margedPath, "/Settings.txt");
             fp = fopen(margedPath, "r");
             if (fp == NULL)
@@ -316,37 +311,37 @@ void loadSettings(const char *const userName)
 
             while ((buffer = fgetc(fp)) != EOF)
             {
-                buffer_2[0] = buffer;
-                buffer_2[1] = '\0';
-                strcat(target, buffer_2);
-                // printf("|%s|", target);
-
-                if (strcmp(target, "ID") == 0)
+                if (buffer == 'I' && fgetc(fp) == 'D' && fgetc(fp) == ':')
                 {
-                    strcpy(target, "");
-                    while ((buffer = fgetc(fp)) != '\n')
+                    while ((buffer = fgetc(fp)) != '\n' && buffer != EOF)
                     {
-                        buffer_2[0] = buffer;
-                        buffer_2[1] = '\0';
-
-                        if (buffer != ':' && buffer != '{' && buffer != '}')
+                        if (buffer != '{' && buffer != '}' && buffer != ':')
                         {
-                            strcat(target, buffer_2);
+                            size_t len = strlen(target);
+                            target[len] = buffer;
+                            target[len + 1] = '\0';
                         }
                     }
+
                     strcpy(Settings.Id, target);
                     break;
                 }
             }
             fclose(fp);
+            break;
         }
     }
 
-    // ディレクトリを閉じる
     closedir(dir);
 
-    // IDが設定されていない場合、デフォルト値を表示
-    printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Font, Settings.WIDTH, Settings.HEIGHT);
+    if (Settings.Id[0] == '\0')
+    {
+        printf("IDが設定されていません。\n");
+    }
+    else
+    {
+        printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Font, Settings.WIDTH, Settings.HEIGHT);
+    }
 }
 
 void loadFont(const char *const _font)
