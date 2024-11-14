@@ -4,7 +4,7 @@ WINDOW
     FONT:PreSet1
     SIZE
     {
-        WIHGT:1920
+        WIDTH:1920
         HEIGHT:1080
     }
 }

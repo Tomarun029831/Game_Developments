@@ -9,7 +9,7 @@
 
 #define OPTION_AMOUNT 6
 #define OPTION_ALIAS 3
-#define OPTION_FAILED NULL
+#define OPTION_FAILURE NULL
 #define OPTION_ADD {"-a", "add", "ADD"}               // create directory, file in data
 #define OPTION_DIRECTOTY {"-d", "dir", "DIR"}         // show file or subdirectory in data
 #define OPTION_HELP {"-h", "help", "HELP"}            // help option
@@ -46,7 +46,6 @@ typedef struct
 
 // Initialize
 void initializeWindow();
-void initializeSettings();
 void initializeGame();
 
 // Options
@@ -58,6 +57,10 @@ void addFileOrDir(char *);
 const char **getFullOption(const char *);
 void *getOptionHandler(const char *_option);
 void executeOption(const char **);
+
+// load settings
+void loadSettings(const char *const);
+void loadFont(const char *const _font);
 
 // Setting Window
 void showSettingsWindow();
@@ -98,10 +101,10 @@ ed
 
 int main(int argc, char **argv)
 {
-    initializeSettings();
+    loadSettings("../data/base/defaultUser");
     initializeWindow();
 
-    StartWindow((const char **)&argv[1]);
+    // StartWindow((const char **)&argv[1]);
     solitaireCalculation();
 
     RESET_FONT;
@@ -118,7 +121,7 @@ void solitaireCalculation()
 void StartWindow(const char **_optionv)
 {
     // found option
-    if (_optionv[0] == NULL)
+    if (_optionv[0] == OPTION_FAILURE)
     {
         T_CLEAR;
 
@@ -137,12 +140,12 @@ void StartWindow(const char **_optionv)
 void executeOption(const char **_optionv)
 {
     void (*handler)() = getOptionHandler(_optionv[0]);
-    if (_optionv[1] == OPTION_FAILED)
+    if (_optionv[1] == OPTION_FAILURE)
     {
-        handler(OPTION_FAILED);
+        handler(OPTION_FAILURE);
         exit(EXIT_SUCCESS);
     }
-    else if (_optionv[2] == OPTION_FAILED)
+    else if (_optionv[2] == OPTION_FAILURE)
     {
         handler(_optionv[1]);
         exit(EXIT_SUCCESS);
@@ -185,9 +188,9 @@ void *getOptionHandler(const char *_option)
 
 const char **getFullOption(const char *_option)
 {
-    if (_option == OPTION_FAILED)
+    if (_option == OPTION_FAILURE)
     {
-        return OPTION_FAILED;
+        return OPTION_FAILURE;
     }
     else
     {
@@ -199,7 +202,7 @@ const char **getFullOption(const char *_option)
                     return optionHandlers[option];
             }
         }
-        return OPTION_FAILED;
+        return OPTION_FAILURE;
     }
 }
 
@@ -218,7 +221,7 @@ void showHelp(const char *_option)
          "-s, settings, SETTINGS - user configs"};
 
     const char **matchingOption = getFullOption(_option);
-    if (matchingOption == OPTION_FAILED)
+    if (matchingOption == OPTION_FAILURE)
     {
         puts("Usage:");
         for (int option = 0; option < OPTION_AMOUNT; option++)
@@ -229,30 +232,6 @@ void showHelp(const char *_option)
     else
     {
         puts("Usage:");
-        // if (matchingOption == optionAdd)
-        // {
-        //     printf("\t%s", optionDescriptions[0]);
-        // }
-        // else if (matchingOption == optionDirectory)
-        // {
-        //     printf("\t%s", optionDescriptions[1]);
-        // }
-        // else if (matchingOption == optionHelp)
-        // {
-        //     printf("\t%s", optionDescriptions[2]);
-        // }
-        // else if (matchingOption == optionRemove)
-        // {
-        //     printf("\t%s", optionDescriptions[3]);
-        // }
-        // else if (matchingOption == optionTree)
-        // {
-        //     printf("\t%s", optionDescriptions[4]);
-        // }
-        // else if (matchingOption == optionSettings)
-        // {
-        //     printf("\t%s", optionDescriptions[5]);
-        // }
         for (int i = 0; i < OPTION_AMOUNT; i++)
         {
             if (matchingOption == optionHandlers[i])
@@ -288,47 +267,90 @@ typedef struct
 
 typedef struct
 {
-    char *Id;
+    char Id[MAX_LENGTH_PATH];
     _Font Font;
-    int WIHGT;
+    int WIDTH;
     int HEIGHT;
 } _Settings;
 
 _Settings Settings;
 
-void initializeSettings()
+void loadSettings(const char *const userName)
 {
+
+    printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Font, Settings.WIDTH, Settings.HEIGHT);
+
     const char *const defaultUserPath = "../data/base/defaultUser";
-    char Path[256];
-    strcpy(Path, defaultUserPath);
+    const char *const userPath = "../data/usr";
+    char margedPath[MAX_LENGTH_PATH];
+    char buffer;
+    char buffer_2[2] = {0};
+    char target[MAX_LENGTH_PATH] = "";
+
+    strcpy(margedPath, defaultUserPath);
 
     struct dirent *entry;
     DIR *dir = opendir(defaultUserPath);
     if (dir == NULL)
     {
+        perror("ディレクトリを開けませんでした");
         exit(EXIT_FAILURE);
     }
-    FILE *fp;
-    if (fp == NULL)
-    {
-        exit(EXIT_FAILURE);
-    }
+
+    FILE *fp = NULL;
 
     while ((entry = readdir(dir)) != NULL)
     {
-        if (strcmp(entry->d_name, "font") == 0)
+
+        if (strcmp(entry->d_name, "Settings.txt") == 0)
         {
-            fp = fopen(strcat(Path, "/font/default.txt"), "r");
-            printf("%s\n", entry->d_name);
-        }
-        else if (strcmp(entry->d_name, "Settings.txt") == 0)
-        {
-            fp = fopen(strcat(Path, "/Settings.txt"), "r");
+
+            strcat(margedPath, "/Settings.txt");
+            fp = fopen(margedPath, "r");
+            if (fp == NULL)
+            {
+                perror("ファイルを開けませんでした");
+                closedir(dir);
+                exit(EXIT_FAILURE);
+            }
+
+            while ((buffer = fgetc(fp)) != EOF)
+            {
+                buffer_2[0] = buffer;
+                buffer_2[1] = '\0';
+                strcat(target, buffer_2);
+                // printf("|%s|", target);
+
+                if (strcmp(target, "ID") == 0)
+                {
+                    strcpy(target, "");
+                    while ((buffer = fgetc(fp)) != '\n')
+                    {
+                        buffer_2[0] = buffer;
+                        buffer_2[1] = '\0';
+
+                        if (buffer != ':' && buffer != '{' && buffer != '}')
+                        {
+                            strcat(target, buffer_2);
+                        }
+                    }
+                    strcpy(Settings.Id, target);
+                    break;
+                }
+            }
+            fclose(fp);
         }
     }
 
-    fclose(fp);
+    // ディレクトリを閉じる
     closedir(dir);
+
+    // IDが設定されていない場合、デフォルト値を表示
+    printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Font, Settings.WIDTH, Settings.HEIGHT);
+}
+
+void loadFont(const char *const _font)
+{
 }
 
 void initializeWindow()
@@ -340,7 +362,7 @@ void showSettingsWindow()
     T_CLEAR;
     // FILE fp;
     char *s;
-    printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Font, Settings.WIHGT, Settings.HEIGHT);
+    printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Font, Settings.WIDTH, Settings.HEIGHT);
     printf("<Option> <Object>\tPut a SPACE between <Option> and <Object>\n");
     TC_END;
 
