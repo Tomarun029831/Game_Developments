@@ -1,4 +1,3 @@
-{
     ID  :-1
     PASSWORD  :abc
     WINDOW
@@ -10,4 +9,3 @@
             HEIGHT  :1080
         }
     }
-}
