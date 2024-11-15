@@ -63,7 +63,7 @@ void loadSettings(const char *const);
 void loadFont(const char *const _font);
 void colonOperater(char *, FILE *const);
 void enterBrackets(char *, FILE *const);
-void analyzeOperater(FILE *const _fp);
+void analyzeSettingsFile(FILE *const _fp);
 
 // Setting Window
 void showSettingsWindow();
@@ -105,6 +105,7 @@ ed
 int main(int argc, char **argv)
 {
     loadSettings("/defaultUser");
+    // loadSettings("USER0");
     initializeWindow();
 
     // StartWindow((const char **)&argv[1]);
@@ -289,21 +290,19 @@ void loadSettings(const char *const _userName)
     const char *basePath;
     if (strcmp(_userName, "/defaultUser") == 0)
     {
-        basePath = "../data/base/defaultUser";
+        basePath = "../data/base";
     }
     else
     {
 
-        basePath = "../data/usr";
+        basePath = "../data/usr/";
     }
-
     char userPath[MAX_LENGTH_PATH];
-    char target[2] = "";
-    char buffer[MAX_LENGTH_PATH] = "";
 
     printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
 
     strcpy(userPath, basePath);
+    strcat(userPath, _userName);
     struct dirent *entry;
     DIR *dir = opendir(userPath);
     if (dir == NULL)
@@ -326,7 +325,7 @@ void loadSettings(const char *const _userName)
                 exit(EXIT_FAILURE);
             }
 
-            analyzeOperater(fp);
+            analyzeSettingsFile(fp);
             fclose(fp);
             break;
         }
@@ -346,7 +345,7 @@ void loadSettings(const char *const _userName)
 
 #define BUFFERABLE target[0] != ':' && target[0] != '{' && target[0] != '}' && target[0] != ' ' && target[0] != '\n'
 
-void analyzeOperater(FILE *const _fp)
+void analyzeSettingsFile(FILE *const _fp)
 {
     char target[2] = "";
     char buffer[MAX_LENGTH_PATH] = "";
