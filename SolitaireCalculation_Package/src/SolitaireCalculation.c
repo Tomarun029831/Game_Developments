@@ -61,9 +61,8 @@ void executeOption(const char **);
 // load settings
 void loadSettings(const char *const);
 void loadFont(const char *const _font);
-void colonOperater(void *, FILE *const);
-void enterBrackets(void *, FILE *const);
-void findAttritude(void *, FILE *);
+void colonOperater(char *, FILE *const);
+void enterBrackets(FILE *const);
 
 // Setting Window
 void showSettingsWindow();
@@ -326,25 +325,7 @@ void loadSettings(const char *const _userName)
                 exit(EXIT_FAILURE);
             }
 
-            while ((target[0] = fgetc(fp)) != EOF)
-            {
-                strcat(buffer, target);
-                if (strcmp(buffer, "ID") == 0)
-                {
-                    strcpy(buffer, "");
-                    findAttritude(Settings.Id, fp);
-                }
-                else if (strcmp(buffer, "PASSWORD") == 0)
-                {
-                    strcpy(buffer, "");
-                    findAttritude(Settings.Password, fp);
-                }
-                else if (strcmp(buffer, "WINDOW") == 0)
-                {
-                    strcpy(buffer, "");
-                    findAttritude(&Settings.Window, fp);
-                }
-            }
+            enterBrackets(fp);
             fclose(fp);
             break;
         }
@@ -362,34 +343,79 @@ void loadSettings(const char *const _userName)
     }
 }
 
-void findAttritude(void *_attr, FILE *_fp)
+void enterBrackets(FILE *const _fp)
 {
-    char target = '\0';
-    while ((target = fgetc(_fp)) != ':' && target != '{')
-        ;
-    switch (target)
+    char target[2] = "";
+    char buffer[MAX_LENGTH_PATH] = "";
+    while ((target[0] = fgetc(_fp)) != '}')
     {
-    case ':':
-        colonOperater(_attr, _fp);
-        break;
-    case '{':
-        enterBrackets(_attr, _fp);
-        break;
+        if (target[0] != ':' && target[0] != '{' && target[0] != '}' && target[0] != ' ')
+            strcat(buffer, target);
+        printf("%s", target);
+        // printf("enter: %s/n", buffer);
+
+        switch (target[0])
+        {
+        case ':':
+            colonOperater(buffer, _fp);
+            break;
+        case '{':
+            enterBrackets(_fp);
+            break;
+        }
     }
 }
 
-void colonOperater(void *_attr, FILE *const _fp)
+void colonOperater(char *_attr, FILE *const _fp)
 {
     char buffer[MAX_LENGTH_PATH] = "";
-    if (fgets(buffer, sizeof(buffer), _fp))
+    printf("|%s|\n", _attr);
+    if (strcmp(_attr, "ID") == 0)
     {
-        buffer[strchr(buffer, '\n') - buffer] = '\0';
-        strcpy(_attr, buffer);
+        if (fgets(buffer, sizeof(buffer), _fp))
+        {
+            buffer[strchr(buffer, '\n') - buffer] = '\0';
+            strcpy(Settings.Id, buffer);
+            strcpy(_attr, "");
+        }
     }
-}
+    else if (strcmp(_attr, "PASSWORD") == 0)
+    {
+        if (fgets(buffer, sizeof(buffer), _fp))
+        {
+            buffer[strchr(buffer, '\n') - buffer] = '\0';
+            strcpy(Settings.Password, buffer);
+            strcpy(_attr, "");
+        }
+    }
+    else if (strcmp(_attr, "FONT") == 0)
+    {
+        if (fgets(buffer, sizeof(buffer), _fp))
+        {
+            loadFont(buffer);
+            strcpy(_attr, "");
+        }
+    }
+    else if (strcmp(_attr, "WIDTH") == 0)
+    {
+        if (fgets(buffer, sizeof(buffer), _fp))
+        {
+            buffer[strchr(buffer, '\n') - buffer] = '\0';
+            printf(":%s\n", buffer);
 
-void enterBrackets(void *_attr, FILE *const _fp)
-{
+            Settings.Window.Width = atoi(buffer);
+            strcpy(_attr, "");
+        }
+    }
+    else if (strcmp(_attr, "HEIGHT") == 0)
+    {
+        if (fgets(buffer, sizeof(buffer), _fp))
+        {
+            buffer[strchr(buffer, '\n') - buffer] = '\0';
+            Settings.Window.Height = atoi(buffer);
+            strcpy(_attr, "");
+        }
+    }
 }
 
 void loadFont(const char *const _font)
