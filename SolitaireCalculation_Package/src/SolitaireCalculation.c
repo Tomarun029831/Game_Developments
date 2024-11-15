@@ -61,7 +61,9 @@ void executeOption(const char **);
 // load settings
 void loadSettings(const char *const);
 void loadFont(const char *const _font);
-void Assignment(void *, FILE *const);
+void colonOperater(void *, FILE *const);
+void enterBrackets(void *, FILE *const);
+void findAttritude(void *, FILE *);
 
 // Setting Window
 void showSettingsWindow();
@@ -268,16 +270,19 @@ typedef struct
 
 typedef struct
 {
+    _Font Font;
+    int Width;
+    int Height;
+} _Window;
+
+typedef struct
+{
     char Id[MAX_LENGTH_PATH];
     char Password[MAX_LENGTH_PATH];
-    _Font Font;
-    int WIDTH;
-    int HEIGHT;
+    _Window Window;
 } _Settings;
 
 _Settings Settings;
-
-#define NOTSKIPABLE target[0] != ':' && target[0] != '{' && target[0] != '}'
 
 void loadSettings(const char *const _userName)
 {
@@ -296,7 +301,7 @@ void loadSettings(const char *const _userName)
     char target[2] = "";
     char buffer[MAX_LENGTH_PATH] = "";
 
-    printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Password, Settings.Font, Settings.WIDTH, Settings.HEIGHT);
+    printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
 
     strcpy(userPath, basePath);
     struct dirent *entry;
@@ -323,86 +328,21 @@ void loadSettings(const char *const _userName)
 
             while ((target[0] = fgetc(fp)) != EOF)
             {
-                if (NOTSKIPABLE)
-                {
-                    strcat(buffer, target);
-                }
+                strcat(buffer, target);
                 if (strcmp(buffer, "ID") == 0)
                 {
                     strcpy(buffer, "");
-                    while ((target[0] = fgetc(fp)) != ':')
-                        ;
-                    Assignment(Settings.Id, fp);
+                    findAttritude(Settings.Id, fp);
                 }
                 else if (strcmp(buffer, "PASSWORD") == 0)
                 {
                     strcpy(buffer, "");
-                    while ((target[0] = fgetc(fp)) != ':')
-                        ;
-                    Assignment(Settings.Password, fp);
+                    findAttritude(Settings.Password, fp);
                 }
                 else if (strcmp(buffer, "WINDOW") == 0)
                 {
                     strcpy(buffer, "");
-                    while ((target[0] = fgetc(fp)) != '}')
-                    {
-                        if (NOTSKIPABLE)
-                        {
-                            strcat(buffer, target);
-                        }
-
-                        if (strcmp(buffer, "FONT") == 0)
-                        {
-                            printf(";%s\n", buffer); // test
-
-                            strcpy(buffer, "");
-                            // while ((target[0] = fgetc(fp)) != ':')
-                            //     ;
-                            while ((target[0] = fgetc(fp)) != '\n')
-                            {
-                                //     strcat(buffer, target);
-                            }
-                            // strcpy(Settings.Font, buffer);
-                            // strcpy(buffer, "");
-                        }
-                        else if (strcpy(buffer, "SIZE") == 0)
-                        {
-
-                            strcpy(buffer, "");
-                            while ((target[0] = fgetc(fp)) != '}')
-                            {
-                                if (NOTSKIPABLE)
-                                {
-                                    strcat(buffer, target);
-                                }
-                                if (strcmp(buffer, "WIDTH") == 0)
-                                {
-                                    strcmp(buffer, "");
-                                    while ((target[0] = fgetc(fp)) != ':')
-                                        ;
-                                    while ((target[0] = fgetc(fp)) != '\n')
-                                    {
-                                        strcat(buffer, target);
-                                    }
-                                    printf(";%s\n", buffer);
-                                    Settings.WIDTH = atoi(buffer);
-                                }
-                                else if (strcmp(buffer, "HEIGHT") == 0)
-                                {
-                                    strcmp(buffer, "");
-                                    while ((target[0] = fgetc(fp)) != ':')
-                                        ;
-                                    while ((target[0] = fgetc(fp)) != '\n')
-                                    {
-                                        strcat(buffer, target);
-                                    }
-                                    printf(";%s\n", buffer);
-
-                                    Settings.WIDTH = atoi(buffer);
-                                }
-                            }
-                        }
-                    }
+                    findAttritude(&Settings.Window, fp);
                 }
             }
             fclose(fp);
@@ -418,21 +358,37 @@ void loadSettings(const char *const _userName)
     }
     else
     {
-        printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Password, Settings.Font, Settings.WIDTH, Settings.HEIGHT);
+        printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
     }
 }
 
-void Assignment(void *_arg, FILE *const _fp)
+void findAttritude(void *_attr, FILE *_fp)
+{
+    char target = '\0';
+    while ((target = fgetc(_fp)) != ':' && target != '{')
+        ;
+    switch (target)
+    {
+    case ':':
+        colonOperater(_attr, _fp);
+        break;
+    case '{':
+        enterBrackets(_attr, _fp);
+        break;
+    }
+}
+
+void colonOperater(void *_attr, FILE *const _fp)
 {
     char buffer[MAX_LENGTH_PATH] = "";
     if (fgets(buffer, sizeof(buffer), _fp))
     {
         buffer[strchr(buffer, '\n') - buffer] = '\0';
-        strcpy(_arg, buffer);
+        strcpy(_attr, buffer);
     }
 }
 
-void enterBrackets(FILE *const _fp)
+void enterBrackets(void *_attr, FILE *const _fp)
 {
 }
 
@@ -449,7 +405,8 @@ void showSettingsWindow()
     T_CLEAR;
     // FILE fp;
     char *s;
-    printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Font, Settings.WIDTH, Settings.HEIGHT);
+    printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
+           Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
     printf("<Option> <Object>\tPut a SPACE between <Option> and <Object>\n");
     TC_END;
 
