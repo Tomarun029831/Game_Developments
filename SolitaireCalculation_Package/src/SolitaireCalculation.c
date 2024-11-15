@@ -287,40 +287,33 @@ _Settings Settings;
 
 void loadSettings(const char *const _userName)
 {
-    const char *basePath;
-    if (strcmp(_userName, "/defaultUser") == 0)
-    {
-        basePath = "../data/base";
-    }
-    else
-    {
-
-        basePath = "../data/usr/";
-    }
-    char userPath[MAX_LENGTH_PATH];
+    const char *basePath = (strcmp(_userName, "/defaultUser") == 0) ? "../data/base" : "../data/usr/";
 
     printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
 
-    strcpy(userPath, basePath);
-    strcat(userPath, _userName);
-    struct dirent *entry;
+    char userPath[MAX_LENGTH_PATH];
+    snprintf(userPath, sizeof(userPath), "%s%s", basePath, _userName);
+
     DIR *dir = opendir(userPath);
     if (dir == NULL)
     {
-        printf("error: dir cannot open");
+        printf("error: dir\n");
         exit(EXIT_FAILURE);
     }
 
     FILE *fp = NULL;
+    struct dirent *entry;
     while ((entry = readdir(dir)) != NULL)
     {
         if (strcmp(entry->d_name, "Settings.txt") == 0)
         {
-            strcat(userPath, "/Settings.txt");
-            fp = fopen(userPath, "r");
+            char bufferPath[MAX_LENGTH_PATH];
+            snprintf(bufferPath, sizeof(bufferPath), "%s/%s", userPath, entry->d_name);
+
+            fp = fopen(bufferPath, "r");
             if (fp == NULL)
             {
-                printf("error file");
+                printf("error: file\n");
                 closedir(dir);
                 exit(EXIT_FAILURE);
             }
@@ -435,7 +428,6 @@ void colonOperater(char *_attr, FILE *const _fp)
 
 void loadFont(const char *const _font)
 {
-    printf("loadFontWith%s\n", _font);
 }
 
 void initializeWindow()
