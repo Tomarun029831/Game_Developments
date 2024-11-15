@@ -425,14 +425,12 @@ void loadSettings(const char *const _userName)
 
 void Assignment(void *_arg, FILE *const _fp)
 {
-    char target[2] = "";
     char buffer[MAX_LENGTH_PATH] = "";
-    while ((target[0] = fgetc(_fp)) != '\n')
+    if (fgets(buffer, sizeof(buffer), _fp))
     {
-        strcat(buffer, target);
+        buffer[strchr(buffer, '\n') - buffer] = '\0';
+        strcpy(_arg, buffer);
     }
-    strcpy(_arg, buffer);
-    strcpy(buffer, "");
 }
 
 void loadFont(const char *const _font)
