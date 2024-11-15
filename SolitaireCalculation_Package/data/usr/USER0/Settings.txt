@@ -1,4 +1,5 @@
 ID:USER0
+PASSWORD:bbd
 WINDOW
 {
     FONT:PreSet1

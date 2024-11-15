@@ -61,6 +61,7 @@ void executeOption(const char **);
 // load settings
 void loadSettings(const char *const);
 void loadFont(const char *const _font);
+void Assignment(void *, FILE *const);
 
 // Setting Window
 void showSettingsWindow();
@@ -101,7 +102,7 @@ ed
 
 int main(int argc, char **argv)
 {
-    loadSettings("../data/base/defaultUser");
+    loadSettings("/defaultUser");
     initializeWindow();
 
     // StartWindow((const char **)&argv[1]);
@@ -268,6 +269,7 @@ typedef struct
 typedef struct
 {
     char Id[MAX_LENGTH_PATH];
+    char Password[MAX_LENGTH_PATH];
     _Font Font;
     int WIDTH;
     int HEIGHT;
@@ -275,23 +277,33 @@ typedef struct
 
 _Settings Settings;
 
-void loadSettings(const char *const userName)
+#define NOTSKIPABLE target[0] != ':' && target[0] != '{' && target[0] != '}'
+
+void loadSettings(const char *const _userName)
 {
-    const char *defaultUserPath = "../data/base/defaultUser";
-    const char *userPath = "../data/usr";
+    const char *basePath;
+    if (strcmp(_userName, "/defaultUser") == 0)
+    {
+        basePath = "../data/base/defaultUser";
+    }
+    else
+    {
 
-    char margedPath[MAX_LENGTH_PATH];
-    char buffer;
-    char target[MAX_LENGTH_PATH] = "";
+        basePath = "../data/usr";
+    }
 
-    printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Font, Settings.WIDTH, Settings.HEIGHT);
+    char userPath[MAX_LENGTH_PATH];
+    char target[2] = "";
+    char buffer[MAX_LENGTH_PATH] = "";
 
-    strcpy(margedPath, defaultUserPath);
+    printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Password, Settings.Font, Settings.WIDTH, Settings.HEIGHT);
+
+    strcpy(userPath, basePath);
     struct dirent *entry;
-    DIR *dir = opendir(defaultUserPath);
+    DIR *dir = opendir(userPath);
     if (dir == NULL)
     {
-        perror("ディレクトリを開けませんでした");
+        printf("error: dir cannot open");
         exit(EXIT_FAILURE);
     }
 
@@ -300,31 +312,98 @@ void loadSettings(const char *const userName)
     {
         if (strcmp(entry->d_name, "Settings.txt") == 0)
         {
-            strcat(margedPath, "/Settings.txt");
-            fp = fopen(margedPath, "r");
+            strcat(userPath, "/Settings.txt");
+            fp = fopen(userPath, "r");
             if (fp == NULL)
             {
-                perror("ファイルを開けませんでした");
+                printf("error file");
                 closedir(dir);
                 exit(EXIT_FAILURE);
             }
 
-            while ((buffer = fgetc(fp)) != EOF)
+            while ((target[0] = fgetc(fp)) != EOF)
             {
-                if (buffer == 'I' && fgetc(fp) == 'D' && fgetc(fp) == ':')
+                if (NOTSKIPABLE)
                 {
-                    while ((buffer = fgetc(fp)) != '\n' && buffer != EOF)
+                    strcat(buffer, target);
+                }
+                if (strcmp(buffer, "ID") == 0)
+                {
+                    strcpy(buffer, "");
+                    while ((target[0] = fgetc(fp)) != ':')
+                        ;
+                    Assignment(Settings.Id, fp);
+                }
+                else if (strcmp(buffer, "PASSWORD") == 0)
+                {
+                    strcpy(buffer, "");
+                    while ((target[0] = fgetc(fp)) != ':')
+                        ;
+                    Assignment(Settings.Password, fp);
+                }
+                else if (strcmp(buffer, "WINDOW") == 0)
+                {
+
+                    strcpy(buffer, "");
+                    while ((target[0] = fgetc(fp)) != '}')
                     {
-                        if (buffer != '{' && buffer != '}' && buffer != ':')
+                        if (NOTSKIPABLE)
                         {
-                            size_t len = strlen(target);
-                            target[len] = buffer;
-                            target[len + 1] = '\0';
+                            strcat(buffer, target);
+                        }
+
+                        if (strcmp(buffer, "FONT") == 0)
+                        {
+                            printf(";%s\n", buffer); // test
+
+                            strcpy(buffer, "");
+                            // while ((target[0] = fgetc(fp)) != ':')
+                            //     ;
+                            while ((target[0] = fgetc(fp)) != '\n')
+                            {
+                                //     strcat(buffer, target);
+                            }
+                            // strcpy(Settings.Font, buffer);
+                            // strcpy(buffer, "");
+                        }
+                        else if (strcpy(buffer, "SIZE") == 0)
+                        {
+
+                            strcpy(buffer, "");
+                            while ((target[0] = fgetc(fp)) != '}')
+                            {
+                                if (NOTSKIPABLE)
+                                {
+                                    strcat(buffer, target);
+                                }
+                                if (strcmp(buffer, "WIDTH") == 0)
+                                {
+                                    strcmp(buffer, "");
+                                    while ((target[0] = fgetc(fp)) != ':')
+                                        ;
+                                    while ((target[0] = fgetc(fp)) != '\n')
+                                    {
+                                        strcat(buffer, target);
+                                    }
+                                    printf(";%s\n", buffer);
+                                    Settings.WIDTH = atoi(buffer);
+                                }
+                                else if (strcmp(buffer, "HEIGHT") == 0)
+                                {
+                                    strcmp(buffer, "");
+                                    while ((target[0] = fgetc(fp)) != ':')
+                                        ;
+                                    while ((target[0] = fgetc(fp)) != '\n')
+                                    {
+                                        strcat(buffer, target);
+                                    }
+                                    printf(";%s\n", buffer);
+
+                                    Settings.WIDTH = atoi(buffer);
+                                }
+                            }
                         }
                     }
-
-                    strcpy(Settings.Id, target);
-                    break;
                 }
             }
             fclose(fp);
@@ -340,8 +419,20 @@ void loadSettings(const char *const userName)
     }
     else
     {
-        printf("ID:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Font, Settings.WIDTH, Settings.HEIGHT);
+        printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Password, Settings.Font, Settings.WIDTH, Settings.HEIGHT);
     }
+}
+
+void Assignment(void *_arg, FILE *const _fp)
+{
+    char target[2] = "";
+    char buffer[MAX_LENGTH_PATH] = "";
+    while ((target[0] = fgetc(_fp)) != '\n')
+    {
+        strcat(buffer, target);
+    }
+    strcpy(_arg, buffer);
+    strcpy(buffer, "");
 }
 
 void loadFont(const char *const _font)
