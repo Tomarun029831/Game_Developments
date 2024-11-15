@@ -343,7 +343,6 @@ void loadSettings(const char *const _userName)
                 }
                 else if (strcmp(buffer, "WINDOW") == 0)
                 {
-
                     strcpy(buffer, "");
                     while ((target[0] = fgetc(fp)) != '}')
                     {
@@ -431,6 +430,10 @@ void Assignment(void *_arg, FILE *const _fp)
         buffer[strchr(buffer, '\n') - buffer] = '\0';
         strcpy(_arg, buffer);
     }
+}
+
+void enterBrackets(FILE *const _fp)
+{
 }
 
 void loadFont(const char *const _font)
