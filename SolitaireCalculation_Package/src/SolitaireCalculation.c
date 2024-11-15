@@ -389,7 +389,9 @@ void colonOperater(char *_attr, FILE *const _fp)
     char buffer[MAX_LENGTH_PATH] = "";
     if (strcmp(_attr, "ID") == 0)
     {
-        if (fgets(buffer, sizeof(buffer), _fp))
+        while ((buffer[0] = fgetc(_fp)) == ' ')
+            ;
+        if (fgets(&buffer[1], sizeof(buffer), _fp))
         {
             buffer[strchr(buffer, '\n') - buffer] = '\0';
             strcpy(Settings.Id, buffer);
@@ -397,7 +399,9 @@ void colonOperater(char *_attr, FILE *const _fp)
     }
     else if (strcmp(_attr, "PASSWORD") == 0)
     {
-        if (fgets(buffer, sizeof(buffer), _fp))
+        while ((buffer[0] = fgetc(_fp)) == ' ')
+            ;
+        if (fgets(&buffer[1], sizeof(buffer), _fp))
         {
             buffer[strchr(buffer, '\n') - buffer] = '\0';
             strcpy(Settings.Password, buffer);
@@ -405,14 +409,18 @@ void colonOperater(char *_attr, FILE *const _fp)
     }
     else if (strcmp(_attr, "FONT") == 0)
     {
-        if (fgets(buffer, sizeof(buffer), _fp))
+        while ((buffer[0] = fgetc(_fp)) == ' ')
+            ;
+        if (fgets(&buffer[1], sizeof(buffer), _fp))
         {
             loadFont(buffer);
         }
     }
     else if (strcmp(_attr, "WIDTH") == 0)
     {
-        if (fgets(buffer, sizeof(buffer), _fp))
+        while ((buffer[0] = fgetc(_fp)) == ' ')
+            ;
+        if (fgets(&buffer[1], sizeof(buffer), _fp))
         {
             buffer[strchr(buffer, '\n') - buffer] = '\0';
             Settings.Window.Width = atoi(buffer);
@@ -420,7 +428,9 @@ void colonOperater(char *_attr, FILE *const _fp)
     }
     else if (strcmp(_attr, "HEIGHT") == 0)
     {
-        if (fgets(buffer, sizeof(buffer), _fp))
+        while ((buffer[0] = fgetc(_fp)) == ' ')
+            ;
+        if (fgets(&buffer[1], sizeof(buffer), _fp))
         {
             buffer[strchr(buffer, '\n') - buffer] = '\0';
             Settings.Window.Height = atoi(buffer);

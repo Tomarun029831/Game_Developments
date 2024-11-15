@@ -1,11 +1,11 @@
-    ID  :-1
-    PASSWORD  :abc
-    WINDOW
+ID : -1
+PASSWORD : abc
+WINDOW
+{
+    FONT : default
+    SIZE
     {
-        FONT:default
-        SIZE
-        {
-            WIDTH  :1920
-            HEIGHT  :1080
-        }
+        WIDTH : 1920
+        HEIGHT : 1080
     }
+}
