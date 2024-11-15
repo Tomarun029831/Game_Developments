@@ -62,7 +62,7 @@ void executeOption(const char **);
 void loadSettings(const char *const);
 void loadFont(const char *const _font);
 void colonOperater(char *, FILE *const);
-void enterBrackets(char *, FILE *const);
+void enterBlocks(char *, FILE *const);
 void analyzeSettingsFile(FILE *const _fp);
 
 // Setting Window
@@ -336,7 +336,10 @@ void loadSettings(const char *const _userName)
     }
 }
 
-#define BUFFERABLE target[0] != ':' && target[0] != '{' && target[0] != '}' && target[0] != ' ' && target[0] != '\n'
+#define ASSIGN_OPERATER ':'
+#define STARTBLOCK '{'
+#define ENDBLOCK '}'
+#define BUFFERABLE target[0] != ASSIGN_OPERATER &&target[0] != STARTBLOCK &&target[0] != ENDBLOCK &&target[0] != ' ' && target[0] != '\n'
 
 void analyzeSettingsFile(FILE *const _fp)
 {
@@ -348,34 +351,34 @@ void analyzeSettingsFile(FILE *const _fp)
             strcat(buffer, target);
         switch (target[0])
         {
-        case ':':
+        case ASSIGN_OPERATER:
             colonOperater(buffer, _fp);
             break;
-        case '{':
-            enterBrackets(buffer, _fp);
+        case STARTBLOCK:
+            enterBlocks(buffer, _fp);
             break;
         }
     }
 }
 
-void enterBrackets(char *_buffer, FILE *const _fp)
+void enterBlocks(char *_buffer, FILE *const _fp)
 {
     char target[2] = "";
     char buffer[MAX_LENGTH_PATH] = "";
-    while ((target[0] = fgetc(_fp)) != '}')
+    while ((target[0] = fgetc(_fp)) != ENDBLOCK)
     {
         if (BUFFERABLE)
             strcat(buffer, target);
 
         switch (target[0])
         {
-        case ':':
+        case ASSIGN_OPERATER:
 
             colonOperater(buffer, _fp);
             break;
-        case '{':
+        case STARTBLOCK:
 
-            enterBrackets(buffer, _fp);
+            enterBlocks(buffer, _fp);
             break;
         }
     }
