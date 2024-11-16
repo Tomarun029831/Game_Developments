@@ -13,8 +13,9 @@
 // Options
 void showHelp(const char *path);
 void showDirectoryTree(char *path);
+void showSettings();
 void listDirectory(char *path);
-void removeFileOrDir(char *path);
+void removeUserData(char *path);
 void addFileOrDir(char *path);
 void handleError();
 const char **getFullOption(const char *_option);

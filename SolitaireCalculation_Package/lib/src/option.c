@@ -1,8 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <direct.h>
+#include <dirent.h>
 #include "../include/window.h"
+#include "../include/settings.h"
 #include "../include/options.h"
+
+extern _Settings Settings;
 
 const char *optionAdd[] = OPTION_ADD;             // create directory, file in data
 const char *optionDirectory[] = OPTION_DIRECTOTY; // show file or subdirectory in data
@@ -11,6 +16,21 @@ const char *optionRemove[] = OPTION_REMOVE;       // remove directory, file in d
 const char *optionSettings[] = OPTION_SETTING;    // User configs
 const char *optionTree[] = OPTION_TREE;           // show struct of path in data
 const char **optionHandlers[] = {optionAdd, optionDirectory, optionHelp, optionRemove, optionTree, optionSettings};
+
+int isDirectory(const char *path);
+
+void showSettings()
+{
+    T_CLEAR;
+    // FILE fp;
+    char *s;
+    printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
+           Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
+    printf("<Option> <Object>\tPut a SPACE between <Option> and <Object>\n");
+    TC_END;
+
+    scanf_s("%s", s);
+}
 
 void executeOption(const char **_optionv)
 {
@@ -48,7 +68,7 @@ void *getOptionHandler(const char *_option)
     }
     else if (matchingOption == optionRemove)
     {
-        return removeFileOrDir;
+        return removeUserData;
     }
     else if (matchingOption == optionTree)
     {
@@ -56,7 +76,7 @@ void *getOptionHandler(const char *_option)
     }
     else if (matchingOption == optionSettings)
     {
-        return showSettingsWindow;
+        return showSettings;
     }
     return handleError;
 }
@@ -114,8 +134,53 @@ void showHelp(const char *_option)
 }
 
 void showDirectoryTree(char *path) { printf("TREE called with %s", path); }
+
 void listDirectory(char *path) { printf("DIRECRORY called with %s", path); }
-void removeFileOrDir(char *path) { printf("REMOVE called with %s", path); }
+
+int isDirectory(const char *path)
+{
+    DIR *dir = opendir(path);
+    if (dir)
+    {
+        closedir(dir);
+        return 1;
+    }
+    return 0;
+}
+
+void removeUserData(char *userName)
+{
+    char basePath[MAX_LENGTH_PATH] = "./data/usr";
+    char userPath[MAX_LENGTH_PATH];
+    snprintf(userPath, sizeof(userPath), "%s/%s", basePath, userName);
+
+    if (isDirectory(userPath)) // dir
+    {
+        // _rmdir => -1 failure, 0 success
+        if (_rmdir(userPath) == -1)
+        {
+            DIR *dir = opendir(userPath);
+            if (dir == NULL)
+                exit(EXIT_FAILURE);
+            struct dirent *enter;
+            char tmpPath[MAX_LENGTH_PATH];
+            while ((enter = readdir(dir)) != NULL)
+            {
+                if (strcmp(enter->d_name, "..") != 0)
+                {
+                    snprintf(tmpPath, sizeof(tmpPath), "%s/%s", userName, enter->d_name);
+                    printf("%s\n", tmpPath);
+                    removeUserData(tmpPath);
+                }
+            }
+        }
+    }
+    else
+    {
+        remove(userPath); // file
+    }
+}
+
 void addFileOrDir(char *path) { printf("ADD called with %s", path); }
 
 void handleError()

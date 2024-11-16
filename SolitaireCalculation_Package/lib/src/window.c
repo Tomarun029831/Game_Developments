@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "../include/options.h"
 #include "../include/settings.h"
 #include "../include/window.h"
@@ -7,34 +9,43 @@ extern _Settings Settings;
 
 void StartWindow(const char **_optionv)
 {
+    char userID[MAX_LENGTH_PATH] = "";
+    char password[MAX_LENGTH_PATH] = "";
     // found option
     if (_optionv[0] == OPTION_FAILURE)
     {
         T_CLEAR;
-
-        // User ID Input and Password
-        // Play or Settings
-
         TC_END;
+        printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
+               Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
+
+        printf("please input userId and password\n");
+
+        while (loadSettings(userID) != LOAD_SUCCESS)
+        {
+            printf("userID: ");
+            scanf_s("%99s", userID, sizeof(userID));
+            if (strchr(userID, INVAIL_MARK) != NULL)
+                exit(EXIT_FAILURE);
+        }
+
+        while (strcmp(password, Settings.Password) != 0)
+        {
+            printf("password: ");
+            scanf("%s", password);
+            if (strchr(password, INVAIL_MARK) != NULL)
+                exit(EXIT_FAILURE);
+        }
+
+        printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
+               Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
+
         return; // Enter Game
     }
     else
     {
         executeOption(_optionv);
     }
-}
-
-void showSettingsWindow()
-{
-    T_CLEAR;
-    // FILE fp;
-    char *s;
-    printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
-           Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
-    printf("<Option> <Object>\tPut a SPACE between <Option> and <Object>\n");
-    TC_END;
-
-    scanf_s("%s", s);
 }
 
 void SetWindowSize(int width, int height)

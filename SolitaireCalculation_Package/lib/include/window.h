@@ -5,6 +5,5 @@
 
 // To Enter Game
 void StartWindow(const char **_optionv); // Setting Window
-void showSettingsWindow();
 void SetWindowSize(int width, int height);
 void setFontAttributes(int style, int foreground, int background);

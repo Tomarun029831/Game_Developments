@@ -4,7 +4,6 @@
 #include <dirent.h>
 #include "../include/settings.h"
 
-#define DEFAULT_PATH "/defaults"
 #define ASSIGN_OPERATER ':'
 #define STARTBLOCK '{'
 #define ENDBLOCK '}'
@@ -18,7 +17,7 @@ void analyzeSettingsFile(FILE *const _fp);
 
 // fopen に 相対パスを設定するとき .exe からの相対パスであることに注意
 
-void loadSettings(const char *const _userName)
+int loadSettings(const char *const _userName)
 {
     char userPath[MAX_LENGTH_PATH], bufferPath[MAX_LENGTH_PATH];
     const char *const basePath = (strcmp(_userName, DEFAULT_PATH) == 0) ? "./data/defaults" : "./data/usr";
@@ -29,13 +28,13 @@ void loadSettings(const char *const _userName)
     strcpy(bufferPath, userPath);
     strcat(bufferPath, "/Settings.txt");
     FILE *fp = fopen(bufferPath, "r");
-    printf("%s", bufferPath);
     if (fp == NULL)
-        exit(EXIT_FAILURE);
+        return LOAD_FAILURE;
 
     analyzeSettingsFile(fp);
 
     fclose(fp);
+    return LOAD_SUCCESS;
 }
 
 void analyzeSettingsFile(FILE *const _fp)
