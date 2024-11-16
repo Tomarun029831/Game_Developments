@@ -148,40 +148,41 @@ int isDirectory(const char *path)
     return 0;
 }
 
-void removeUserData(char *userName)
+void removeUserData(char *_userName)
 {
-    printf("callRemoveWith %s\n", userName);
     char basePath[MAX_LENGTH_PATH] = "./data/usr";
-    char userPath[MAX_LENGTH_PATH];
-    snprintf(userPath, sizeof(userPath), "%s/%s", basePath, userName);
+    char path[MAX_LENGTH_PATH];
+    snprintf(path, sizeof(path), "%s/%s", basePath, _userName);
 
-    if (isDirectory(userPath)) // dir
+    if (isDirectory(path))
     {
         // _rmdir => -1 failure, 0 success
-        if (_rmdir(userPath) == -1)
+        if (_rmdir(path) == -1)
         {
-            DIR *dir = opendir(userPath);
+            DIR *dir = opendir(path);
             if (dir == NULL)
                 exit(EXIT_FAILURE);
             struct dirent *enter;
             char tmpPath[MAX_LENGTH_PATH] = "";
             while ((enter = readdir(dir)) != NULL)
             {
-                printf("%s\n", tmpPath);
+                printf("%s\n", enter->d_name);
+                printf("-%s\n", tmpPath);
 
                 if (strcmp(enter->d_name, "..") != 0 && strcmp(enter->d_name, ".") != 0)
                 {
-                    snprintf(tmpPath, sizeof(tmpPath), "%s/%s", userName, enter->d_name);
+                    snprintf(tmpPath, sizeof(tmpPath), "%s/%s", _userName, enter->d_name);
                     removeUserData(tmpPath);
+                    strcpy(tmpPath, "");
                 }
             }
-            _rmdir(userPath);
+            _rmdir(path); // dir
         }
     }
     else
     {
-        printf("%s\n", userPath);
-        remove(userPath); // file
+        printf("%s\n", path);
+        remove(path); // file
     }
 }
 
