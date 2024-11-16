@@ -4,7 +4,18 @@
 #include "../include/settings.h"
 
 #define DEFAULT_PATH "/defaults"
+#define ASSIGN_OPERATER ':'
+#define STARTBLOCK '{'
+#define ENDBLOCK '}'
+#define BUFFERABLE target[0] != ASSIGN_OPERATER &&target[0] != STARTBLOCK &&target[0] != ENDBLOCK &&target[0] != ' ' && target[0] != '\n'
+
 extern _Settings Settings;
+
+void colonOperater(char *, FILE *const);
+void enterBlocks(char *, FILE *const);
+void analyzeSettingsFile(FILE *const _fp);
+
+// data\defaults\Settings.txt
 
 void loadSettings(const char *const _userName)
 {
@@ -15,8 +26,8 @@ void loadSettings(const char *const _userName)
     else
         strcpy(userPath, basePath);
     strcpy(bufferPath, userPath);
-
-    FILE *fp = fopen(strcat(bufferPath, "/Settings.txt"), "r");
+    strcat(bufferPath, "/Settings.txt");
+    FILE *fp = fopen("C:/Users/humti/OneDrive/ドキュメント/For_GitHub/Game_Developments/SolitaireCalculation_Package/data/defaults/Settings.txt", "r");
     printf("%s", bufferPath);
     if (fp == NULL)
         exit(EXIT_FAILURE);
