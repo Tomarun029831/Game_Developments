@@ -56,6 +56,8 @@ ed
 
 */
 
+// gcc ./src/SolitaireCalculation.c ./lib/src/*.c -o SolitaireCalculation && ./SolitaireCalculation
+
 int main(int argc, char **argv)
 {
     initializeWindow();

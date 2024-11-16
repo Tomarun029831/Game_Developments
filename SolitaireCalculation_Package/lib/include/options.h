@@ -15,7 +15,7 @@ void showHelp(const char *path);
 void showDirectoryTree(char *path);
 void showSettings();
 void listDirectory(char *path);
-void removeUserData(char *path);
+void removeUserData(const char *const path);
 void addFileOrDir(char *path);
 void handleError();
 const char **getFullOption(const char *_option);

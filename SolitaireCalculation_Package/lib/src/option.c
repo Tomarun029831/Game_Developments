@@ -148,41 +148,47 @@ int isDirectory(const char *path)
     return 0;
 }
 
-void removeUserData(char *_userName)
+void removeUserData(const char *const _userName)
 {
-    char basePath[MAX_LENGTH_PATH] = "./data/usr";
+    const char *const basePath = "./data/usr";
     char path[MAX_LENGTH_PATH];
     snprintf(path, sizeof(path), "%s/%s", basePath, _userName);
 
+    DIR *dir = NULL;
     if (isDirectory(path))
     {
-        // _rmdir => -1 failure, 0 success
+        dir = opendir(path);
+        if (dir == NULL)
+        {
+            printf("Failed to open directory\n");
+            exit(EXIT_FAILURE);
+        }
+
+        struct dirent *entry;
+        char tmpPath[MAX_LENGTH_PATH];
+
+        while ((entry = readdir(dir)) != NULL)
+        {
+            if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+                continue; // skip routine
+
+            snprintf(tmpPath, sizeof(tmpPath), "%s/%s", _userName, entry->d_name);
+            removeUserData(tmpPath);
+        }
+
+        closedir(dir);
+
         if (_rmdir(path) == -1)
         {
-            DIR *dir = opendir(path);
-            if (dir == NULL)
-                exit(EXIT_FAILURE);
-            struct dirent *enter;
-            char tmpPath[MAX_LENGTH_PATH] = "";
-            while ((enter = readdir(dir)) != NULL)
-            {
-                printf("%s\n", enter->d_name);
-                printf("-%s\n", tmpPath);
-
-                if (strcmp(enter->d_name, "..") != 0 && strcmp(enter->d_name, ".") != 0)
-                {
-                    snprintf(tmpPath, sizeof(tmpPath), "%s/%s", _userName, enter->d_name);
-                    removeUserData(tmpPath);
-                    strcpy(tmpPath, "");
-                }
-            }
-            _rmdir(path); // dir
+            printf("Failed to remove directory\n");
         }
     }
     else
     {
-        printf("%s\n", path);
-        remove(path); // file
+        if (remove(path) == -1)
+        {
+            printf("Failed to remove file\n");
+        }
     }
 }
 

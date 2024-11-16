@@ -6,6 +6,7 @@
 #include "../include/window.h"
 
 extern _Settings Settings;
+// _Settings Settings;
 
 void StartWindow(const char **_optionv)
 {
