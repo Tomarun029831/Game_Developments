@@ -3,17 +3,24 @@
 #include <string.h>
 #include "../include/settings.h"
 
+#define DEFAULT_PATH "/defaults"
 extern _Settings Settings;
 
 void loadSettings(const char *const _userName)
 {
     char userPath[MAX_LENGTH_PATH], bufferPath[MAX_LENGTH_PATH];
-    const char *const basePath = (strcmp(_userName, "/defaultUser") == 0) ? "../data/base" : "../data/usr";
-    (strcmp(_userName, "/defaultUser") == 0) ? snprintf(userPath, sizeof(userPath), "%s%s", basePath, _userName) : snprintf(userPath, sizeof(userPath), "%s/%s", basePath, _userName);
+    const char *const basePath = (strcmp(_userName, DEFAULT_PATH) == 0) ? "../../data/defaults" : "../../data/usr";
+    if (strcmp(_userName, DEFAULT_PATH) != 0)
+        snprintf(userPath, sizeof(userPath), "%s/%s", basePath, _userName);
+    else
+        strcpy(userPath, basePath);
     strcpy(bufferPath, userPath);
+
     FILE *fp = fopen(strcat(bufferPath, "/Settings.txt"), "r");
+    printf("%s", bufferPath);
     if (fp == NULL)
         exit(EXIT_FAILURE);
+
     analyzeSettingsFile(fp);
 
     fclose(fp);

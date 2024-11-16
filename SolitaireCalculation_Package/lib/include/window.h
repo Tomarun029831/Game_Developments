@@ -4,8 +4,7 @@
 #define TC_END printf("\x1b[?25h")              // show cursor
 
 // To Enter Game
-void StartWindow(const char **);
-// Setting Window
+void StartWindow(const char **_optionv); // Setting Window
 void showSettingsWindow();
-void SetWindowSize(int, int);
-void setFontAttributes(int, int, int);
+void SetWindowSize(int width, int height);
+void setFontAttributes(int style, int foreground, int background);

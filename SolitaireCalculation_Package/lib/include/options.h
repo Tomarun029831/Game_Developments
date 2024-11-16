@@ -11,12 +11,12 @@
 #define OPTION_TREE {"-t", "tree", "TREE"}            // show struct of path in data
 
 // Options
-void showHelp(const char *);
-void showDirectoryTree(char *);
-void listDirectory(char *);
-void removeFileOrDir(char *);
-void addFileOrDir(char *);
+void showHelp(const char *path);
+void showDirectoryTree(char *path);
+void listDirectory(char *path);
+void removeFileOrDir(char *path);
+void addFileOrDir(char *path);
 void handleError();
-const char **getFullOption(const char *);
+const char **getFullOption(const char *_option);
 void *getOptionHandler(const char *_option);
-void executeOption(const char **);
+void executeOption(const char **_optionv);

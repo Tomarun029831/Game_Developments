@@ -4,10 +4,9 @@
 #include <string.h> // strcmp
 #include <stdlib.h> // exit, random
 #include <time.h>   // time
-
-#include "./lib/include/settings.h"
-#include "./lib/include/options.h"
-#include "./lib/include/window.h"
+#include "../lib/include/options.h"
+#include "../lib/include/settings.h"
+#include "../lib/include/window.h"
 
 // 'S', 'D', 'H', 'C'
 int cardRanks[] = {'S', 'D', 'H', 'C'};
@@ -59,12 +58,11 @@ ed
 
 int main(int argc, char **argv)
 {
-    // loadSettings("/defaultUser");
-    // loadSettings("USER0");
-    loadSettings("/defaultUser");
+    // loadSettings("/defaults");
+    loadSettings("USER0");
     initializeWindow();
 
-    // StartWindow((const char **)&argv[1]);
+    StartWindow((const char **)&argv[1]);
     solitaireCalculation();
 
     RESET_FONT;
