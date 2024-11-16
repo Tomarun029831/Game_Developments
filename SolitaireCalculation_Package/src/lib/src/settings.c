@@ -3,6 +3,8 @@
 #include <string.h>
 #include "../include/settings.h"
 
+extern _Settings Settings;
+
 void loadSettings(const char *const _userName)
 {
     char userPath[MAX_LENGTH_PATH], bufferPath[MAX_LENGTH_PATH];

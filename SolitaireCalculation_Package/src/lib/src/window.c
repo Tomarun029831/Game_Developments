@@ -3,6 +3,8 @@
 #include "../include/settings.h"
 #include "../include/window.h"
 
+extern _Settings Settings;
+
 void StartWindow(const char **_optionv)
 {
     // found option

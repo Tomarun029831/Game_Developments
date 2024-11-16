@@ -39,8 +39,6 @@ typedef struct
     _Window Window;
 } _Settings;
 
-_Settings Settings;
-
 // load settings
 void loadSettings(const char *const _userName);
 void loadFont(const char *const _font);
