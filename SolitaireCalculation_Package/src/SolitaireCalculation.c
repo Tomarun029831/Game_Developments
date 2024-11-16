@@ -59,7 +59,7 @@ void *getOptionHandler(const char *_option);
 void executeOption(const char **);
 
 // load settings
-void loadSettings(const char *const);
+void loadSettings(const char *const _userName);
 void loadFont(const char *const _font);
 void colonOperater(char *, FILE *const);
 void enterBlocks(char *, FILE *const);
@@ -104,8 +104,9 @@ ed
 
 int main(int argc, char **argv)
 {
-    loadSettings("/defaultUser");
+    // loadSettings("/defaultUser");
     // loadSettings("USER0");
+    loadSettings("/defaultUser");
     initializeWindow();
 
     // StartWindow((const char **)&argv[1]);
@@ -287,53 +288,15 @@ _Settings Settings;
 
 void loadSettings(const char *const _userName)
 {
-    const char *basePath = (strcmp(_userName, "/defaultUser") == 0) ? "../data/base" : "../data/usr/";
+    char userPath[MAX_LENGTH_PATH], bufferPath[MAX_LENGTH_PATH];
+    const char *const basePath = (strcmp(_userName, "/defaultUser") == 0) ? "../data/base" : "../data/usr";
+    (strcmp(_userName, "/defaultUser") == 0) ? snprintf(userPath, sizeof(userPath), "%s%s", basePath, _userName) : snprintf(userPath, sizeof(userPath), "%s/%s", basePath, _userName);
+    strcpy(bufferPath, userPath);
+    FILE *fp = fopen(strcat(bufferPath, "/Settings.txt"), "r");
+    fp ? fp : (printf("error: file\n"), exit(EXIT_FAILURE));
+    analyzeSettingsFile(fp);
 
-    printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
-
-    char userPath[MAX_LENGTH_PATH];
-    snprintf(userPath, sizeof(userPath), "%s%s", basePath, _userName);
-
-    DIR *dir = opendir(userPath);
-    if (dir == NULL)
-    {
-        printf("error: dir\n");
-        exit(EXIT_FAILURE);
-    }
-
-    FILE *fp = NULL;
-    struct dirent *entry;
-    while ((entry = readdir(dir)) != NULL)
-    {
-        if (strcmp(entry->d_name, "Settings.txt") == 0)
-        {
-            char bufferPath[MAX_LENGTH_PATH];
-            snprintf(bufferPath, sizeof(bufferPath), "%s/%s", userPath, entry->d_name);
-
-            fp = fopen(bufferPath, "r");
-            if (fp == NULL)
-            {
-                printf("error: file\n");
-                closedir(dir);
-                exit(EXIT_FAILURE);
-            }
-
-            analyzeSettingsFile(fp);
-            fclose(fp);
-            break;
-        }
-    }
-
-    closedir(dir);
-
-    if (Settings.Id[0] == '\0')
-    {
-        printf("IDが設定されていません。\n");
-    }
-    else
-    {
-        printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n", Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
-    }
+    fclose(fp);
 }
 
 #define ASSIGN_OPERATER ':'
