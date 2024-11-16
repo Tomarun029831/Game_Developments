@@ -150,6 +150,7 @@ int isDirectory(const char *path)
 
 void removeUserData(char *userName)
 {
+    printf("callRemoveWith %s\n", userName);
     char basePath[MAX_LENGTH_PATH] = "./data/usr";
     char userPath[MAX_LENGTH_PATH];
     snprintf(userPath, sizeof(userPath), "%s/%s", basePath, userName);
@@ -163,20 +164,23 @@ void removeUserData(char *userName)
             if (dir == NULL)
                 exit(EXIT_FAILURE);
             struct dirent *enter;
-            char tmpPath[MAX_LENGTH_PATH];
+            char tmpPath[MAX_LENGTH_PATH] = "";
             while ((enter = readdir(dir)) != NULL)
             {
-                if (strcmp(enter->d_name, "..") != 0)
+                printf("%s\n", tmpPath);
+
+                if (strcmp(enter->d_name, "..") != 0 && strcmp(enter->d_name, ".") != 0)
                 {
                     snprintf(tmpPath, sizeof(tmpPath), "%s/%s", userName, enter->d_name);
-                    printf("%s\n", tmpPath);
                     removeUserData(tmpPath);
                 }
             }
+            _rmdir(userPath);
         }
     }
     else
     {
+        printf("%s\n", userPath);
         remove(userPath); // file
     }
 }
