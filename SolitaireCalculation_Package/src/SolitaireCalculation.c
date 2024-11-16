@@ -58,8 +58,8 @@ ed
 
 int main(int argc, char **argv)
 {
-    // loadSettings("/defaults");
-    loadSettings("USER0");
+    loadSettings("/defaults");
+    // loadSettings("USER_ONE");
     initializeWindow();
 
     StartWindow((const char **)&argv[1]);

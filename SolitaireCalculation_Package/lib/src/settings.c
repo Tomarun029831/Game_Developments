@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 #include "../include/settings.h"
 
 #define DEFAULT_PATH "/defaults"
@@ -15,19 +16,19 @@ void colonOperater(char *, FILE *const);
 void enterBlocks(char *, FILE *const);
 void analyzeSettingsFile(FILE *const _fp);
 
-// data\defaults\Settings.txt
+// fopen に 相対パスを設定するとき .exe からの相対パスであることに注意
 
 void loadSettings(const char *const _userName)
 {
     char userPath[MAX_LENGTH_PATH], bufferPath[MAX_LENGTH_PATH];
-    const char *const basePath = (strcmp(_userName, DEFAULT_PATH) == 0) ? "../../data/defaults" : "../../data/usr";
+    const char *const basePath = (strcmp(_userName, DEFAULT_PATH) == 0) ? "./data/defaults" : "./data/usr";
     if (strcmp(_userName, DEFAULT_PATH) != 0)
         snprintf(userPath, sizeof(userPath), "%s/%s", basePath, _userName);
     else
         strcpy(userPath, basePath);
     strcpy(bufferPath, userPath);
     strcat(bufferPath, "/Settings.txt");
-    FILE *fp = fopen("C:/Users/humti/OneDrive/ドキュメント/For_GitHub/Game_Developments/SolitaireCalculation_Package/data/defaults/Settings.txt", "r");
+    FILE *fp = fopen(bufferPath, "r");
     printf("%s", bufferPath);
     if (fp == NULL)
         exit(EXIT_FAILURE);
