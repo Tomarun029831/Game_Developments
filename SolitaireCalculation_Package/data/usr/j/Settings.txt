@@ -2,7 +2,7 @@ ID:fff
 PASSWORD:012
 WINDOW
 {
-    FONT:default
+    FONT:Locks
     SIZE
     {
         WIDTH:1920

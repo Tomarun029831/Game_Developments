@@ -17,7 +17,7 @@ void StartWindow(const char **_optionv)
         // T_CLEAR;
         // TC_END;
         printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
-               Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
+               Settings.Id, Settings.Password, Settings.Window.Font.name, Settings.Window.Width, Settings.Window.Height);
 
         printf("please input userId and password\n");
 
@@ -41,7 +41,7 @@ void StartWindow(const char **_optionv)
         // loadSettings("/defaults", 's');
 
         printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
-               Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
+               Settings.Id, Settings.Password, Settings.Window.Font.name, Settings.Window.Width, Settings.Window.Height);
 
         return; // Enter Game
     }

@@ -38,7 +38,6 @@ int isBufferAble(const char _c)
 // _mode, 'r': Read-Only, 's': Save-Settings
 int loadSettings(const char *const _userName, const char load_mode)
 {
-    printf("load called with %s %c\n", _userName, load_mode);
     if (load_mode != 'r' && load_mode != 's' || strcmp(_userName, "") == 0)
         return LOAD_FAILURE;
 
@@ -64,13 +63,14 @@ int loadSettings(const char *const _userName, const char load_mode)
     fileSize = ftell(fp);
     fseek(fp, 0, SEEK_SET);
 
-    buffer = malloc(fileSize * sizeof(char));
-    fileSize = fread(buffer, sizeof(char), fileSize, fp);
+    size_t c_size = sizeof(char);
+    buffer = malloc(fileSize * c_size);
+    fileSize = fread(buffer, c_size, fileSize, fp);
     free(buffer);
 
     fseek(fp, 0, SEEK_SET);
-    buffer = malloc(fileSize * sizeof(char));
-    fread(buffer, sizeof(char), fileSize, fp);
+    buffer = malloc(fileSize * c_size);
+    fread(buffer, c_size, fileSize, fp);
     fclose(fp);
 
     analyzeSettings(buffer, load_mode);
@@ -94,6 +94,7 @@ void analyzeSettings(char *_str, char _mode)
         case STARTBLOCK:
             ++blockCount;
             strcpy(buffer, "");
+
             break;
         case ENDBLOCK:
             --blockCount;
@@ -115,34 +116,56 @@ void analyzeSettings(char *_str, char _mode)
 
 void colonOperater(const char *const _attr, char *_str, const char **_loadPointer, const char _mode)
 {
-    while (**_loadPointer == ' ')
-        ++*_loadPointer;
-    char *buffer = read_until_newline(_loadPointer);
-    buffer[strcspn(buffer, "\n")] = '\0';
-    if (buffer != NULL)
+    char *buffer;
+    if (_mode == 'r')
     {
-        if (strcmp(_attr, "ID") == 0 || strcmp(_attr, "PASSWORD") == 0)
+        while (**_loadPointer == ' ')
+            ++*_loadPointer;
+        buffer = read_until_newline(_loadPointer);
+        buffer[strcspn(buffer, "\n")] = '\0';
+    }
+    if (strcmp(_attr, "ID") == 0 || strcmp(_attr, "PASSWORD") == 0)
+    {
+        switch (_mode)
         {
+        case 'r':
+
             if (strcmp(_attr, "ID") == 0)
                 strcpy(Settings.Id, buffer);
             else if (strcmp(_attr, "PASSWORD") == 0)
                 strcpy(Settings.Password, buffer);
+        case 's':
+            break;
         }
-        else if (strcmp(_attr, "FONT") == 0)
+    }
+    else if (strcmp(_attr, "FONT") == 0)
+    {
+        switch (_mode)
         {
-
+        case 'r':
+            strcpy(Settings.Window.Font.name, buffer);
             loadFont(buffer);
+            break;
+        case 's':
+            break;
         }
-        else if (strcmp(_attr, "WIDTH") == 0 || strcmp(_attr, "HEIGHT") == 0)
+    }
+    else if (strcmp(_attr, "WIDTH") == 0 || strcmp(_attr, "HEIGHT") == 0)
+    {
+        switch (_mode)
         {
-
+        case 'r':
             if (strcmp(_attr, "WIDTH") == 0)
                 Settings.Window.Width = atoi(buffer);
             else if (strcmp(_attr, "HEIGHT") == 0)
                 Settings.Window.Height = atoi(buffer);
+        case 's':
+            break;
         }
-        free(buffer);
     }
+
+    if (buffer != NULL)
+        free(buffer);
 }
 
 void loadFont(const char *const _font)

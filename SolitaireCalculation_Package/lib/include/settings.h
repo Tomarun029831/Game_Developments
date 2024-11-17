@@ -19,7 +19,7 @@ typedef struct
 
 typedef struct
 {
-    char *name;
+    char name[MAX_LENGTH_PATH];
     ColorAttritude ShowUp;
     ColorAttritude Makestack;
     ColorAttritude Discard;
