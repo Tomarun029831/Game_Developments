@@ -25,8 +25,8 @@ void StartWindow(const char **_optionv)
         {
             printf("userID: ");
             scanf_s("%s", userID, sizeof(userID));
-            if (strchr(userID, INVAIL_MARK) != NULL)
-                exit(EXIT_FAILURE);
+            // if (strchr(userID, INVAIL_MARK) != NULL)
+            //     exit(EXIT_FAILURE);
         }
 
         while (strcmp(password, Settings.Password) != 0)

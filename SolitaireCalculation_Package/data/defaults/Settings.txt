@@ -1,4 +1,4 @@
-ID:  f-1
+ID:-1
 PASSWORD:abc
 WINDOW
 {

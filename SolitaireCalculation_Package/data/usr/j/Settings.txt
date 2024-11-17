@@ -1,5 +1,5 @@
-ID:j
-PASSWORD:fdf
+ID:fff
+PASSWORD:012
 WINDOW
 {
     FONT:default
