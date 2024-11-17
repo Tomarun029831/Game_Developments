@@ -106,8 +106,6 @@ void analyzeSettings(char *_str, char _mode)
             break;
         }
         ++loadPointer;
-        // printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
-        //        Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
     }
     if (blockCount != 0)
     {
@@ -117,74 +115,34 @@ void analyzeSettings(char *_str, char _mode)
 
 void colonOperater(const char *const _attr, char *_str, const char **_loadPointer, const char _mode)
 {
-    char *buffer;
-    if (strcmp(_attr, "ID") == 0)
+    while (**_loadPointer == ' ')
+        ++*_loadPointer;
+    char *buffer = read_until_newline(_loadPointer);
+    buffer[strcspn(buffer, "\n")] = '\0';
+    if (buffer != NULL)
     {
-        while (**_loadPointer == ' ')
-            ++*_loadPointer;
-
-        buffer = read_until_newline(_loadPointer);
-
-        if (buffer != NULL)
+        if (strcmp(_attr, "ID") == 0 || strcmp(_attr, "PASSWORD") == 0)
         {
-            buffer[strcspn(buffer, "\n")] = '\0';
-            strcpy(Settings.Id, buffer);
+            if (strcmp(_attr, "ID") == 0)
+                strcpy(Settings.Id, buffer);
+            else if (strcmp(_attr, "PASSWORD") == 0)
+                strcpy(Settings.Password, buffer);
         }
-    }
-    else if (strcmp(_attr, "PASSWORD") == 0)
-    {
-        while (**_loadPointer == ' ')
-            ++*_loadPointer;
-
-        buffer = read_until_newline(_loadPointer);
-
-        if (buffer != NULL)
+        else if (strcmp(_attr, "FONT") == 0)
         {
-            buffer[strcspn(buffer, "\n")] = '\0';
-            strcpy(Settings.Password, buffer);
-        }
-    }
-    else if (strcmp(_attr, "FONT") == 0)
-    {
-        while (**_loadPointer == ' ')
-            ++*_loadPointer;
 
-        buffer = read_until_newline(_loadPointer);
-
-        if (buffer != NULL)
-        {
-            buffer[strcspn(buffer, "\n")] = '\0';
             loadFont(buffer);
         }
-    }
-    else if (strcmp(_attr, "WIDTH") == 0)
-    {
-        while (**_loadPointer == ' ')
-            ++*_loadPointer;
-
-        buffer = read_until_newline(_loadPointer);
-
-        if (buffer != NULL)
+        else if (strcmp(_attr, "WIDTH") == 0 || strcmp(_attr, "HEIGHT") == 0)
         {
-            buffer[strcspn(buffer, "\n")] = '\0';
-            Settings.Window.Width = atoi(buffer);
-        }
-    }
-    else if (strcmp(_attr, "HEIGHT") == 0)
-    {
-        while (**_loadPointer == ' ')
-            ++*_loadPointer;
 
-        buffer = read_until_newline(_loadPointer);
-
-        if (buffer != NULL)
-        {
-            buffer[strcspn(buffer, "\n")] = '\0';
-            Settings.Window.Height = atoi(buffer);
+            if (strcmp(_attr, "WIDTH") == 0)
+                Settings.Window.Width = atoi(buffer);
+            else if (strcmp(_attr, "HEIGHT") == 0)
+                Settings.Window.Height = atoi(buffer);
         }
-    }
-    if (buffer != NULL)
         free(buffer);
+    }
 }
 
 void loadFont(const char *const _font)
