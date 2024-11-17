@@ -192,9 +192,53 @@ void removeUserData(const char *const _userName)
     }
 }
 
+void copy_file(const char *source_filename, const char *destination_filename)
+{
+    FILE *source_file = fopen(source_filename, "rb"); // バイナリモードで読み込み
+    if (source_file == NULL)
+    {
+        perror("Error opening source file");
+        return;
+    }
+
+    FILE *destination_file = fopen(destination_filename, "wb"); // バイナリモードで書き込み
+    if (destination_file == NULL)
+    {
+        perror("Error opening destination file");
+        fclose(source_file);
+        return;
+    }
+
+    // バッファを使ってファイルをコピー
+    const size_t buffer_size = 1024; // 1KBのバッファを使用
+    unsigned char buffer[buffer_size];
+    size_t bytes_read;
+
+    while ((bytes_read = fread(buffer, 1, buffer_size, source_file)) > 0)
+    {
+        size_t bytes_written = fwrite(buffer, 1, bytes_read, destination_file);
+        if (bytes_written < bytes_read)
+        {
+            perror("Error writing to destination file");
+            fclose(source_file);
+            fclose(destination_file);
+            return;
+        }
+    }
+
+    // ファイルクローズ
+    fclose(source_file);
+    fclose(destination_file);
+
+    printf("File copied successfully.\n");
+}
+
 void addUserData(char *_userName)
 {
     printf("ADD called with %s", _userName);
+
+    const char *const defaultSettingsPath = "./data/defaults/Settings.txt";
+    const char *const defaultFontPath = "./data/defaults/Font/default.txt";
 
     const char *const basePath = "./data/usr";
     char userDir[MAX_LENGTH_PATH];
@@ -204,16 +248,11 @@ void addUserData(char *_userName)
 
     _mkdir(userDir);
     snprintf(tmpPath, sizeof(tmpPath), "%s/%s", userDir, "Settings.txt");
-    fp = fopen(tmpPath, "w");
-
-    fclose(fp);
+    copy_file(defaultSettingsPath, tmpPath);
 
     _mkdir(strcat(strcpy(tmpPath, userDir), "/font"));
     snprintf(tmpPath, sizeof(tmpPath), "%s/%s", tmpPath, "font.txt");
-
-    fp = fopen(tmpPath, "w");
-
-    fclose(fp);
+    copy_file(defaultFontPath, tmpPath);
 }
 
 void createFontFile(char *_name, FILE *_fp)

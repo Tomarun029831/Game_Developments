@@ -1,8 +1,8 @@
-ID:fff
-PASSWORD:012
+ID:GUEST
+PASSWORD:-
 WINDOW
 {
-    FONT:Locks
+    FONT:default
     SIZE
     {
         WIDTH:1920

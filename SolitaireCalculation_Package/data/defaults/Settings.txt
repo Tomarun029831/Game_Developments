@@ -1,5 +1,5 @@
-ID:-1
-PASSWORD:abc
+ID:GUEST
+PASSWORD:-
 WINDOW
 {
     FONT:default
