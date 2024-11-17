@@ -4,6 +4,7 @@
 #define DEFAULT_PATH "/defaults"
 #define MAX_LENGTH_PATH 256
 #define RESET_FONT setFontAttributes(-1, -1, -1)
+#define NOTBUFFERABLE {ASSIGN_OPERATER, STARTBLOCK, ENDBLOCK, ' ', '\n'}
 
 // loadSettings
 #define LOAD_SUCCESS 0
@@ -42,5 +43,5 @@ typedef struct
 } _Settings;
 
 // load settings
-int loadSettings(const char *const _userName);
+int loadSettings(const char *const _userName, const char load_mode);
 void loadFont(const char *const _font);

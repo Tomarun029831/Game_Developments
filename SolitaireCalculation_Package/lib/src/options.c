@@ -56,7 +56,7 @@ void *getOptionHandler(const char *_option)
     const char **matchingOption = getFullOption(_option);
     if (matchingOption == optionAdd)
     {
-        return addFileOrDir;
+        return addUserData;
     }
     else if (matchingOption == optionDirectory)
     {
@@ -192,7 +192,39 @@ void removeUserData(const char *const _userName)
     }
 }
 
-void addFileOrDir(char *path) { printf("ADD called with %s", path); }
+void addUserData(char *_userName)
+{
+    printf("ADD called with %s", _userName);
+
+    const char *const basePath = "./data/usr";
+    char userDir[MAX_LENGTH_PATH];
+    char tmpPath[MAX_LENGTH_PATH];
+    FILE *fp;
+    snprintf(userDir, sizeof(userDir), "%s/%s", basePath, _userName);
+
+    _mkdir(userDir);
+    snprintf(tmpPath, sizeof(tmpPath), "%s/%s", userDir, "Settings.txt");
+    fp = fopen(tmpPath, "w");
+
+    fclose(fp);
+
+    _mkdir(strcat(strcpy(tmpPath, userDir), "/font"));
+    snprintf(tmpPath, sizeof(tmpPath), "%s/%s", tmpPath, "font.txt");
+
+    fp = fopen(tmpPath, "w");
+
+    fclose(fp);
+}
+
+void createFontFile(char *_name, FILE *_fp)
+{
+    if (strcmp(_name, "default") == 0)
+    {
+    }
+    else
+    {
+    }
+}
 
 void handleError()
 {

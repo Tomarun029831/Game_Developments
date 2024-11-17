@@ -5,8 +5,7 @@
 #include "../include/settings.h"
 #include "../include/window.h"
 
-extern _Settings Settings;
-// _Settings Settings;
+_Settings Settings;
 
 void StartWindow(const char **_optionv)
 {
@@ -15,17 +14,17 @@ void StartWindow(const char **_optionv)
     // found option
     if (_optionv[0] == OPTION_FAILURE)
     {
-        T_CLEAR;
-        TC_END;
+        // T_CLEAR;
+        // TC_END;
         printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
                Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
 
         printf("please input userId and password\n");
 
-        while (loadSettings(userID) != LOAD_SUCCESS)
+        while (loadSettings(userID, 'r') != LOAD_SUCCESS)
         {
             printf("userID: ");
-            scanf_s("%99s", userID, sizeof(userID));
+            scanf_s("%s", userID, sizeof(userID));
             if (strchr(userID, INVAIL_MARK) != NULL)
                 exit(EXIT_FAILURE);
         }
@@ -33,10 +32,13 @@ void StartWindow(const char **_optionv)
         while (strcmp(password, Settings.Password) != 0)
         {
             printf("password: ");
-            scanf("%s", password);
+            scanf_s("%s", password, sizeof(password));
             if (strchr(password, INVAIL_MARK) != NULL)
                 exit(EXIT_FAILURE);
         }
+
+        // strcpy(Settings.Id, "one");
+        // loadSettings("/defaults", 's');
 
         printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
                Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);

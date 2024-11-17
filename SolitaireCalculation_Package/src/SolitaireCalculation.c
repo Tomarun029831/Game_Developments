@@ -5,6 +5,7 @@
 #include <stdlib.h> // exit, random
 #include <time.h>   // time
 #include "../lib/include/options.h"
+// #include "../lib/include/settings.h"
 #include "../lib/include/settings.h"
 #include "../lib/include/window.h"
 
@@ -12,7 +13,7 @@
 int cardRanks[] = {'S', 'D', 'H', 'C'};
 // 'A', '2', '3', '4', '5', '6', '7', '8', '9', "10", 'J', 'Q', 'K'
 int cardSuits[] = {'A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'};
-_Settings Settings;
+extern _Settings Settings;
 
 typedef struct
 {
@@ -82,5 +83,5 @@ void initializeGame()
 
 void initializeWindow()
 {
-    loadSettings("/defaults");
+    loadSettings("/defaults", 'r');
 }
