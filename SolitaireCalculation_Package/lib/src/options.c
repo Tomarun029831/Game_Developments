@@ -18,6 +18,7 @@ const char *optionTree[] = OPTION_TREE;           // show struct of path in data
 const char **optionHandlers[] = {optionAdd, optionDirectory, optionHelp, optionRemove, optionTree, optionSettings};
 
 int isDirectory(const char *path);
+void copy_file(const char *source_filename, const char *destination_filename);
 
 void showSettings()
 {
@@ -194,14 +195,14 @@ void removeUserData(const char *const _userName)
 
 void copy_file(const char *source_filename, const char *destination_filename)
 {
-    FILE *source_file = fopen(source_filename, "rb"); // バイナリモードで読み込み
+    FILE *source_file = fopen(source_filename, "rb");
     if (source_file == NULL)
     {
         perror("Error opening source file");
         return;
     }
 
-    FILE *destination_file = fopen(destination_filename, "wb"); // バイナリモードで書き込み
+    FILE *destination_file = fopen(destination_filename, "wb");
     if (destination_file == NULL)
     {
         perror("Error opening destination file");
@@ -209,8 +210,7 @@ void copy_file(const char *source_filename, const char *destination_filename)
         return;
     }
 
-    // バッファを使ってファイルをコピー
-    const size_t buffer_size = 1024; // 1KBのバッファを使用
+    const size_t buffer_size = 1024; // 1KB
     unsigned char buffer[buffer_size];
     size_t bytes_read;
 
@@ -226,11 +226,8 @@ void copy_file(const char *source_filename, const char *destination_filename)
         }
     }
 
-    // ファイルクローズ
     fclose(source_file);
     fclose(destination_file);
-
-    printf("File copied successfully.\n");
 }
 
 void addUserData(char *_userName)
@@ -255,9 +252,9 @@ void addUserData(char *_userName)
     copy_file(defaultFontPath, tmpPath);
 }
 
-void createFontFile(char *_name, FILE *_fp)
+void createFontFile(char *_fontName, FILE *_fp)
 {
-    if (strcmp(_name, "default") == 0)
+    if (strcmp(_fontName, "default") == 0)
     {
     }
     else
