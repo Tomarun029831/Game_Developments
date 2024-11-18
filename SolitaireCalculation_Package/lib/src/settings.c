@@ -12,7 +12,7 @@ char notBufferAble[] = NOTBUFFERABLE;
 extern _Settings Settings;
 int isBufferAble(const char _c);
 void analyzeSettings(char *_str, char load_mode);
-void colonOperater(const char *const _attr, char *_str, const char **_loadPointer, const char _mode);
+void colonOperater(const char *const _attr, char *_str, char **_loadPointer, const char _mode);
 char *read_until_newline(const char **_loadPointer);
 
 // :, {, },  , \n
@@ -38,6 +38,7 @@ int isBufferAble(const char _c)
 // _mode, 'r': Read-Only, 's': Save-Settings
 int loadSettings(const char *const _userName, const char load_mode)
 {
+    printf("load called with %s %c\n", _userName, load_mode);
     if (load_mode != 'r' && load_mode != 's' || strcmp(_userName, "") == 0)
         return LOAD_FAILURE;
 
@@ -71,9 +72,16 @@ int loadSettings(const char *const _userName, const char load_mode)
     fseek(fp, 0, SEEK_SET);
     buffer = malloc(fileSize * c_size);
     fread(buffer, c_size, fileSize, fp);
-    fclose(fp);
 
     analyzeSettings(buffer, load_mode);
+    fclose(fp);
+
+    if (load_mode == 's')
+    {
+        fp = fopen(bufferPath, "w");
+        fwrite(buffer, c_size, strlen(buffer) + 1, fp);
+        fclose(fp);
+    }
     free(buffer);
 
     return LOAD_SUCCESS;
@@ -82,7 +90,7 @@ int loadSettings(const char *const _userName, const char load_mode)
 void analyzeSettings(char *_str, char _mode)
 {
     int blockCount = 0;
-    const char *loadPointer = _str;
+    char *loadPointer = _str;
     char target[2] = "";
     char buffer[MAX_LENGTH_PATH] = "";
     while ((target[0] = *loadPointer) != '\0')
@@ -114,51 +122,61 @@ void analyzeSettings(char *_str, char _mode)
     }
 }
 
-void colonOperater(const char *const _attr, char *_str, const char **_loadPointer, const char _mode)
+void forceInsertStr(char **_startPointer, const char *_source)
+{
+    char *startPoint = *_startPointer;
+    *_startPointer += strcspn(startPoint, "\n");
+    char *buffer = malloc((strlen(startPoint) + strlen(_source) + 1) * sizeof(char));
+    strcpy(buffer, _source);
+    strcat(buffer, *_startPointer);
+    strcpy(startPoint, buffer);
+
+    free(buffer);
+}
+
+void colonOperater(const char *const _attr, char *_str, char **_loadPointer, const char _mode)
 {
     char *buffer;
+    char *strp;
+    int *intp;
     if (_mode == 'r')
     {
         while (**_loadPointer == ' ')
             ++*_loadPointer;
-        buffer = read_until_newline(_loadPointer);
+        buffer = read_until_newline((const char **)_loadPointer);
         buffer[strcspn(buffer, "\n")] = '\0';
     }
-    if (strcmp(_attr, "ID") == 0 || strcmp(_attr, "PASSWORD") == 0)
+    if (strcmp(_attr, "ID") == 0 || strcmp(_attr, "PASSWORD") == 0 || strcmp(_attr, "FONT") == 0)
     {
+        if (strcmp(_attr, "ID") == 0)
+            strp = Settings.Id;
+        else if (strcmp(_attr, "PASSWORD") == 0)
+            strp = Settings.Password;
+        else if (strcmp(_attr, "FONT") == 0)
+            strp = Settings.Window.Font.name;
         switch (_mode)
         {
         case 'r':
-
-            if (strcmp(_attr, "ID") == 0)
-                strcpy(Settings.Id, buffer);
-            else if (strcmp(_attr, "PASSWORD") == 0)
-                strcpy(Settings.Password, buffer);
-        case 's':
-            break;
-        }
-    }
-    else if (strcmp(_attr, "FONT") == 0)
-    {
-        switch (_mode)
-        {
-        case 'r':
-            strcpy(Settings.Window.Font.name, buffer);
-            loadFont(buffer);
+            strcpy(strp, buffer);
+            if (strcmp(_attr, "FONT") == 0)
+                loadFont(buffer);
             break;
         case 's':
+            forceInsertStr(_loadPointer, strp);
             break;
         }
     }
     else if (strcmp(_attr, "WIDTH") == 0 || strcmp(_attr, "HEIGHT") == 0)
     {
+        if (strcmp(_attr, "WIDTH") == 0)
+            intp = &Settings.Window.Width;
+        else if (strcmp(_attr, "HEIGHT") == 0)
+            intp = &Settings.Window.Height;
         switch (_mode)
         {
         case 'r':
-            if (strcmp(_attr, "WIDTH") == 0)
-                Settings.Window.Width = atoi(buffer);
-            else if (strcmp(_attr, "HEIGHT") == 0)
-                Settings.Window.Height = atoi(buffer);
+            *intp = atoi(buffer);
+            break;
         case 's':
             break;
         }
@@ -190,7 +208,7 @@ char *read_until_newline(const char **_loadPointer)
     strncpy(result, *_loadPointer, length);
 
     result[length] = '\0';
-    *_loadPointer += length;
+    *_loadPointer += length; // move pointer to a newline
 
     return result;
 }

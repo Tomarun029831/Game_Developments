@@ -29,19 +29,17 @@ void StartWindow(const char **_optionv)
             //     exit(EXIT_FAILURE);
         }
 
+        setFontAttributes(8, 0, 0);
         while (strcmp(password, Settings.Password) != 0)
         {
+            RESET_FONT;
             printf("password: ");
+            setFontAttributes(8, 0, 0);
             scanf_s("%s", password, sizeof(password));
             if (strchr(password, INVAIL_MARK) != NULL)
                 exit(EXIT_FAILURE);
         }
-
-        // strcpy(Settings.Id, "one");
-        // loadSettings("/defaults", 's');
-
-        printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
-               Settings.Id, Settings.Password, Settings.Window.Font.name, Settings.Window.Width, Settings.Window.Height);
+        RESET_FONT;
 
         return; // Enter Game
     }
