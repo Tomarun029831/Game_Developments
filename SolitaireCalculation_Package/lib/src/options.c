@@ -105,35 +105,40 @@ const char **getFullOption(const char *_option)
 void showHelp(const char *_option)
 {
     char *optionDescriptions[OPTION_AMOUNT] =
-        {"-a <NAME>, add <NAME>, ADD <NAME> - create new file for saving processing of game",
-         "-d <PATH>, dir <PATH>, DIR <PATH> - show files and subdirectories in directory of argument",
-         "-h <OPTION>, help <OPTION>, HELP <OPTION> - show usage",
-         "-rm <PATH>, remove <PATH>, REMOVE <PATH> - delete file of argument",
-         "-t <PATH>, tree <PATH>, TREE <PATH> - show grahical struct of directory",
-         "-s, settings, SETTINGS - user configs"};
+        {"ADD: ADD <NAME>, add <NAME>, -a <NAME> - create new file for saving processing of game",
+         "DIR: DIR <PATH>, dir <PATH>, -d <PATH> - show files and subdirectories in directory of argument",
+         "HELP: HELP <OPTION>, help <OPTION>, -h <OPTION> - show usage",
+         "REMOVE: REMOVE <NAME>, remove <NAME>, -rm <NAME> - delete file of argument",
+         "TREE: TREE <PATH>, tree <PATH>, -t <PATH> - show grahical struct of directory",
+         "SETTINGS: SETTINGS <ATTR>, settings <ATTR>, -s <ATTR> - user configs"};
 
     char *settingsDescription[] =
-        {
-
-        };
+        {"ID: Identification of user",
+         "PASSWORD: User's password that exclude \'/\'",
+         "WINDOW: Window-settings includes Font and Size",
+         "FONT: Strings-Settings printed that includes Foreground, Background and Text-Style ",
+         "SIZE: Terminal-Size",
+         "WIDTH: :)",
+         "HEIGHT: :)"};
 
     const char **matchingOption = getFullOption(_option);
     if (matchingOption == OPTION_FAILURE)
     {
         puts("Usage:");
-        for (int option = 0; option < OPTION_AMOUNT; option++)
+        for (int i = 0; i < OPTION_AMOUNT; i++)
         {
-            printf("\t%s\n", optionDescriptions[option]);
+            printf("\t%s\n", optionDescriptions[i]);
         }
     }
     else
     {
         puts("Usage:");
-        for (int i = 0; i < OPTION_AMOUNT; i++)
+        for (int option = 0; option < OPTION_AMOUNT; option++)
         {
-            if (matchingOption == optionHandlers[i])
+            if (matchingOption == optionHandlers[option])
             {
-                printf("\t%s", optionDescriptions[i]);
+                printf("\t%s", optionDescriptions[option]);
+                break;
             }
         }
     }

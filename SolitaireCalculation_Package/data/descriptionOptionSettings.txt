@@ -1,0 +1,20 @@
+OPTION
+{
+    ADD:        ADD <NAME>, add <NAME>, -a <NAME> - create new file for saving processing of game
+    DIR:        DIR <PATH>, dir <PATH>, -d <PATH> - show files and subdirectories in directory of argument
+    HELP:       HELP <OPTION>, help <OPTION>, -h <OPTION> - show usage
+    REMOVE:     REMOVE <NAME>, remove <NAME>, -rm <NAME> - delete file of argument
+    TREE:       TREE <PATH>, tree <PATH>, -t <PATH> - show grahical struct of directory
+    SETTINGS:   SETTINGS <ATTR>, settings <ATTR>, -s <ATTR> - user configs
+}
+
+SETTINGS
+{
+    ID:         Identification of user
+    PASSWORD:   User's password that exclude \'/\'
+    WINDOW:     Window-settings includes Font and Size
+    FONT:       Strings-Settings printed that includes Foreground, Background and Text-Style
+    SIZE:       Terminal-Size
+    WIDTH:      :)
+    HEIGHT:     :)
+}

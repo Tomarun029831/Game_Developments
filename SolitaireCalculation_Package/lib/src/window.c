@@ -14,8 +14,8 @@ void StartWindow(const char **_optionv)
     // found option
     if (_optionv[0] == OPTION_FAILURE)
     {
-        T_CLEAR;
-        TC_END;
+        // T_CLEAR;
+        // TC_END;
         printf("1- ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
                Settings.Id, Settings.Password, Settings.Window.Font.name, Settings.Window.Width, Settings.Window.Height);
 
@@ -51,8 +51,11 @@ void StartWindow(const char **_optionv)
         } while (strcmp(password, Settings.Password) != 0);
         RESET_FONT;
 
-        strcpy(Settings.Id, "one");
-        loadSettings("/defaults", 's');
+        // strcpy(Settings.Id, "abcdefghijk");
+        // strcpy(Settings.Password, "0123456789");
+        // strcpy(Settings.Window.Font.name, "mailyoUnchi");
+
+        // loadSettings("/defaults", 's');
 
         return; // Enter Game
     }

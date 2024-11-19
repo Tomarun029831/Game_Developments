@@ -7,12 +7,13 @@
 #define ASSIGN_OPERATER ':'
 #define STARTBLOCK '{'
 #define ENDBLOCK '}'
-char notBufferAble[] = NOTBUFFERABLE;
+const char notBufferAble[] = NOTBUFFERABLE;
+const char *settingsAttritude[] = SETTINGS_ATTRITUDE;
 
 extern _Settings Settings;
 int isBufferAble(const char _c);
 void analyzeSettings(char *_str, char load_mode);
-void colonOperater(const char *const _attr, char *_str, char **_loadPointer, const char _mode);
+char *colonOperater(const char *const _attr, char **_loadPointer, const char _mode);
 char *read_until_newline(const char **_loadPointer);
 void forceInsertStr(char **_startPointer, const char *_source);
 
@@ -43,7 +44,6 @@ int loadSettings(const char *const _userName, const char load_mode)
     if (load_mode != 'r' && load_mode != 's' || strcmp(_userName, "") == 0)
         return LOAD_FAILURE;
 
-    char *buffer;
     char userPath[MAX_LENGTH_PATH];
     char bufferPath[MAX_LENGTH_PATH];
     const char *const basePath = (strcmp(_userName, DEFAULT_PATH) == 0) ? "./data/defaults" : "./data/usr";
@@ -65,7 +65,8 @@ int loadSettings(const char *const _userName, const char load_mode)
     fseek(fp, 0, SEEK_SET);
 
     size_t c_size = sizeof(char);
-    buffer = malloc(fileSize + 1);
+    char buffer[MAX_LENGTH_PATH] = "";
+    // char *buffer = malloc(fileSize + 1);
 
     fread(buffer, c_size, fileSize, fp);
     buffer[fileSize] = '\0';
@@ -79,7 +80,8 @@ int loadSettings(const char *const _userName, const char load_mode)
         fwrite(buffer, c_size, strlen(buffer), fp);
         fclose(fp);
     }
-    free(buffer);
+
+    // free(buffer); // error
 
     return LOAD_SUCCESS;
 }
@@ -92,6 +94,13 @@ void analyzeSettings(char *_str, char _mode)
     char buffer[MAX_LENGTH_PATH] = "";
     while ((target[0] = *loadPointer) != '\0')
     {
+        // if (target[0] == '\n')
+        //     printf("n\n");
+        // else if (target[0] == '\r')
+        //     printf("r");
+        // else
+        //     printf("|%c|", target[0]);
+
         if (isBufferAble(target[0]))
             strcat(buffer, target);
         switch (target[0])
@@ -107,7 +116,7 @@ void analyzeSettings(char *_str, char _mode)
             break;
         case ASSIGN_OPERATER:
             ++loadPointer;
-            colonOperater(buffer, _str, &loadPointer, _mode);
+            colonOperater(buffer, &loadPointer, _mode);
             strcpy(buffer, "");
             break;
         }
@@ -121,21 +130,24 @@ void analyzeSettings(char *_str, char _mode)
 
 void forceInsertStr(char **_startPointer, const char *_source)
 {
+    // printf("FIS called with %c %s\n", **_startPointer, _source);
     char *startPoint = *_startPointer;
-    *_startPointer += strcspn(startPoint, "\n");
     char *buffer = malloc((strlen(startPoint) + strlen(_source) + 1) * sizeof(char));
     strcpy(buffer, _source);
+    *_startPointer += strcspn(startPoint, "\r\n");
     strcat(buffer, *_startPointer);
     strcpy(startPoint, buffer);
+    *_startPointer = startPoint + strcspn(startPoint, "\n");
 
     free(buffer);
 }
 
-void colonOperater(const char *const _attr, char *_str, char **_loadPointer, const char _mode)
+char *colonOperater(const char *const _attr, char **_loadPointer, const char _mode)
 {
-    char *buffer;
-    char *strp;
-    int *intp;
+    char *buffer = NULL;
+    char *strp = NULL;
+    int *intp = NULL;
+
     if (_mode == 'r')
     {
         while (**_loadPointer == ' ')
@@ -143,44 +155,57 @@ void colonOperater(const char *const _attr, char *_str, char **_loadPointer, con
         buffer = read_until_newline((const char **)_loadPointer);
         buffer[strcspn(buffer, "\r\n")] = '\0';
     }
-    if (strcmp(_attr, "ID") == 0 || strcmp(_attr, "PASSWORD") == 0 || strcmp(_attr, "FONT") == 0)
+
+    void *settings[] = {
+        Settings.Id, Settings.Password, Settings.Window.Font.name,
+        &Settings.Window.Width, &Settings.Window.Height};
+
+    for (int i = 0; i < sizeof(settingsAttritude) / sizeof(settingsAttritude[0]); ++i)
     {
-        if (strcmp(_attr, "ID") == 0)
-            strp = Settings.Id;
-        else if (strcmp(_attr, "PASSWORD") == 0)
-            strp = Settings.Password;
-        else if (strcmp(_attr, "FONT") == 0)
-            strp = Settings.Window.Font.name;
-        switch (_mode)
+        if (strcmp(_attr, settingsAttritude[i]) == 0)
         {
-        case 'r':
-            strcpy(strp, buffer);
-            if (strcmp(_attr, "FONT") == 0)
-                loadFont(buffer);
-            break;
-        case 's':
-            forceInsertStr(_loadPointer, strp);
-            break;
-        }
-    }
-    else if (strcmp(_attr, "WIDTH") == 0 || strcmp(_attr, "HEIGHT") == 0)
-    {
-        if (strcmp(_attr, "WIDTH") == 0)
-            intp = &Settings.Window.Width;
-        else if (strcmp(_attr, "HEIGHT") == 0)
-            intp = &Settings.Window.Height;
-        switch (_mode)
-        {
-        case 'r':
-            *intp = atoi(buffer);
-            break;
-        case 's':
+            if (i < 3)
+            { // ID, Password, Font.name
+                strp = (char *)settings[i];
+            }
+            else
+            { // Width, Height
+                intp = (int *)settings[i];
+            }
+
+            switch (_mode)
+            {
+            case 'r':
+                if (strp)
+                {
+                    strcpy(strp, buffer); // ID, Password, Font.nameの設定
+                    if (i == 2)
+                    {
+                        loadFont(buffer);
+                    }
+                }
+                else if (intp)
+                {
+                    *intp = atoi(buffer); // Width, Heightの設定
+                }
+                break;
+            case 's':
+                if (strp)
+                {
+                    forceInsertStr(_loadPointer, strp); // ID, Password, Font.nameの書き込み
+                }
+                // Width, Heightの書き込み
+                break;
+            }
             break;
         }
     }
 
+    // bufferが確保されていれば解放
     if (buffer != NULL)
         free(buffer);
+
+    return NULL;
 }
 
 void loadFont(const char *const _font)
