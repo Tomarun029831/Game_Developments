@@ -14,32 +14,45 @@ void StartWindow(const char **_optionv)
     // found option
     if (_optionv[0] == OPTION_FAILURE)
     {
-        // T_CLEAR;
-        // TC_END;
-        printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
+        T_CLEAR;
+        TC_END;
+        printf("1- ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
                Settings.Id, Settings.Password, Settings.Window.Font.name, Settings.Window.Width, Settings.Window.Height);
 
-        printf("please input userId and password\n");
+        puts("please input userId and password");
 
-        while (loadSettings(userID, 'r') != LOAD_SUCCESS)
+        do
         {
-            printf("userID: ");
+            printf("userID: \033[K");
             scanf_s("%s", userID, sizeof(userID));
+            UP_CURSOR;
             // if (strchr(userID, INVAIL_MARK) != NULL)
+            // {
+            //     RESET_FONT;
             //     exit(EXIT_FAILURE);
-        }
+            // }
+        } while (loadSettings(userID, 'r') != LOAD_SUCCESS);
+
+        puts("");
 
         setFontAttributes(8, 0, 0);
-        while (strcmp(password, Settings.Password) != 0)
+        do
         {
             RESET_FONT;
-            printf("password: ");
-            setFontAttributes(8, 0, 0);
+            printf("password: \033[K");
+            setFontAttributes(8, 0, 0); // Hide input
             scanf_s("%s", password, sizeof(password));
+            UP_CURSOR;
             if (strchr(password, INVAIL_MARK) != NULL)
+            {
+                RESET_FONT;
                 exit(EXIT_FAILURE);
-        }
+            }
+        } while (strcmp(password, Settings.Password) != 0);
         RESET_FONT;
+
+        strcpy(Settings.Id, "one");
+        loadSettings("/defaults", 's');
 
         return; // Enter Game
     }
@@ -56,7 +69,7 @@ void SetWindowSize(int width, int height)
 // 0 <= style <= 9, 30 <= foreground <= 37 or 90 <= foreground <= 97, 40 <= background <= 47 or 100 <= background <= 107
 void setFontAttributes(int style, int foreground, int background)
 {
-    int isStyleValid = (style >= 0 && style <= 9);
+    int isStyleValid = (style >= 1 && style <= 9);
     int isForegroundValid = ((30 <= foreground && foreground <= 39) || (90 <= foreground && foreground <= 97));
     int isBackgroundValid = ((40 <= background && background <= 49) || (100 <= background && background <= 107));
 

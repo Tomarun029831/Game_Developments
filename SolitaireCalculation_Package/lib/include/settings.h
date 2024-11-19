@@ -4,7 +4,7 @@
 #define DEFAULT_PATH "/defaults"
 #define MAX_LENGTH_PATH 256
 #define RESET_FONT setFontAttributes(-1, -1, -1)
-#define NOTBUFFERABLE {ASSIGN_OPERATER, STARTBLOCK, ENDBLOCK, ' ', '\n'}
+#define NOTBUFFERABLE {ASSIGN_OPERATER, STARTBLOCK, ENDBLOCK, ' ', '\n', '\r'}
 
 // loadSettings
 #define LOAD_SUCCESS 0

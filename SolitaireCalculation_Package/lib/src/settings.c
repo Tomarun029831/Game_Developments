@@ -14,8 +14,9 @@ int isBufferAble(const char _c);
 void analyzeSettings(char *_str, char load_mode);
 void colonOperater(const char *const _attr, char *_str, char **_loadPointer, const char _mode);
 char *read_until_newline(const char **_loadPointer);
+void forceInsertStr(char **_startPointer, const char *_source);
 
-// :, {, },  , \n
+// :, {, },  , \n, \r
 int isBufferAble(const char _c)
 {
     int isbufferable = 1;
@@ -38,11 +39,10 @@ int isBufferAble(const char _c)
 // _mode, 'r': Read-Only, 's': Save-Settings
 int loadSettings(const char *const _userName, const char load_mode)
 {
-    printf("load called with %s %c\n", _userName, load_mode);
+    // printf("load called with %s %c\n", _userName, load_mode);
     if (load_mode != 'r' && load_mode != 's' || strcmp(_userName, "") == 0)
         return LOAD_FAILURE;
 
-    int fileSize;
     char *buffer;
     char userPath[MAX_LENGTH_PATH];
     char bufferPath[MAX_LENGTH_PATH];
@@ -56,30 +56,27 @@ int loadSettings(const char *const _userName, const char load_mode)
     strcpy(bufferPath, userPath);
     strcat(bufferPath, "/Settings.txt");
 
-    FILE *fp = fopen(bufferPath, "r");
+    FILE *fp = fopen(bufferPath, "rb");
     if (fp == NULL)
         return LOAD_FAILURE;
 
     fseek(fp, 0, SEEK_END);
-    fileSize = ftell(fp);
+    int fileSize = ftell(fp); // 117
     fseek(fp, 0, SEEK_SET);
 
     size_t c_size = sizeof(char);
-    buffer = malloc(fileSize * c_size);
-    fileSize = fread(buffer, c_size, fileSize, fp);
-    free(buffer);
+    buffer = malloc(fileSize + 1);
 
-    fseek(fp, 0, SEEK_SET);
-    buffer = malloc(fileSize * c_size);
     fread(buffer, c_size, fileSize, fp);
+    buffer[fileSize] = '\0';
 
     analyzeSettings(buffer, load_mode);
     fclose(fp);
 
     if (load_mode == 's')
     {
-        fp = fopen(bufferPath, "w");
-        fwrite(buffer, c_size, strlen(buffer) + 1, fp);
+        fp = fopen(bufferPath, "wb");
+        fwrite(buffer, c_size, strlen(buffer), fp);
         fclose(fp);
     }
     free(buffer);
@@ -144,7 +141,7 @@ void colonOperater(const char *const _attr, char *_str, char **_loadPointer, con
         while (**_loadPointer == ' ')
             ++*_loadPointer;
         buffer = read_until_newline((const char **)_loadPointer);
-        buffer[strcspn(buffer, "\n")] = '\0';
+        buffer[strcspn(buffer, "\r\n")] = '\0';
     }
     if (strcmp(_attr, "ID") == 0 || strcmp(_attr, "PASSWORD") == 0 || strcmp(_attr, "FONT") == 0)
     {

@@ -112,6 +112,11 @@ void showHelp(const char *_option)
          "-t <PATH>, tree <PATH>, TREE <PATH> - show grahical struct of directory",
          "-s, settings, SETTINGS - user configs"};
 
+    char *settingsDescription[] =
+        {
+
+        };
+
     const char **matchingOption = getFullOption(_option);
     if (matchingOption == OPTION_FAILURE)
     {
