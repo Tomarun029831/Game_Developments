@@ -9,19 +9,24 @@
 
 extern _Settings Settings;
 
-const char *optionAdd[] = OPTION_ADD;             // create directory, file in data
-const char *optionDirectory[] = OPTION_DIRECTOTY; // show file or subdirectory in data
-const char *optionHelp[] = OPTION_HELP;           // help option
-const char *optionRemove[] = OPTION_REMOVE;       // remove directory, file in data
-const char *optionSettings[] = OPTION_SETTING;    // User configs
-const char *optionTree[] = OPTION_TREE;           // show struct of path in data
-const char **optionHandlers[] = {optionAdd, optionDirectory, optionHelp, optionRemove, optionTree, optionSettings};
+const char *optionAdd[] = ALIAS_ADD;             // create directory, file in data
+const char *optionDirectory[] = ALIAS_DIRECTORY; // show file or subdirectory in data
+const char *optionHelp[] = ALIAS_HELP;           // help option
+const char *optionRemove[] = ALIAS_REMOVE;       // remove directory, file in data
+const char *optionSettings[] = ALIAS_SETTINGS;   // User configs
+const char *optionTree[] = ALIAS_TREE;           // show struct of path in data
+const char *optionHandler[] = {ORIGINAL_ADD, ORIGINAL_DIRECTORY, ORIGINAL_HELP, ORIGINAL_REMOVE, ORIGINAL_SETTINGS, ORIGINAL_TREE};
+const char **optionAliasHandlers[] = {optionAdd, optionDirectory, optionHelp, optionRemove, optionTree, optionSettings};
 
 int isDirectory(const char *path);
 void copy_file(const char *source_filename, const char *destination_filename);
 
 void showSettings()
 {
+    for (int i = 0; i < sizeof(optionHandler) / sizeof(optionHandler[0]); i++)
+    {
+        printf("%s\n", optionHandler[i]);
+    }
     T_CLEAR;
     // FILE fp;
     char *s;
@@ -94,8 +99,8 @@ const char **getFullOption(const char *_option)
         {
             for (int alias = 0; alias < OPTION_ALIAS; alias++)
             {
-                if (strcmp(_option, optionHandlers[option][alias]) == 0)
-                    return optionHandlers[option];
+                if (strcmp(_option, optionAliasHandlers[option][alias]) == 0)
+                    return optionAliasHandlers[option];
             }
         }
         return OPTION_FAILURE;
@@ -135,7 +140,7 @@ void showHelp(const char *_option)
         puts("Usage:");
         for (int option = 0; option < OPTION_AMOUNT; option++)
         {
-            if (matchingOption == optionHandlers[option])
+            if (matchingOption == optionAliasHandlers[option])
             {
                 printf("\t%s", optionDescriptions[option]);
                 break;

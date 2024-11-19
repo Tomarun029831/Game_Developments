@@ -7,8 +7,6 @@
 #define ASSIGN_OPERATER ':'
 #define STARTBLOCK '{'
 #define ENDBLOCK '}'
-const char notBufferAble[] = NOTBUFFERABLE;
-const char *settingsAttritude[] = SETTINGS_ATTRITUDE;
 
 extern _Settings Settings;
 int isBufferAble(const char _c);
@@ -20,6 +18,7 @@ void forceInsertStr(char **_startPointer, const char *_source);
 // :, {, },  , \n, \r
 int isBufferAble(const char _c)
 {
+    const char notBufferAble[] = NOTBUFFERABLE;
     int isbufferable = 1;
     int len = strlen(notBufferAble);
 
@@ -142,18 +141,36 @@ void forceInsertStr(char **_startPointer, const char *_source)
     free(buffer);
 }
 
+int count_figures(int n)
+{
+    int count = 0;
+    if (n == 0)
+        return 1;
+    if (n < 0)
+        n = -n;
+
+    while (n != 0)
+    {
+        n /= 10;
+        count++;
+    }
+
+    return count;
+}
+
 char *colonOperater(const char *const _attr, char **_loadPointer, const char _mode)
 {
-    char *buffer = NULL;
-    char *strp = NULL;
     int *intp = NULL;
+    char *strp = NULL;
+    char *buffer = NULL;
+    const char *settingsAttritude[] = SETTINGS_ATTRITUDE;
 
     if (_mode == 'r')
     {
-        while (**_loadPointer == ' ')
-            ++*_loadPointer;
-        buffer = read_until_newline((const char **)_loadPointer);
-        buffer[strcspn(buffer, "\r\n")] = '\0';
+        // while (**_loadPointer == ' ')
+        //     ++*_loadPointer;
+        // buffer = read_until_newline((const char **)_loadPointer);
+        // buffer[strcspn(buffer, "\r\n")] = '\0';
     }
 
     void *settings[] = {
@@ -176,9 +193,13 @@ char *colonOperater(const char *const _attr, char **_loadPointer, const char _mo
             switch (_mode)
             {
             case 'r':
+                while (**_loadPointer == ' ')
+                    ++*_loadPointer;
+                buffer = read_until_newline((const char **)_loadPointer);
+                buffer[strcspn(buffer, "\r\n")] = '\0';
                 if (strp)
                 {
-                    strcpy(strp, buffer); // ID, Password, Font.nameの設定
+                    strcpy(strp, buffer); // Get ID, Password, Font.name From File
                     if (i == 2)
                     {
                         loadFont(buffer);
@@ -186,15 +207,19 @@ char *colonOperater(const char *const _attr, char **_loadPointer, const char _mo
                 }
                 else if (intp)
                 {
-                    *intp = atoi(buffer); // Width, Heightの設定
+                    *intp = atoi(buffer); // Get Width, Height From File
                 }
                 break;
             case 's':
                 if (strp)
                 {
-                    forceInsertStr(_loadPointer, strp); // ID, Password, Font.nameの書き込み
+                    forceInsertStr(_loadPointer, strp); // Write ID, Password, Font.name to File
                 }
-                // Width, Heightの書き込み
+                else if (intp)
+                {
+                    buffer = malloc((count_figures(*intp) + 1) * sizeof(char));
+                    forceInsertStr(_loadPointer, itoa(*intp, buffer, 10)); // Write Width, Height To File
+                }
                 break;
             }
             break;

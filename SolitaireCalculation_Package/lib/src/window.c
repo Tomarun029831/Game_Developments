@@ -54,6 +54,8 @@ void StartWindow(const char **_optionv)
         // strcpy(Settings.Id, "abcdefghijk");
         // strcpy(Settings.Password, "0123456789");
         // strcpy(Settings.Window.Font.name, "mailyoUnchi");
+        // Settings.Window.Height = 10;
+        // Settings.Window.Width = 6;
 
         // loadSettings("/defaults", 's');
 

@@ -46,3 +46,6 @@ typedef struct
 // load settings
 int loadSettings(const char *const _userName, const char load_mode);
 void loadFont(const char *const _font);
+
+// analyze string
+void analyzeSettings(char *_str, char _mode);
