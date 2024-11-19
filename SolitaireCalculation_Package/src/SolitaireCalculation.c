@@ -4,8 +4,8 @@
 #include <string.h> // strcmp
 #include <stdlib.h> // exit, random
 #include <time.h>   // time
+#include <locale.h> // UTF-8
 #include "../lib/include/options.h"
-// #include "../lib/include/settings.h"
 #include "../lib/include/settings.h"
 #include "../lib/include/window.h"
 
@@ -83,5 +83,6 @@ void initializeGame()
 
 void initializeWindow()
 {
+    setlocale(LC_ALL, ".UTF-8");
     loadSettings("/defaults", 'r');
 }

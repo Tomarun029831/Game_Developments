@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <wchar.h>
 #include <string.h>
 #include <direct.h>
 #include <dirent.h>
+
 #include "../include/window.h"
 #include "../include/settings.h"
 #include "../include/options.h"
@@ -149,7 +151,20 @@ void showHelp(const char *_option)
     }
 }
 
-void showDirectoryTree(char *path) { printf("TREE called with %s", path); }
+#define VERTICAL_LINE L'│'   // │ (Unicode)
+#define NODE_CHILD L'├'      // ├ (Unicode)
+#define HORIZONTAL_LINE L'─' // ─ (Unicode)
+#define LAST_NODE L'└'       // └ (Unicode)
+
+void showDirectoryTree(char *path)
+{
+    wchar_t vline = VERTICAL_LINE;
+    wchar_t nodec = NODE_CHILD;
+    wchar_t hline = HORIZONTAL_LINE;
+    wchar_t lnode = LAST_NODE;
+    printf("TREE called with %s\n", path);
+    wprintf(L"%lc %lc %lc %lc\n", vline, nodec, hline, lnode);
+}
 
 void listDirectory(char *path) { printf("DIRECRORY called with %s", path); }
 
