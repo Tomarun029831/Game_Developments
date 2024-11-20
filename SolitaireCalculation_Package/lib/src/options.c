@@ -151,22 +151,106 @@ void showHelp(const char *_option)
     }
 }
 
+int countDirectory(char *path)
+{
+    if (strchr(path, '\\') != NULL)
+    {
+        puts("Invail path: You cannot include \'\\\' in Path, but \'/\'\n");
+        exit(EXIT_FAILURE);
+    }
+    path = path ? path : "./";
+    DIR *dir = opendir(path);
+    struct dirent *entry;
+    int count = 0;
+    while ((entry = readdir(dir)) != NULL)
+        ++count;
+    return count;
+}
+
 #define VERTICAL_LINE L'│'   // │ (Unicode)
 #define NODE_CHILD L'├'      // ├ (Unicode)
 #define HORIZONTAL_LINE L'─' // ─ (Unicode)
 #define LAST_NODE L'└'       // └ (Unicode)
-
 void showDirectoryTree(char *path)
 {
+    if (path == NULL || *path == '\0')
+    {
+        path = "./";
+    }
+
+    if (strchr(path, '\\') != NULL)
+    {
+        puts("Invalid path: You cannot include '\\' in path, use '/' instead.");
+        exit(EXIT_FAILURE);
+    }
+
+    if (*path == '/')
+    {
+        printf("Using relative path: ./\n");
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+        printf("Using relative path: %s\n", path);
+    }
+
+    char formatedPath[MAX_LENGTH_PATH];
+    strcpy(formatedPath, path);
+    char *lastSlash = strrchr(path, '/');
+    if (lastSlash != NULL)
+    {
+        strcpy(formatedPath, lastSlash + 1);
+    }
+    else
+    {
+        strcpy(formatedPath, path);
+    }
+
     DIR *dir = opendir(path);
     if (dir == NULL)
     {
         printf("Failed to open directory\n");
         exit(EXIT_FAILURE);
     }
+
     struct dirent *entry;
-    printf("TREE called with %s\n", path);
-    // wprintf(L"%lc %lc %lc %lc\n", vline, nodec, hline, LAST_NODE);
+    int count = countDirectory(path);
+    int i = 0;
+    while ((entry = readdir(dir)) != NULL)
+    {
+        // ディレクトリ項目が"."または".."の場合はスキップ
+        if (strcmp(entry->d_name, "..") == 0 || strcmp(entry->d_name, ".") == 0)
+        {
+            continue;
+        }
+
+        if (i == 0)
+        {
+            // 最初の項目（ディレクトリ名など）を表示
+            char *str = strrchr(path, '/') + 1;
+            if (*str == '\0')
+            {
+                *str = '.'; // カレントディレクトリの場合、'.'に設定
+            }
+            printf("%s\n", str);
+            i++;
+            continue;
+        }
+        else if (i == count - 1)
+        {
+            // 最後のノード（子ノードの最後）を表示
+            wprintf(L"%lc%lc", LAST_NODE, HORIZONTAL_LINE);
+        }
+        else
+        {
+            // 中間のノードを表示
+            wprintf(L"%lc%lc", NODE_CHILD, HORIZONTAL_LINE);
+        }
+
+        printf("%s\n", entry->d_name); // ディレクトリ項目名を表示
+        i++;
+    }
+
     closedir(dir);
 }
 

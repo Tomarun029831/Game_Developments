@@ -11,11 +11,12 @@
 #define ORIGINAL_SETTINGS "SETTINGS"
 #define ORIGINAL_TREE "TREE"
 
-#define ALIAS_ADD {ORIGINAL_ADD, "add", "-a"}                // create directory, file in data
+#define ALIAS_ADD {ORIGINAL_ADD, "add", "-a"} // create directory, file in data
+
 #define ALIAS_DIRECTORY {ORIGINAL_DIRECTORY, "dir", "-d"}    // show file or subdirectory in data
 #define ALIAS_HELP {ORIGINAL_HELP, "help", "-h"}             // help option
 #define ALIAS_REMOVE {ORIGINAL_REMOVE, "remove", "-rm"}      // remove directory, file in data
-#define ALIAS_SETTINGS {ORIGINAL_SETTINGS, "settings", "-s"} // User configs
+#define ALIAS_SETTINGS {ORIGINAL_SETTINGS, "settings", "-s"} // User configss
 #define ALIAS_TREE {ORIGINAL_TREE, "tree", "-t"}             // show struct of path in data
 
 // Options
