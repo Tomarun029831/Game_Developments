@@ -172,6 +172,11 @@ void showDirectoryTree(char *path)
 
 void listDirectory(char *path)
 {
+    if (strchr(path, '\\') != NULL)
+    {
+        puts("Invail path: You cannot include \'\\\' in Path, but \'/\'\n");
+        exit(EXIT_FAILURE);
+    }
     path = path ? path : "./";
     char bufferPath[MAX_LENGTH_PATH];
     strcpy(bufferPath, path);
