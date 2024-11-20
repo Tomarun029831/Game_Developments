@@ -164,16 +164,7 @@ char *colonOperater(const char *const _attr, char **_loadPointer, const char _mo
     char *strp = NULL;
     char *buffer = NULL;
     const char *settingsAttritude[] = SETTINGS_ATTRITUDE;
-
-    if (_mode == 'r')
-    {
-        // while (**_loadPointer == ' ')
-        //     ++*_loadPointer;
-        // buffer = read_until_newline((const char **)_loadPointer);
-        // buffer[strcspn(buffer, "\r\n")] = '\0';
-    }
-
-    void *settings[] = {
+    void *settings_p[] = {
         Settings.Id, Settings.Password, Settings.Window.Font.name,
         &Settings.Window.Width, &Settings.Window.Height};
 
@@ -181,15 +172,6 @@ char *colonOperater(const char *const _attr, char **_loadPointer, const char _mo
     {
         if (strcmp(_attr, settingsAttritude[i]) == 0)
         {
-            if (i < 3)
-            { // ID, Password, Font.name
-                strp = (char *)settings[i];
-            }
-            else
-            { // Width, Height
-                intp = (int *)settings[i];
-            }
-
             switch (_mode)
             {
             case 'r':
@@ -197,28 +179,28 @@ char *colonOperater(const char *const _attr, char **_loadPointer, const char _mo
                     ++*_loadPointer;
                 buffer = read_until_newline((const char **)_loadPointer);
                 buffer[strcspn(buffer, "\r\n")] = '\0';
-                if (strp)
+                if (i < 3)
                 {
-                    strcpy(strp, buffer); // Get ID, Password, Font.name From File
-                    if (i == 2)
+                    strcpy((char *)settings_p[i], buffer);
+                    if (strcmp(_attr, "FONT") == 0)
                     {
                         loadFont(buffer);
                     }
                 }
-                else if (intp)
+                else
                 {
-                    *intp = atoi(buffer); // Get Width, Height From File
+                    *((int *)settings_p[i]) = atoi(buffer);
                 }
                 break;
             case 's':
-                if (strp)
+                if (i < 3)
                 {
-                    forceInsertStr(_loadPointer, strp); // Write ID, Password, Font.name to File
+                    forceInsertStr(_loadPointer, (char *)settings_p[i]);
                 }
-                else if (intp)
+                else
                 {
-                    buffer = malloc((count_figures(*intp) + 1) * sizeof(char));
-                    forceInsertStr(_loadPointer, itoa(*intp, buffer, 10)); // Write Width, Height To File
+                    buffer = malloc((count_figures(*((int *)settings_p[i])) + 1) * sizeof(char));
+                    forceInsertStr(_loadPointer, itoa(*((int *)settings_p[i]), buffer, 10));
                 }
                 break;
             }
@@ -226,7 +208,6 @@ char *colonOperater(const char *const _attr, char **_loadPointer, const char _mo
         }
     }
 
-    // bufferが確保されていれば解放
     if (buffer != NULL)
         free(buffer);
 

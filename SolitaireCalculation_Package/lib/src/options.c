@@ -158,15 +158,42 @@ void showHelp(const char *_option)
 
 void showDirectoryTree(char *path)
 {
-    wchar_t vline = VERTICAL_LINE;
-    wchar_t nodec = NODE_CHILD;
-    wchar_t hline = HORIZONTAL_LINE;
-    wchar_t lnode = LAST_NODE;
+    DIR *dir = opendir(path);
+    if (dir == NULL)
+    {
+        printf("Failed to open directory\n");
+        exit(EXIT_FAILURE);
+    }
+    struct dirent *entry;
     printf("TREE called with %s\n", path);
-    wprintf(L"%lc %lc %lc %lc\n", vline, nodec, hline, lnode);
+    // wprintf(L"%lc %lc %lc %lc\n", vline, nodec, hline, LAST_NODE);
+    closedir(dir);
 }
 
-void listDirectory(char *path) { printf("DIRECRORY called with %s", path); }
+void listDirectory(char *path)
+{
+    path = path ? path : "./";
+    char bufferPath[MAX_LENGTH_PATH];
+    strcpy(bufferPath, path);
+    char *strp = &bufferPath[strcspn(bufferPath, "\0")];
+
+    DIR *dir = opendir(path);
+    if (dir == NULL)
+    {
+        printf("Failed to open directory\n");
+        exit(EXIT_FAILURE);
+    }
+    struct dirent *entry;
+    setFontAttributes(0, 92, 0);
+    printf("Mode\tName\n----\t----\n");
+    RESET_FONT;
+    while ((entry = readdir(dir)) != NULL)
+    {
+        snprintf(bufferPath, sizeof(bufferPath), "%s/%s", path, entry->d_name);
+        printf("%s\t%s\n", isDirectory(bufferPath) ? "d----" : "-a---", entry->d_name);
+    }
+    closedir(dir);
+}
 
 int isDirectory(const char *path)
 {
@@ -185,10 +212,9 @@ void removeUserData(const char *const _userName)
     char path[MAX_LENGTH_PATH];
     snprintf(path, sizeof(path), "%s/%s", basePath, _userName);
 
-    DIR *dir = NULL;
     if (isDirectory(path))
     {
-        dir = opendir(path);
+        DIR *dir = opendir(path);
         if (dir == NULL)
         {
             printf("Failed to open directory\n");
@@ -262,8 +288,6 @@ void copy_file(const char *source_filename, const char *destination_filename)
 
 void addUserData(char *_userName)
 {
-    printf("ADD called with %s", _userName);
-
     const char *const defaultSettingsPath = "./data/defaults/Settings.txt";
     const char *const defaultFontPath = "./data/defaults/Font/default.txt";
 

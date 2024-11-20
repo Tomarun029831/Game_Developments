@@ -1,11 +1,11 @@
-ID:GUEST
-PASSWORD:-
+ID:abcdefghijk
+PASSWORD:0123456789
 WINDOW
 {
-    FONT:default
+    FONT:mailyoUnchi
     SIZE
     {
-        WIDTH:1920
-        HEIGHT:1080
+        WIDTH:6
+        HEIGHT:10
     }
 }
