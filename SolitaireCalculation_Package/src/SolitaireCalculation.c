@@ -8,26 +8,17 @@
 #include "../lib/include/options.h"
 #include "../lib/include/settings.h"
 #include "../lib/include/window.h"
+#include "../lib/include/card.h"
 
-// 'S', 'D', 'H', 'C'
-int cardRanks[] = {'S', 'D', 'H', 'C'};
-// 'A', '2', '3', '4', '5', '6', '7', '8', '9', "10", 'J', 'Q', 'K'
-int cardSuits[] = {'A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'};
 extern _Settings Settings;
-
-typedef struct
-{
-    char *suit; // 'S', 'D', 'H', 'C'
-    char *rank; // 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'
-} Card;
-typedef struct
-{
-    Card *next;
-} Stock;
 
 // Initialize
 void initializeWindow();
-void initializeGame();
+void initializeStock();
+
+// Card
+Card *getStock();
+void Shuffle(Card *_stock);
 
 // Enter Game
 void solitaireCalculation();
@@ -61,9 +52,9 @@ ed
 
 int main(int argc, char **argv)
 {
-    initializeWindow();
+    // initializeWindow();
 
-    StartWindow((const char **)&argv[1]);
+    // StartWindow((const char **)&argv[1]);
     solitaireCalculation();
 
     RESET_FONT;
@@ -72,17 +63,29 @@ int main(int argc, char **argv)
 
 void solitaireCalculation()
 {
-    initializeGame();
+    initializeStock();
 
     puts("SolitaireCalculation starts\n");
 }
 
-void initializeGame()
+void initializeStock()
 {
+    Shuffle(NULL);
 }
 
 void initializeWindow()
 {
     setlocale(LC_ALL, ".UTF-8");
     loadSettings("/defaults", 'r');
+}
+
+void Shuffle(Card *_stock)
+{
+    srand(time(NULL));
+    printf("- %d\n", rand() % 100);
+}
+
+Card *getStock()
+{
+    Card _stock[CARD_AMOUNT];
 }

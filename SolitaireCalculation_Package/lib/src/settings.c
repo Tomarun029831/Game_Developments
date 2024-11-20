@@ -8,7 +8,7 @@
 #define STARTBLOCK '{'
 #define ENDBLOCK '}'
 
-extern _Settings Settings;
+_Settings Settings;
 int isBufferAble(const char _c);
 void analyzeSettings(char *_str, char load_mode);
 char *colonOperater(const char *const _attr, char **_loadPointer, const char _mode);

@@ -5,7 +5,7 @@
 #include "../include/settings.h"
 #include "../include/window.h"
 
-_Settings Settings;
+extern _Settings Settings;
 
 void StartWindow(const char **_optionv)
 {
@@ -35,12 +35,12 @@ void StartWindow(const char **_optionv)
 
         puts("");
 
-        setFontAttributes(8, 0, 0);
+        setFontAttributes(8, -1, -1);
         do
         {
             RESET_FONT;
             printf("password: \033[K");
-            setFontAttributes(8, 0, 0); // Hide input
+            setFontAttributes(8, -1, -1); // Hide input
             scanf_s("%s", password, sizeof(password));
             UP_CURSOR;
             if (strchr(password, INVAIL_MARK) != NULL)

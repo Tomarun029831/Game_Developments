@@ -2,7 +2,7 @@ ID:/defaults
 PASSWORD:0123456789
 WINDOW
 {
-    FONT:mailyoUnchi
+    FONT:aaa
     SIZE
     {
         WIDTH:6

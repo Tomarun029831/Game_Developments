@@ -26,7 +26,7 @@ void showSettings();
 void listDirectory(char *path);
 void removeUserData(const char *const path);
 void addUserData(char *path);
-void createFontFile(char *_fontName, FILE *_fp);
+void createFontFile(char *_fontName);
 void handleError();
 const char **getFullOption(const char *_option);
 void *getOptionHandler(const char *_option);
