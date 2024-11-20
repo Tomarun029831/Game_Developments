@@ -30,14 +30,65 @@ void showSettings()
         printf("%s\n", optionHandler[i]);
     }
     T_CLEAR;
-    // FILE fp;
-    char *s;
-    printf("ID:%s\nPassword:%s\nFont:%s\nWight:%d\nHeight:%d\n",
-           Settings.Id, Settings.Password, Settings.Window.Font, Settings.Window.Width, Settings.Window.Height);
-    printf("<Option> <Object>\tPut a SPACE between <Option> and <Object>\n");
+    char buffer[MAX_LENGTH_PATH];
+    setFontAttributes(-1, 92, -1);
+    printf("-ID-");
+    for (int i = strlen(Settings.Id) % 2; i >= 0; i--)
+        printf("\t");
+    printf("-Font-");
+    for (int i = strlen(Settings.Window.Font.name) % 2; i >= 0; i--)
+        printf("\t");
+    printf("-Wight-");
+    for (int i = strlen(itoa(Settings.Window.Width, buffer, 10)) % 2; i >= 0; i--)
+        printf("\t");
+    printf("-Height-");
+    for (int i = strlen(itoa(Settings.Window.Height, buffer, 10)) % 2; i >= 0; i--)
+        printf("\t");
+    puts("");
+    printf("%s", Settings.Id);
+    for (int i = strlen(Settings.Id) % 2; i >= 0; i--)
+        printf("\t");
+    printf("%s", Settings.Window.Font.name);
+    for (int i = strlen(Settings.Window.Font.name) % 2; i >= 0; i--)
+        printf("\t");
+    printf("%d", Settings.Window.Width);
+    for (int i = count_figures(Settings.Window.Width) % 2; i >= 0; i--)
+        printf("\t");
+    printf("%d", Settings.Window.Height);
+    for (int i = count_figures(Settings.Window.Height) % 2; i >= 0; i--)
+        printf("\t");
+    printf("\n");
+
+    RESET_FONT;
+    printf("<Setting-Attr> <Value>\tPut a SPACE between <Option> and <Object>\n");
     TC_END;
 
-    scanf_s("%s", s);
+    char attr[MAX_LENGTH_PATH], value[MAX_LENGTH_PATH];
+    const char *settingsAttritude[] = SETTINGS_ATTRITUDE;
+    void *settings_p[] = {
+        Settings.Id, Settings.Password, Settings.Window.Font.name,
+        &Settings.Window.Width, &Settings.Window.Height};
+    scanf_s("%s %s", attr, sizeof(attr), value, sizeof(value));
+
+    for (int i = 1; i < sizeof(settingsAttritude) / sizeof(settingsAttritude[0]); i++) // i = 1 => connot modify Settings.ID
+    {
+        if (strcmp(attr, settingsAttritude[i]) == 0)
+        {
+
+            if (i < 3)
+            {
+                strcpy((char *)settings_p[i], value);
+            }
+            else
+            {
+
+                *((int *)settings_p[i]) = atoi(value);
+            }
+            break;
+        }
+    }
+
+    loadSettings(Settings.Id, 's');
 }
 
 void executeOption(const char **_optionv)
@@ -273,7 +324,7 @@ void listDirectory(char *path)
         exit(EXIT_FAILURE);
     }
     struct dirent *entry;
-    setFontAttributes(0, 92, 0);
+    setFontAttributes(-1, 92, -1);
     printf("Mode\tName\n----\t----\n");
     RESET_FONT;
     while ((entry = readdir(dir)) != NULL)

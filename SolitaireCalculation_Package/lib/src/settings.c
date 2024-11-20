@@ -160,8 +160,7 @@ int count_figures(int n)
 
 char *colonOperater(const char *const _attr, char **_loadPointer, const char _mode)
 {
-    int *intp = NULL;
-    char *strp = NULL;
+
     char *buffer = NULL;
     const char *settingsAttritude[] = SETTINGS_ATTRITUDE;
     void *settings_p[] = {

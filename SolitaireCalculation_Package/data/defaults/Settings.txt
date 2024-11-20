@@ -1,4 +1,4 @@
-ID:abcdefghijk
+ID:/defaults
 PASSWORD:0123456789
 WINDOW
 {

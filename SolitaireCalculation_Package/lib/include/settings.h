@@ -49,3 +49,6 @@ void loadFont(const char *const _font);
 
 // analyze string
 void analyzeSettings(char *_str, char _mode);
+
+//
+int count_figures(int n);

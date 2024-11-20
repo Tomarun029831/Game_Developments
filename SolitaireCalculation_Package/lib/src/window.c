@@ -74,7 +74,7 @@ void SetWindowSize(int width, int height)
 // 0 <= style <= 9, 30 <= foreground <= 37 or 90 <= foreground <= 97, 40 <= background <= 47 or 100 <= background <= 107
 void setFontAttributes(int style, int foreground, int background)
 {
-    int isStyleValid = (style >= 1 && style <= 9);
+    int isStyleValid = (style >= 0 && style <= 9);
     int isForegroundValid = ((30 <= foreground && foreground <= 39) || (90 <= foreground && foreground <= 97));
     int isBackgroundValid = ((40 <= background && background <= 49) || (100 <= background && background <= 107));
 
