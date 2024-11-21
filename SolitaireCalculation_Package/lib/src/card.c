@@ -19,6 +19,10 @@ void Shuffle(_Card *_stock)
 
 void generateNewStock(_Card *_stock)
 {
+    // 'S', 'D', 'H', 'C'
+    char cardSuits[] = CARD_SUITS;
+    // 'A', '2', '3', '4', '5', '6', '7', '8', '9', "10", 'J', 'Q', 'K'
+    char *cardRanks[] = CARD_RANKS;
     for (int i = 0; i < CARD_AMOUNT; i++)
     {
         _stock[i].suit = cardSuits[i / RANK_AMOUNT];

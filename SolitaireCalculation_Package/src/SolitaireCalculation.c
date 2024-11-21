@@ -61,7 +61,6 @@ void solitaireCalculation()
 {
     _Card deck[CARD_AMOUNT];
     initializeGame(deck);
-    printDeck(deck);
 
     puts("SolitaireCalculation starts\n");
 }
