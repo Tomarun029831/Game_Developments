@@ -14,11 +14,7 @@ extern _Settings Settings;
 
 // Initialize
 void initializeWindow();
-void initializeStock();
-
-// Card
-Card *getStock();
-void Shuffle(Card *_stock);
+void initializeGame(_Card *deck);
 
 // Enter Game
 void solitaireCalculation();
@@ -63,29 +59,21 @@ int main(int argc, char **argv)
 
 void solitaireCalculation()
 {
-    initializeStock();
+    _Card deck[CARD_AMOUNT];
+    initializeGame(deck);
+    printDeck(deck);
 
     puts("SolitaireCalculation starts\n");
 }
 
-void initializeStock()
+void initializeGame(_Card *deck)
 {
-    Shuffle(NULL);
+    generateNewStock(deck);
+    Shuffle(deck);
 }
 
 void initializeWindow()
 {
     setlocale(LC_ALL, ".UTF-8");
     loadSettings("/defaults", 'r');
-}
-
-void Shuffle(Card *_stock)
-{
-    srand(time(NULL));
-    printf("- %d\n", rand() % 100);
-}
-
-Card *getStock()
-{
-    Card _stock[CARD_AMOUNT];
 }
