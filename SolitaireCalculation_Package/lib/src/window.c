@@ -153,15 +153,17 @@ void showTable()
 
     // ============== line_ 1 ==============
     /* === padding === */
-    for (int i = 0; i < 44; i++)
-        printf("\t");
+    for (int i = 0; i < 10; i++)
+        printf("   ");
+    for (int i = 0; i < 9; i++)
+        printf(" ");
     /* =============== */
-    printf("turn%c%2d", CONNECTTION_MARK, CARD_AMOUNT - Statu.amountCards + 1);
+    printf("turn%c %2d", CONNECTTION_MARK, CARD_AMOUNT - Statu.amountCards + 1);
     puts("");
 
     // ============== line_ 2 ==============
     for (int i = 0; i < 3; i++)
-        printf("\t");
+        printf("    ");
     printf(" ");
     puts(ROOF);
 
@@ -169,7 +171,7 @@ void showTable()
     /* === padding === */
     printf("%s", STRING_POINT);
     for (int i = 0; i < 3; i++)
-        printf("\t");
+        printf("    ");
     printf("  ");
     /* =============== */
     for (int i = 0; i < 4; i++)
@@ -177,19 +179,19 @@ void showTable()
         printf("%c  %d  %c", SEP, i + 1, SEP);
         /* === padding === */
         if (i != 3)
-            printf("\t  ");
+            printf("      ");
         /* =============== */
     }
     puts("");
 
     // ============== line_ 4 ==============
-    printf("\t%s", STRING_LEAD);
-    printf("\t ");
+    printf("    %s", STRING_LEAD);
+    printf("     ");
     for (int i = 0; i < 4; i++)
     {
         printf("%s", UPPER_BANS);
         if (i != 3)
-            printf("\t  ");
+            printf("      ");
     }
     puts("");
 
@@ -200,7 +202,7 @@ void showTable()
     RESET_FONT;
     printCard(Statu.showup);
     for (int i = 0; i < 2; i++)
-        printf("\t");
+        printf("    ");
 
     for (int i = 0; i < 4; i++)
     {
@@ -214,17 +216,17 @@ void showTable()
     puts("");
     // ============== line_ 6 ==============
 
-    printf("\t ");
+    printf("              ");
     for (int i = 0; i < 4; i++)
     {
         printf("%s", UNDER_BANS);
         if (i != 3)
-            printf("\t  ");
+            printf("      ");
     }
     puts("");
 
     // ============== line_ 7 ==============
-    printf("\t%s", STRING_STUCK);
+    printf("    %s", STRING_STUCK);
     puts("");
 
     // ============== line_ 8 ==============
