@@ -4,10 +4,38 @@
 #include "../include/options.h"
 #include "../include/settings.h"
 #include "../include/window.h"
+#include "../include/statu.h"
 
 extern _Settings Settings;
+extern _Statu Statu;
 
-void StartWindow(const char **_optionv)
+void printCard(_Card card);
+void printRank(_Card card);
+void printSuit(_Card card);
+
+void printCard(_Card card)
+{
+    printSuit(card);
+    setFontAttributes(-1, 37, -1);
+    printf("_");
+    RESET_FONT;
+    printRank(card);
+}
+
+void printRank(_Card card)
+{
+    setFontAttributes(-1, 39, -1);
+    printf("%2s", card.rank);
+    RESET_FONT;
+}
+void printSuit(_Card card)
+{
+    setFontAttributes(-1, 39, -1);
+    printf("%c", card.suit);
+    RESET_FONT;
+}
+
+void loginWindow(const char **_optionv)
 {
     char userID[MAX_LENGTH_PATH] = "";
     char password[MAX_LENGTH_PATH] = "";
@@ -105,3 +133,128 @@ void setFontAttributes(int style, int foreground, int background)
 
     printf("m");
 }
+
+void showTable()
+{
+    //                                            turn_  1
+    //              .------_:=^=:_------_:=^=:_------_:=^=:_------_:=^=:_------.
+    // point:              |  1  |      |  2  |      |  3  |      |  4  |
+    //     lead:     .-----.      .-----.      .-----.      .-----.
+    // $ C_ K        |   2 | S_ A |   4 | D_ 2 |   6 | H_ 3 |   8 | C_ 4
+    //               '-----'      '-----'      '-----'      '-----'
+    //     stuck:
+
+    // ms (1~4):makestack stuckpoint
+    // dc (1~4):discard leadpoint
+    // ds (1~4) (1~4):disstuck stuckpoint leadpoint
+    // ud :undo
+    // ed :endgame
+    // T_CLEAR;
+
+    // ============== line_ 1 ==============
+    /* === padding === */
+    for (int i = 0; i < 44; i++)
+        printf("\t");
+    /* =============== */
+    printf("turn%c%2d", CONNECTTION_MARK, CARD_AMOUNT - Statu.amountCards + 1);
+    puts("");
+
+    // ============== line_ 2 ==============
+    for (int i = 0; i < 3; i++)
+        printf("\t");
+    printf(" ");
+    puts(ROOF);
+
+    // ============== line_ 3 ==============
+    /* === padding === */
+    printf("%s", STRING_POINT);
+    for (int i = 0; i < 3; i++)
+        printf("\t");
+    printf("  ");
+    /* =============== */
+    for (int i = 0; i < 4; i++)
+    {
+        printf("%c  %d  %c", SEP, i + 1, SEP);
+        /* === padding === */
+        if (i != 3)
+            printf("\t  ");
+        /* =============== */
+    }
+    puts("");
+
+    // ============== line_ 4 ==============
+    printf("\t%s", STRING_LEAD);
+    printf("\t ");
+    for (int i = 0; i < 4; i++)
+    {
+        printf("%s", UPPER_BANS);
+        if (i != 3)
+            printf("\t  ");
+    }
+    puts("");
+
+    // ============== line_ 5 ==============
+    /* === Showup ===*/
+    setFontAttributes(-1, 36, -1);
+    printf("$ ");
+    RESET_FONT;
+    printCard(Statu.showup);
+    for (int i = 0; i < 2; i++)
+        printf("\t");
+
+    for (int i = 0; i < 4; i++)
+    {
+        printf("%c  ", SEP);
+        printRank(Statu.leadCards[i]);
+        printf(" %c ", SEP);
+        printCard(Statu.leadCards[i]);
+        printf(" ");
+    }
+
+    puts("");
+    // ============== line_ 6 ==============
+
+    printf("\t ");
+    for (int i = 0; i < 4; i++)
+    {
+        printf("%s", UNDER_BANS);
+        if (i != 3)
+            printf("\t  ");
+    }
+    puts("");
+
+    // ============== line_ 7 ==============
+    printf("\t%s", STRING_STUCK);
+    puts("");
+
+    // ============== line_ 8 ==============
+    puts("");
+
+    // ============== line_ 9 ==============
+    printf("ms (1~4):makestack stuckpoint");
+    puts("");
+
+    // ============== line_10 ==============
+    printf("dc (1~4):discard leadpoint");
+    puts("");
+
+    // ============== line_11 ==============
+    printf("ds (1~4) (1~4):disstuck stuckpoint leadpoint");
+    puts("");
+
+    // ============== line_12 ==============
+    printf("ud :undo");
+    puts("");
+
+    // ============== line_13 ==============
+    printf("ed :endgame");
+    puts("");
+
+    // ============== line_14 ==============
+    puts("");
+
+    TC_END;
+}
+
+/* === padding === */
+/* =============== */

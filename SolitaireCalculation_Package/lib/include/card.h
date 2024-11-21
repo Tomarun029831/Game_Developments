@@ -15,4 +15,4 @@ typedef struct
 
 void generateNewStock(_Card *_stock);
 void Shuffle(_Card *_stock);
-void printDeck(_Card *_stock);
+// void printDeck(_Card *_stock);

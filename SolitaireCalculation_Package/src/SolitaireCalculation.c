@@ -48,9 +48,9 @@ ed
 
 int main(int argc, char **argv)
 {
-    // initializeWindow();
+    initializeWindow();
 
-    // StartWindow((const char **)&argv[1]);
+    loginWindow((const char **)&argv[1]);
     solitaireCalculation();
 
     RESET_FONT;
