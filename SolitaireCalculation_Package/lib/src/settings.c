@@ -11,7 +11,7 @@
 _Settings Settings;
 int isBufferAble(const char _c);
 void analyzeSettings(char *_str, char load_mode);
-char *colonOperater(const char *const _attr, char **_loadPointer, const char _mode);
+void colonOperater(const char *const _attr, char **_loadPointer, const char _mode);
 char *read_until_newline(const char **_loadPointer);
 void forceInsertStr(char **_startPointer, const char *_source);
 
@@ -64,8 +64,7 @@ int loadSettings(const char *const _userName, const char load_mode)
     fseek(fp, 0, SEEK_SET);
 
     size_t c_size = sizeof(char);
-    char buffer[MAX_LENGTH_PATH] = "";
-    // char *buffer = malloc(fileSize + 1);
+    char *buffer = malloc(fileSize + 1);
 
     fread(buffer, c_size, fileSize, fp);
     buffer[fileSize] = '\0';
@@ -80,7 +79,8 @@ int loadSettings(const char *const _userName, const char load_mode)
         fclose(fp);
     }
 
-    // free(buffer); // error
+    if (buffer != NULL)
+        free(buffer);
 
     return LOAD_SUCCESS;
 }
@@ -107,7 +107,6 @@ void analyzeSettings(char *_str, char _mode)
         case STARTBLOCK:
             ++blockCount;
             strcpy(buffer, "");
-
             break;
         case ENDBLOCK:
             --blockCount;
@@ -158,7 +157,7 @@ int count_figures(int n)
     return count;
 }
 
-char *colonOperater(const char *const _attr, char **_loadPointer, const char _mode)
+void colonOperater(const char *const _attr, char **_loadPointer, const char _mode)
 {
 
     char *buffer = NULL;
@@ -176,7 +175,7 @@ char *colonOperater(const char *const _attr, char **_loadPointer, const char _mo
             case 'r':
                 while (**_loadPointer == ' ')
                     ++*_loadPointer;
-                buffer = read_until_newline((const char **)_loadPointer);
+                buffer = read_until_newline((const char **)_loadPointer); // need free(return value)
                 buffer[strcspn(buffer, "\r\n")] = '\0';
                 if (i < 3)
                 {
@@ -206,11 +205,6 @@ char *colonOperater(const char *const _attr, char **_loadPointer, const char _mo
             break;
         }
     }
-
-    if (buffer != NULL)
-        free(buffer);
-
-    return NULL;
 }
 
 void loadFont(const char *const _font)
