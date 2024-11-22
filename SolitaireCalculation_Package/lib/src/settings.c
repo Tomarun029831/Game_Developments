@@ -128,7 +128,6 @@ void analyzeSettings(char *_str, char _mode)
 
 void forceInsertStr(char **_startPointer, const char *_source)
 {
-    // printf("FIS called with %c %s\n", **_startPointer, _source);
     char *startPoint = *_startPointer;
     char *buffer = malloc((strlen(startPoint) + strlen(_source) + 1) * sizeof(char));
     strcpy(buffer, _source);
@@ -136,7 +135,6 @@ void forceInsertStr(char **_startPointer, const char *_source)
     strcat(buffer, *_startPointer);
     strcpy(startPoint, buffer);
     *_startPointer = startPoint + strcspn(startPoint, "\n");
-
     free(buffer);
 }
 
@@ -162,9 +160,11 @@ void colonOperater(const char *const _attr, char **_loadPointer, const char _mod
 
     char *buffer = NULL;
     const char *settingsAttritude[] = SETTINGS_ATTRITUDE;
-    void *settings_p[] = {
-        Settings.Id, Settings.Password, Settings.Window.Font.name,
-        &Settings.Window.Width, &Settings.Window.Height};
+    void *settings_p[] = {Settings.Id,
+                          Settings.Password,
+                          Settings.Window.Font.name,
+                          &Settings.Window.Width,
+                          &Settings.Window.Height};
 
     for (int i = 0; i < sizeof(settingsAttritude) / sizeof(settingsAttritude[0]); ++i)
     {
@@ -181,20 +181,14 @@ void colonOperater(const char *const _attr, char **_loadPointer, const char _mod
                 {
                     strcpy((char *)settings_p[i], buffer);
                     if (strcmp(_attr, "FONT") == 0)
-                    {
                         loadFont(buffer);
-                    }
                 }
                 else
-                {
                     *((int *)settings_p[i]) = atoi(buffer);
-                }
                 break;
             case 's':
                 if (i < 3)
-                {
                     forceInsertStr(_loadPointer, (char *)settings_p[i]);
-                }
                 else
                 {
                     buffer = malloc((count_figures(*((int *)settings_p[i])) + 1) * sizeof(char));
@@ -202,6 +196,9 @@ void colonOperater(const char *const _attr, char **_loadPointer, const char _mod
                 }
                 break;
             }
+            if (buffer != NULL)
+                free(buffer);
+            buffer = NULL;
             break;
         }
     }
