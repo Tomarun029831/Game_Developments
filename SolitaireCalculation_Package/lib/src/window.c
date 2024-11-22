@@ -150,7 +150,7 @@ void showTable()
     // ud :undo
     // ed :endgame
     // T_CLEAR;
-
+    T_CLEAR;
     // ============== line_ 1 ==============
     /* === padding === */
     for (int i = 0; i < 10; i++)
@@ -158,25 +158,37 @@ void showTable()
     for (int i = 0; i < 9; i++)
         printf(" ");
     /* =============== */
+    setFontAttributes(-1, 91, -1);
     printf("turn%c %2d", CONNECTTION_MARK, CARD_AMOUNT - Statu.amountCards + 1);
     puts("");
+    RESET_FONT;
 
     // ============== line_ 2 ==============
-    for (int i = 0; i < 3; i++)
-        printf("    ");
-    printf(" ");
+    for (int i = 0; i < 6; i++)
+        printf("   ");
+    printf("  ");
+    setFontAttributes(-1, 91, -1);
     puts(ROOF);
+    RESET_FONT;
 
     // ============== line_ 3 ==============
     /* === padding === */
+    setFontAttributes(-1, 32, -1);
     printf("%s", STRING_POINT);
+    RESET_FONT;
     for (int i = 0; i < 3; i++)
         printf("    ");
     printf("  ");
     /* =============== */
     for (int i = 0; i < 4; i++)
     {
-        printf("%c  %d  %c", SEP, i + 1, SEP);
+        setFontAttributes(-1, 91, -1);
+        printf("%c  ", PILLAR);
+        setFontAttributes(-1, 93, -1);
+        printf("%d", i + 1, PILLAR);
+        setFontAttributes(-1, -91, -1);
+        printf("  %c", PILLAR);
+        RESET_FONT;
         /* === padding === */
         if (i != 3)
             printf("      ");
@@ -185,8 +197,11 @@ void showTable()
     puts("");
 
     // ============== line_ 4 ==============
+    setFontAttributes(-1, 32, -1);
     printf("    %s", STRING_LEAD);
+    RESET_FONT;
     printf("     ");
+    setFontAttributes(-1, 32, -1);
     for (int i = 0; i < 4; i++)
     {
         printf("%s", UPPER_BANS);
@@ -194,10 +209,11 @@ void showTable()
             printf("      ");
     }
     puts("");
+    RESET_FONT;
 
     // ============== line_ 5 ==============
     /* === Showup ===*/
-    setFontAttributes(-1, 36, -1);
+    setFontAttributes(-1, 32, -1);
     printf("$ ");
     RESET_FONT;
     printCard(Statu.showup);
@@ -206,9 +222,13 @@ void showTable()
 
     for (int i = 0; i < 4; i++)
     {
-        printf("%c  ", SEP);
+        setFontAttributes(-1, 32, -1);
+        printf("%c  ", TOPPINGS);
+        RESET_FONT;
         printRank(Statu.leadCards[i]);
-        printf(" %c ", SEP);
+        setFontAttributes(-1, 32, -1);
+        printf(" %c ", TOPPINGS);
+        RESET_FONT;
         printCard(Statu.leadCards[i]);
         printf(" ");
     }
@@ -217,6 +237,7 @@ void showTable()
     // ============== line_ 6 ==============
 
     printf("              ");
+    setFontAttributes(-1, 32, -1);
     for (int i = 0; i < 4; i++)
     {
         printf("%s", UNDER_BANS);
@@ -224,33 +245,46 @@ void showTable()
             printf("      ");
     }
     puts("");
+    RESET_FONT;
 
     // ============== line_ 7 ==============
+    setFontAttributes(-1, 32, -1);
     printf("    %s", STRING_STUCK);
+    RESET_FONT;
     puts("");
 
     // ============== line_ 8 ==============
     puts("");
 
     // ============== line_ 9 ==============
-    printf("ms (1~4):makestack stuckpoint");
+    setFontAttributes(-1, 32, -1);
+    printf("ms (1~4):Makestack Stuckpoint");
     puts("");
+    RESET_FONT;
 
     // ============== line_10 ==============
-    printf("dc (1~4):discard leadpoint");
+    setFontAttributes(-1, 32, -1);
+    printf("dc (1~4):Discard Leadpoint");
     puts("");
+    RESET_FONT;
 
     // ============== line_11 ==============
-    printf("ds (1~4) (1~4):disstuck stuckpoint leadpoint");
+    setFontAttributes(-1, 32, -1);
+    printf("ds (1~4) (1~4):Disstuck Stuckpoint Leadpoint");
     puts("");
+    RESET_FONT;
 
     // ============== line_12 ==============
-    printf("ud :undo");
+    setFontAttributes(-1, 32, -1);
+    printf("ud :Undo");
     puts("");
+    RESET_FONT;
 
     // ============== line_13 ==============
-    printf("ed :endgame");
+    setFontAttributes(-1, 32, -1);
+    printf("ed :Endgame");
     puts("");
+    RESET_FONT;
 
     // ============== line_14 ==============
     puts("");

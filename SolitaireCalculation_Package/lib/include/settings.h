@@ -5,6 +5,10 @@
 #define MAX_LENGTH_PATH 256
 #define NOTBUFFERABLE {ASSIGN_OPERATER, STARTBLOCK, ENDBLOCK, ' ', '\n', '\r', '\0'}
 #define SETTINGS_ATTRITUDE {"ID", "PASSWORD", "FONT", "WIDTH", "HEIGHT"}
+#define FONT_POSITION \
+    {                 \
+    }
+#define FONT_ATTRITUDE {"FOREGROUND", "BACKGROUND", "STYLE"}
 
 // loadSettings
 #define LOAD_SUCCESS 0
@@ -20,10 +24,20 @@ typedef struct
 typedef struct
 {
     char name[MAX_LENGTH_PATH];
-    ColorAttritude ShowUp;
-    ColorAttritude Makestack;
+    ColorAttritude Turn;
+    ColorAttritude Roof;
+    ColorAttritude Point;
+    ColorAttritude Pillar;
+    ColorAttritude Number_BP;
+    ColorAttritude Lead;
+    ColorAttritude Upper_bans;
+    ColorAttritude Showup;
+    ColorAttritude Toppings;
+    ColorAttritude Under_bans;
+    ColorAttritude Stuck;
+    ColorAttritude Makestuck;
     ColorAttritude Discard;
-    ColorAttritude Disstack;
+    ColorAttritude Disstuck;
     ColorAttritude Undo;
     ColorAttritude Endgame;
 } _Font;

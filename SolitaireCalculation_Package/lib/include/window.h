@@ -9,10 +9,11 @@
 #define RESET_FONT setFontAttributes(-1, -1, -1)
 
 // Game Codinates
-#define ROOF ".------_:=^=:_------_:=^=:_------_:=^=:_------_:=^=:_------."
+#define ROOF "_:=^=:_------_:=^=:_------_:=^=:_------_:=^=:_"
 #define UPPER_BANS ".-----."
+#define TOPPINGS '|'
 #define UNDER_BANS "'-----'"
-#define SEP '|'
+#define PILLAR '|'
 #define CONNECTTION_MARK '_'
 #define STOCK_MARK '$'
 #define STRING_POINT "point:"
