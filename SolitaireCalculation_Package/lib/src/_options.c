@@ -8,6 +8,7 @@
 #include "../include/window.h"
 #include "../include/settings.h"
 #include "../include/options.h"
+#include "../include/font.h"
 
 extern _Settings Settings;
 

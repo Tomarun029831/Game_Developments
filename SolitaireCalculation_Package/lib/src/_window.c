@@ -4,6 +4,7 @@
 #include "../include/options.h"
 #include "../include/settings.h"
 #include "../include/window.h"
+#include "../include/font.h"
 #include "../include/statu.h"
 
 extern _Settings Settings;
@@ -97,8 +98,8 @@ void showTable()
     for (int i = 0; i < 9; i++)
         printf(" ");
     /* =============== */
-    setFontAttributes(-1, 91, -1);
-    printf("turn_ %2d", CARD_AMOUNT - Statu.amountCards + 1);
+    setFontAttributes(-1, 90, -1);
+    printf("turn%c %2d", CONNECTTION_MARK, CARD_AMOUNT - Statu.amountCards + 1);
     puts("");
     RESET_FONT;
 
@@ -124,7 +125,7 @@ void showTable()
         setFontAttributes(-1, 91, -1);
         printf("%c  ", PILLAR);
         setFontAttributes(-1, 93, -1);
-        printf("%d", i + 1, PILLAR);
+        printf("%d", i + 1);
         setFontAttributes(-1, 91, -1);
         printf("  %c", PILLAR);
         RESET_FONT;
@@ -164,7 +165,7 @@ void showTable()
         setFontAttributes(-1, 32, -1);
         printf("%c  ", TOPPINGS);
         RESET_FONT;
-        printRank(Statu.leadCards[i]);
+        printRank(Statu.leadCards[i].rank); // patty
         setFontAttributes(-1, 32, -1);
         printf(" %c ", TOPPINGS);
         RESET_FONT;

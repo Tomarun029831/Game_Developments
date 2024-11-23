@@ -1,7 +1,5 @@
 #pragma once
-#include "./font.h"
 
-#define INVAIL_MARK '/'
 #define DEFAULT_PATH "/defaults"
 #define MAX_LENGTH_PATH 256
 #define NOTBUFFERABLE {ASSIGN_OPERATER, STARTBLOCK, ENDBLOCK, ' ', '\n', '\r', '\0'}

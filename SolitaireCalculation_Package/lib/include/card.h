@@ -10,13 +10,21 @@
 typedef struct
 {
     char suit;    // 'S', 'D', 'H', 'C'
-    char rank[3]; // 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'
+    char rank[3]; // "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"
 } _Card;
 
+typedef struct
+{
+    _Card card;
+    _Card *next;
+} _chainCard;
+
+// Control Cards
 void generateNewStock(_Card *_stock);
 void Shuffle(_Card *_stock);
 // void printDeck(_Card *_stock);
 
+// Print Cards
 void printCard(_Card card);
-void printRank(_Card card);
-void printSuit(_Card card);
+void printSuit(char _suit);
+void printRank(char *_rank);

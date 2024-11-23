@@ -3,6 +3,7 @@
 #include <string.h>
 #include <dirent.h>
 #include "../include/settings.h"
+#include "../include/font.h"
 
 #define ASSIGN_OPERATER ':'
 #define STARTBLOCK '{'
@@ -202,10 +203,6 @@ void colonOperater(const char *const _attr, char **_loadPointer, const char _mod
             break;
         }
     }
-}
-
-void loadFont(const char *const _font)
-{
 }
 
 char *readUntilNewline(const char **_loadPointer)

@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include "../include/font.h"
 
+void loadFont(const char *const _font)
+{
+}
+
 void setFontAttributes(int style, int foreground, int background)
 {
     int isStyleValid = (style >= 0 && style <= 9);

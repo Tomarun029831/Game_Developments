@@ -22,25 +22,7 @@ typedef struct
 
 typedef struct
 {
-    ColorAttritude Ace;
-    ColorAttritude Two;
-    ColorAttritude Three;
-    ColorAttritude Four;
-    ColorAttritude Five;
-    ColorAttritude Six;
-    ColorAttritude Seven;
-    ColorAttritude Eight;
-    ColorAttritude Nine;
-    ColorAttritude Ten;
-    ColorAttritude Jack;
-    ColorAttritude Queen;
-    ColorAttritude King;
-} _rankFont;
-
-typedef struct
-{
     _suitFont Suit;
-    _rankFont Rank;
 } _cardFont;
 
 typedef struct

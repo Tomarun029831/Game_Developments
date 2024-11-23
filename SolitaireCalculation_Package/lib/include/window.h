@@ -1,5 +1,9 @@
 #pragma once
 
+// login
+#define INVAIL_MARK '/'
+void loginWindow(const char **_optionv); // Setting Window
+
 // escape sequence
 #define T_CLEAR printf("\x1b[?25l\x1b[H\x1b[J") // hide cursor, move it to HOME and delete right of cousor pos
 #define TR_CLEAR printf("\033[K")               //
@@ -20,7 +24,6 @@
 #define STRING_STUCK "stuck:"
 
 // To Enter Game
-void loginWindow(const char **_optionv); // Setting Window
 void SetWindowSize(int width, int height);
 void setFontAttributes(int style, int foreground, int background);
 
