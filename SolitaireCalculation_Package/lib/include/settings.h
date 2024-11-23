@@ -1,7 +1,9 @@
 #pragma once
 
+#include "./max_length_path.h"
+#include "./font.h"
+
 #define DEFAULT_PATH "/defaults"
-#define MAX_LENGTH_PATH 256
 #define NOTBUFFERABLE {ASSIGN_OPERATER, STARTBLOCK, ENDBLOCK, ' ', '\n', '\r', '\0'}
 #define SETTINGS_ATTRITUDE {"ID", "PASSWORD", "FONT", "WIDTH", "HEIGHT"}
 
@@ -16,7 +18,7 @@ typedef struct
     int Height;
 } _Window;
 
-typedef struct
+typedef struct _settings
 {
     char Id[MAX_LENGTH_PATH];
     char Password[MAX_LENGTH_PATH];

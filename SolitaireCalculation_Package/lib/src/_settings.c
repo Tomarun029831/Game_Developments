@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+
 #include "../include/settings.h"
 #include "../include/font.h"
 
@@ -10,6 +11,7 @@
 #define ENDBLOCK '}'
 
 _Settings Settings;
+
 int isBufferAble(const char _c);
 void analyzeSettings(char *_str, char load_mode);
 void colonOperater(const char *const _attr, char **_loadPointer, const char _mode);

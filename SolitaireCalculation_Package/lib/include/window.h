@@ -17,7 +17,7 @@ void loginWindow(const char **_optionv); // Setting Window
 #define TOPPINGS '|'
 #define UNDER_BANS "'-----'"
 #define PILLAR '|'
-#define CONNECTTION_MARK '_'
+#define CONNECTION_MARK '_'
 #define STOCK_MARK '$'
 #define STRING_POINT "point:"
 #define STRING_LEAD "lead:"

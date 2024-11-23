@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/options.h"
-#include "../include/settings.h"
+
 #include "../include/window.h"
+
+#include "../include/settings.h"
 #include "../include/font.h"
 #include "../include/statu.h"
+#include "../include/options.h"
 
 extern _Settings Settings;
+extern _Font Font;
 extern _Statu Statu;
 
 void loginWindow(const char **_optionv)
@@ -99,7 +102,7 @@ void showTable()
         printf(" ");
     /* =============== */
     setFontAttributes(-1, 90, -1);
-    printf("turn%c %2d", CONNECTTION_MARK, CARD_AMOUNT - Statu.amountCards + 1);
+    printf("turn%c %2d", CONNECTION_MARK, CARD_AMOUNT - Statu.amountCards + 1);
     puts("");
     RESET_FONT;
 
@@ -156,7 +159,7 @@ void showTable()
     setFontAttributes(-1, 32, -1);
     printf("$ ");
     RESET_FONT;
-    printCard(Statu.showup);
+    printCard(Statu.showup, 'c');
     for (int i = 0; i < 2; i++)
         printf("    ");
 
@@ -165,11 +168,11 @@ void showTable()
         setFontAttributes(-1, 32, -1);
         printf("%c  ", TOPPINGS);
         RESET_FONT;
-        printRank(Statu.leadCards[i].rank); // patty
+        printCard(Statu.leadCards[i], 'r'); // patty
         setFontAttributes(-1, 32, -1);
         printf(" %c ", TOPPINGS);
         RESET_FONT;
-        printCard(Statu.leadCards[i]);
+        printCard(Statu.leadCards[i], 'c');
         printf(" ");
     }
 

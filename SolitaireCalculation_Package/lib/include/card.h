@@ -4,27 +4,27 @@
 #define RANK_AMOUNT 13
 #define CARD_AMOUNT 52
 
-#define CARD_SUITS {'S', 'D', 'H', 'C'}
+#define SPEAD 'S'
+#define DIAMOND 'D'
+#define HEART 'H'
+#define CLUB 'C'
+#define CARD_SUITS {SPEAD, DIAMOND, HEART, CLUB}
 #define CARD_RANKS {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"}
 
-typedef struct
+typedef struct _card _Card;
+
+typedef struct _card
 {
     char suit;    // 'S', 'D', 'H', 'C'
     char rank[3]; // "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"
+    _Card *next;
 } _Card;
 
-typedef struct
-{
-    _Card card;
-    _Card *next;
-} _chainCard;
-
 // Control Cards
-void generateNewStock(_Card *_stock);
-void Shuffle(_Card *_stock);
-// void printDeck(_Card *_stock);
+void generateNewStock(_Card *_originNode);
+void deleteStock(_Card *_originNode);
+void Shuffle(_Card *_originNode);
+void printDeck(_Card *_originNode);
 
 // Print Cards
-void printCard(_Card card);
-void printSuit(char _suit);
-void printRank(char *_rank);
+void printCard(_Card card, char mode);

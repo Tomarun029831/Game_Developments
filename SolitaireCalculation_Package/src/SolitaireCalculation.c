@@ -5,10 +5,13 @@
 #include <stdlib.h> // exit, random
 #include <time.h>   // time
 #include <locale.h> // UTF-8
+
+#include "../lib/include/card.h"
+#include "../lib/include/font.h"
 #include "../lib/include/options.h"
 #include "../lib/include/settings.h"
+#include "../lib/include/statu.h"
 #include "../lib/include/window.h"
-#include "../lib/include/card.h"
 
 extern _Settings Settings;
 
@@ -50,7 +53,7 @@ int main(int argc, char **argv)
 {
     initializeWindow();
 
-    loginWindow((const char **)&argv[1]);
+    // loginWindow((const char **)&argv[1]);
     solitaireCalculation();
 
     RESET_FONT;
@@ -59,16 +62,18 @@ int main(int argc, char **argv)
 
 void solitaireCalculation()
 {
-    _Card deck[CARD_AMOUNT];
-    initializeGame(deck);
+    _Card *originNode = malloc(sizeof(_Card));
+    initializeGame(originNode);
 
     puts("SolitaireCalculation starts\n");
 }
 
-void initializeGame(_Card *deck)
+void initializeGame(_Card *originNode)
 {
-    generateNewStock(deck);
-    Shuffle(deck);
+    generateNewStock(originNode);
+    Shuffle(originNode);
+    printDeck(originNode);
+    deleteStock(originNode);
 }
 
 void initializeWindow()

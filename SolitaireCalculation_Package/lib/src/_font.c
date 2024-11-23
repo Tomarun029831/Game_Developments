@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "../include/font.h"
 
+_Font Font;
+
 void loadFont(const char *const _font)
 {
 }

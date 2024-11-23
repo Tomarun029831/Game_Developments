@@ -1,8 +1,25 @@
 #pragma once
-#include "./settings.h"
-#define FONT_POSITION \
-    {                 \
-    }
+
+#include "./max_length_path.h"
+
+#define FONT_POSITION {"Turn",       \
+                       "Roof",       \
+                       "Point",      \
+                       "Pillar",     \
+                       "Number_BP",  \
+                       "Lead",       \
+                       "Upper_bans", \
+                       "Showup",     \
+                       "Toppings",   \
+                       "Under_bans", \
+                       "Stuck",      \
+                       "Makestuck",  \
+                       "Discard",    \
+                       "Disstuck",   \
+                       "Undo",       \
+                       "Endgame",    \
+                       "Card"}
+
 #define FONT_ATTRITUDE {"FOREGROUND", "BACKGROUND", "STYLE"}
 
 typedef struct
@@ -10,40 +27,41 @@ typedef struct
     int Style;
     int Foreground;
     int Background;
-} ColorAttritude;
+} _ColorAttritude;
 
 typedef struct
 {
-    ColorAttritude Spead;
-    ColorAttritude Diamond;
-    ColorAttritude Heart;
-    ColorAttritude Clover;
+    _ColorAttritude Spead;
+    _ColorAttritude Diamond;
+    _ColorAttritude Heart;
+    _ColorAttritude Club;
 } _suitFont;
 
 typedef struct
 {
     _suitFont Suit;
+    _ColorAttritude ConnectionMark;
 } _cardFont;
 
-typedef struct
+typedef struct _font
 {
     char name[MAX_LENGTH_PATH];
-    ColorAttritude Turn;
-    ColorAttritude Roof;
-    ColorAttritude Point;
-    ColorAttritude Pillar;
-    ColorAttritude Number_BP;
-    ColorAttritude Lead;
-    ColorAttritude Upper_bans;
-    ColorAttritude Showup;
-    ColorAttritude Toppings;
-    ColorAttritude Under_bans;
-    ColorAttritude Stuck;
-    ColorAttritude Makestuck;
-    ColorAttritude Discard;
-    ColorAttritude Disstuck;
-    ColorAttritude Undo;
-    ColorAttritude Endgame;
+    _ColorAttritude Turn;
+    _ColorAttritude Roof;
+    _ColorAttritude Point;
+    _ColorAttritude Pillar;
+    _ColorAttritude Number_BP;
+    _ColorAttritude Lead;
+    _ColorAttritude Upper_bans;
+    _ColorAttritude Showup;
+    _ColorAttritude Toppings;
+    _ColorAttritude Under_bans;
+    _ColorAttritude Stuck;
+    _ColorAttritude Makestuck;
+    _ColorAttritude Discard;
+    _ColorAttritude Disstuck;
+    _ColorAttritude Undo;
+    _ColorAttritude Endgame;
     _cardFont Card;
 } _Font;
 
