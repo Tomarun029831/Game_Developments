@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "../include/card.h"
+#include "../include/font.h"
 
 void Shuffle(_Card *_stock)
 {
@@ -35,4 +36,27 @@ void printDeck(_Card *_stock)
     {
         printf("%d: %c-%s\n", i + 1, _stock[i].suit, _stock[i].rank);
     }
+}
+
+void printCard(_Card card)
+{
+    printSuit(card);
+    setFontAttributes(-1, 33, -1);
+    printf("%c", CONNECTTION_MARK);
+    RESET_FONT;
+    printRank(card);
+}
+
+void printRank(_Card card)
+{
+    setFontAttributes(-1, 35, -1);
+    printf("%2s", card.rank);
+    RESET_FONT;
+}
+
+void printSuit(_Card card)
+{
+    setFontAttributes(-1, 36, -1);
+    printf("%c", card.suit);
+    RESET_FONT;
 }

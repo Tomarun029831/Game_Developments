@@ -6,7 +6,6 @@
 #define TC_END printf("\x1b[?25h")              // show cursor
 #define UP_CURSOR printf("\033[A")              // set cursor above currently line
 #define DOWN_CURSOR printf("\033[D")            // set cursor below currently line
-#define RESET_FONT setFontAttributes(-1, -1, -1)
 
 // Game Codinates
 #define ROOF "_:=^=:_------_:=^=:_------_:=^=:_------_:=^=:_"

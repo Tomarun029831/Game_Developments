@@ -9,32 +9,6 @@
 extern _Settings Settings;
 extern _Statu Statu;
 
-void printCard(_Card card);
-void printRank(_Card card);
-void printSuit(_Card card);
-
-void printCard(_Card card)
-{
-    printSuit(card);
-    setFontAttributes(-1, 37, -1);
-    printf("_");
-    RESET_FONT;
-    printRank(card);
-}
-
-void printRank(_Card card)
-{
-    setFontAttributes(-1, 39, -1);
-    printf("%2s", card.rank);
-    RESET_FONT;
-}
-void printSuit(_Card card)
-{
-    setFontAttributes(-1, 39, -1);
-    printf("%c", card.suit);
-    RESET_FONT;
-}
-
 void loginWindow(const char **_optionv)
 {
     char userID[MAX_LENGTH_PATH] = "";
@@ -99,41 +73,6 @@ void SetWindowSize(int width, int height)
 {
 }
 
-// 0 <= style <= 9, 30 <= foreground <= 37 or 90 <= foreground <= 97, 40 <= background <= 47 or 100 <= background <= 107
-void setFontAttributes(int style, int foreground, int background)
-{
-    int isStyleValid = (style >= 0 && style <= 9);
-    int isForegroundValid = ((30 <= foreground && foreground <= 39) || (90 <= foreground && foreground <= 97));
-    int isBackgroundValid = ((40 <= background && background <= 49) || (100 <= background && background <= 107));
-
-    if (style == -1 && foreground == -1 && background == -1)
-    {
-        printf("\x1b[0m");
-        return;
-    }
-
-    printf("\x1b[");
-
-    if (isStyleValid)
-        printf("%d", style);
-
-    if (isForegroundValid)
-    {
-        if (isStyleValid)
-            printf(";");
-        printf("%d", foreground);
-    }
-
-    if (isBackgroundValid)
-    {
-        if (isStyleValid || isForegroundValid)
-            printf(";");
-        printf("%d", background);
-    }
-
-    printf("m");
-}
-
 void showTable()
 {
     //                                            turn_  1
@@ -159,7 +98,7 @@ void showTable()
         printf(" ");
     /* =============== */
     setFontAttributes(-1, 91, -1);
-    printf("turn%c %2d", CONNECTTION_MARK, CARD_AMOUNT - Statu.amountCards + 1);
+    printf("turn_ %2d", CARD_AMOUNT - Statu.amountCards + 1);
     puts("");
     RESET_FONT;
 
@@ -186,7 +125,7 @@ void showTable()
         printf("%c  ", PILLAR);
         setFontAttributes(-1, 93, -1);
         printf("%d", i + 1, PILLAR);
-        setFontAttributes(-1, -91, -1);
+        setFontAttributes(-1, 91, -1);
         printf("  %c", PILLAR);
         RESET_FONT;
         /* === padding === */

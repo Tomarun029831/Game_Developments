@@ -12,7 +12,7 @@ _Settings Settings;
 int isBufferAble(const char _c);
 void analyzeSettings(char *_str, char load_mode);
 void colonOperater(const char *const _attr, char **_loadPointer, const char _mode);
-char *read_until_newline(const char **_loadPointer);
+char *readUntilNewline(const char **_loadPointer);
 void forceInsertStr(char **_startPointer, const char *_source);
 
 // :, {, },  , \n, \r
@@ -175,7 +175,7 @@ void colonOperater(const char *const _attr, char **_loadPointer, const char _mod
             case 'r':
                 while (**_loadPointer == ' ')
                     ++*_loadPointer;
-                buffer = read_until_newline((const char **)_loadPointer); // need free(return value)
+                buffer = readUntilNewline((const char **)_loadPointer); // need free(return value)
                 buffer[strcspn(buffer, "\r\n")] = '\0';
                 if (i < 3)
                 {
@@ -208,7 +208,7 @@ void loadFont(const char *const _font)
 {
 }
 
-char *read_until_newline(const char **_loadPointer)
+char *readUntilNewline(const char **_loadPointer)
 {
     if (*_loadPointer == NULL)
     {
