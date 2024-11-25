@@ -40,8 +40,29 @@ void deleteStock(_Card *_originNode)
     }
 }
 
-void Shuffle(_Card *_originNode)
+void ShuffleStock(_Card **_originNode)
 {
+    _Card *p_card[CARD_AMOUNT];
+    p_card[0] = *_originNode;
+    int i = 0;
+
+    while (p_card[i++]->next != NULL)
+        p_card[i] = p_card[i - 1]->next;
+
+    srand(time(NULL));
+    for (int i = CARD_AMOUNT - 1; i > 0; i--)
+    {
+        int index = rand() % (i + 1);
+        _Card *tmp = p_card[i];
+        p_card[i] = p_card[index];
+        p_card[index] = tmp;
+    }
+
+    for (int i = 0; i < CARD_AMOUNT - 1; i++)
+        p_card[i]->next = p_card[i + 1];
+    p_card[CARD_AMOUNT - 1]->next = NULL;
+
+    *_originNode = p_card[0];
 }
 
 void printDeck(_Card *_originNode)

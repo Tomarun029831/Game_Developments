@@ -71,7 +71,7 @@ void solitaireCalculation()
 void initializeGame(_Card *originNode)
 {
     generateNewStock(originNode);
-    Shuffle(originNode);
+    ShuffleStock(&originNode);
     printDeck(originNode);
     deleteStock(originNode);
 }
