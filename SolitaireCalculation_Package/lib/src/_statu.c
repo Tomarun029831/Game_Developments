@@ -1,11 +1,12 @@
 #include "../include/statu.h"
 #include <stdio.h>
+#include <string.h>
 
 _Statu Statu;
 
 void Showup(_ChainCard *Node)
 {
-    if (Statu.showup.rank == NULL)
+    if (strcmp(Statu.showup.rank, "") == 0 && Statu.showup.suit == '\0')
     {
     }
 }

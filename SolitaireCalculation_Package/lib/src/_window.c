@@ -92,8 +92,8 @@ void showTable()
     // ds (1~4) (1~4):disstuck stuckpoint leadpoint
     // ud :undo
     // ed :endgame
+
     // T_CLEAR;
-    T_CLEAR;
     // ============== line_ 1 ==============
     /* === padding === */
     for (int i = 0; i < 10; i++)
