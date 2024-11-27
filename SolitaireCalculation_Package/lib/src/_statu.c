@@ -1,18 +1,26 @@
 #include "../include/statu.h"
+#include <stdio.h>
 
 _Statu Statu;
 
-void makeStuck(int _pointS)
+void Showup(_ChainCard *Node)
+{
+    if (Statu.showup.rank == NULL)
+    {
+    }
+}
+
+void MakeStuck(int _pointS)
 {
     printf("makestuck called with %d\n", _pointS);
 }
 
-void disCard(int _pointL)
+void DisCard(int _pointL)
 {
     printf("discard called with %d\n", _pointL);
 }
 
-void disStuck(int _pointS, int _pointL)
+void DisStuck(int _pointS, int _pointL)
 {
     printf("disstuck called with %d %d\n", _pointS, _pointL);
 }

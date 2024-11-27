@@ -169,9 +169,9 @@ void showTable()
 
     for (int i = 0; i < 4; i++)
     {
-        Statu.leadCards[i] = malloc(sizeof(_Card));
-        Statu.leadCards[i]->suit = 'H';
-        strcpy(Statu.leadCards[i]->rank, "10");
+        Statu.leadCards[i] = malloc(sizeof(_ChainCard));
+        Statu.leadCards[i]->card.suit = 'H';
+        strcpy(Statu.leadCards[i]->card.rank, "10");
         strcpy(Statu.leadRanks[i], "A");
 
         setFontAttributes(-1, 32, -1);
@@ -183,7 +183,7 @@ void showTable()
         setFontAttributes(-1, 32, -1);
         printf(" %c ", TOPPINGS);
         RESET_FONT;
-        printCard(*Statu.leadCards[i], 'c');
+        printChainCard(*Statu.leadCards[i], 'c');
         printf(" ");
 
         free(Statu.leadCards[i]);

@@ -18,7 +18,7 @@ extern _Statu Statu;
 
 // Initialize
 void initializeWindow();
-void initializeGame(_Card *deck);
+void initializeGame(_ChainCard *deck);
 
 // Enter Game
 void solitaireCalculation();
@@ -70,13 +70,13 @@ int main(int argc, char **argv)
 
 void solitaireCalculation()
 {
-    _Card *originNode = malloc(sizeof(_Card));
+    _ChainCard *originNode = malloc(sizeof(_ChainCard));
     initializeGame(originNode);
 
     do
     {
+        Showup(originNode);
         showTable();
-
         break;
     } while (Statu.leadRanks[0] == Statu.leadRanks[1] &&
              Statu.leadRanks[1] == Statu.leadRanks[2] &&
@@ -91,7 +91,7 @@ void solitaireCalculation()
     originNode = NULL;
 }
 
-void initializeGame(_Card *originNode)
+void initializeGame(_ChainCard *originNode)
 {
     generateNewStock(originNode);
     ShuffleStock(&originNode);
@@ -176,13 +176,13 @@ void convertInputToAction(char *_input)
     {
         char point_S[2];
         strncpy(point_S, &_input[2], 1);
-        makeStuck(atoi(point_S));
+        MakeStuck(atoi(point_S));
     }
     else if (strcmp(DISCARD, action) == 0)
     {
         char point_L[2];
         strncpy(point_L, &_input[2], 1);
-        disCard(atoi(point_L));
+        DisCard(atoi(point_L));
     }
     else if (strcmp(DISSTUCK, action) == 0)
     {
@@ -190,7 +190,7 @@ void convertInputToAction(char *_input)
 
         strncpy(point_S, &_input[2], 1);
         strncpy(point_L, &_input[3], 1);
-        disStuck(atoi(point_S), atoi(point_L));
+        DisStuck(atoi(point_S), atoi(point_L));
     }
     else if (strcmp(UNDO, action) == 0)
     {
