@@ -38,6 +38,7 @@ void deleteStock(_Card *_originNode)
         free(currentNode);
         currentNode = nextNode;
     }
+    _originNode = NULL;
 }
 
 void ShuffleStock(_Card **_originNode)
@@ -142,7 +143,12 @@ void printCard(_Card card, char mode)
     if (mode == 'c' || mode == 'r')
     {
         setFontAttributes(ColorAttr.Style, ColorAttr.Foreground, ColorAttr.Background);
-        printf("%s", card.rank);
+        printRank(card.rank);
         RESET_FONT;
     }
+}
+
+void printRank(char *_rank)
+{
+    printf("%2s", _rank);
 }

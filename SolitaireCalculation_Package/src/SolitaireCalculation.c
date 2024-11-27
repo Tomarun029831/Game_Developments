@@ -14,6 +14,7 @@
 #include "../lib/include/window.h"
 
 extern _Settings Settings;
+extern _Statu Statu;
 
 // Initialize
 void initializeWindow();
@@ -21,6 +22,13 @@ void initializeGame(_Card *deck);
 
 // Enter Game
 void solitaireCalculation();
+
+// Check Action
+int isAction(char *_action);
+
+// Input
+char *InputGuard(char *_input);
+void convertInputToAction(char *_input);
 
 /*
 
@@ -65,19 +73,131 @@ void solitaireCalculation()
     _Card *originNode = malloc(sizeof(_Card));
     initializeGame(originNode);
 
+    do
+    {
+        showTable();
+
+        break;
+    } while (Statu.leadRanks[0] == Statu.leadRanks[1] &&
+             Statu.leadRanks[1] == Statu.leadRanks[2] &&
+             Statu.leadRanks[2] == Statu.leadRanks[3] &&
+             Statu.leadRanks[3] == NULL);
+
     puts("SolitaireCalculation starts\n");
+    char *input = malloc(sizeof(char) * 5);
+    convertInputToAction(InputGuard(input));
+    free(input);
+    deleteStock(originNode);
+    originNode = NULL;
 }
 
 void initializeGame(_Card *originNode)
 {
     generateNewStock(originNode);
     ShuffleStock(&originNode);
-    printDeck(originNode);
-    deleteStock(originNode);
 }
 
 void initializeWindow()
 {
     setlocale(LC_ALL, ".UTF-8");
     loadSettings("/defaults", 'r');
+}
+
+#define MAKESTUCK "ms"
+#define DISCARD "dc"
+#define DISSTUCK "ds"
+#define UNDO "ud"
+#define ENDGAME "ed"
+
+#define ACTION_ALIAS {MAKESTUCK, DISCARD, DISSTUCK, UNDO, ENDGAME};
+// "ms", "dc", "ds", "ud", "ed"
+char *actionAlias[] = ACTION_ALIAS;
+
+int isAction(char *_action)
+{
+    for (int i = 1; i <= 5; i++)
+        if (strcmp(_action, actionAlias[i - 1]) == 0)
+            return 1;
+    return 0;
+}
+
+char *InputGuard(char *_input)
+{
+    char action[3];
+    int len;
+    do
+    {
+        TR_CLEAR;
+        printf("Action: ");
+        scanf("%s", _input);
+        UP_CURSOR;
+        if (strcmp(UNDO, _input) == 0)
+            return _input;
+        else if (strcmp(ENDGAME, _input) == 0)
+            return _input;
+
+        len = strlen(_input);
+        strncpy(action, _input, 2);
+
+        if (len == 2)
+        {
+            getchar();
+            printf("\033[12G");
+            _input[2] = getchar();
+            UP_CURSOR;
+            _input[3] = '\0';
+            if (strcmp(MAKESTUCK, action) == 0 || strcmp(DISCARD, action) == 0)
+                return _input;
+            ++len;
+        }
+
+        if (len == 3 && strcmp(DISSTUCK, action) == 0)
+        {
+            getchar();
+            printf("\033[14G");
+            _input[3] = getchar();
+            UP_CURSOR;
+            _input[4] = '\0';
+            ++len;
+        }
+    } while (!isAction(action) ||
+             !(2 <= len && len <= 4) ||
+             !('1' <= _input[2] && _input[2] <= '4') ||
+             !('1' <= _input[3] && _input[3] <= '4'));
+    DOWN_CURSOR;
+    return _input;
+}
+
+void convertInputToAction(char *_input)
+{
+    char action[3];
+    strncpy(action, _input, 2);
+    if (strcmp(MAKESTUCK, action) == 0)
+    {
+        char point_S[2];
+        strncpy(point_S, &_input[2], 1);
+        makeStuck(atoi(point_S));
+    }
+    else if (strcmp(DISCARD, action) == 0)
+    {
+        char point_L[2];
+        strncpy(point_L, &_input[2], 1);
+        disCard(atoi(point_L));
+    }
+    else if (strcmp(DISSTUCK, action) == 0)
+    {
+        char point_S[2], point_L[2];
+
+        strncpy(point_S, &_input[2], 1);
+        strncpy(point_L, &_input[3], 1);
+        disStuck(atoi(point_S), atoi(point_L));
+    }
+    else if (strcmp(UNDO, action) == 0)
+    {
+        Undo();
+    }
+    else if (strcmp(ENDGAME, action) == 0)
+    {
+        EndGame();
+    }
 }

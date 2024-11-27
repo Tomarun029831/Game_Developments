@@ -24,7 +24,7 @@ typedef struct s_card
 void generateNewStock(_Card *_originNode);
 void deleteStock(_Card *_originNode);
 void ShuffleStock(_Card **_originNode);
-void printDeck(_Card *_originNode);
-
 // Print Cards
 void printCard(_Card card, char mode);
+void printDeck(_Card *_originNode);
+void printRank(char *_rank);
